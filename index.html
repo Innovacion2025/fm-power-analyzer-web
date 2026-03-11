@@ -109,47 +109,48 @@
   <div class="error" id="error"></div>
 
   <script>
-    const device = "FMAN-0001";
-
+    const params = new URLSearchParams(window.location.search);
+    const device = params.get("device") || "FMAN-0001";
+  
     async function actualizar() {
       try {
         const url =
           "https://fm-power-analyzer-server.onrender.com/api/device/" +
           device +
           "?t=" + Date.now();
-
+  
         const res = await fetch(url, {
           method: "GET",
           cache: "no-store"
         });
-
+  
         const data = await res.json();
-
+  
         console.log("Respuesta API:", data);
-
+  
         if (!data.ok) {
           document.getElementById("error").innerText = "No se encontraron datos del dispositivo";
           return;
         }
-
+  
         document.getElementById("error").innerText = "";
         document.getElementById("device").innerText = data.device_id;
-
+  
         document.getElementById("voltaje").innerText =
           (data.data.voltage_an ?? "--") + " V";
-
+  
         document.getElementById("corriente").innerText =
           (data.data.current_a ?? "--") + " A";
-
+  
         document.getElementById("frecuencia").innerText =
           (data.data.frecuencia ?? "--") + " Hz";
-
+  
         document.getElementById("ptot").innerText =
           (data.data.ptot ?? "--") + " kW";
-
+  
         document.getElementById("qtot").innerText =
           (data.data.qtot ?? "--") + " kVAR";
-
+  
         document.getElementById("stot").innerText =
           (data.data.stot ?? "--") + " kVA";
       } catch (e) {
@@ -157,7 +158,7 @@
         document.getElementById("error").innerText = "Error conectando con la API";
       }
     }
-
+  
     setInterval(actualizar, 2000);
     actualizar();
   </script>
