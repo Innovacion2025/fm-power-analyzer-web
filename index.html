@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FM POWER ANALYZER</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .status {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 18px;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 950px;
+      margin: auto;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .label {
+      color: #666;
+      font-size: 18px;
+    }
+
+    .value {
+      font-size: 32px;
+      font-weight: bold;
+      margin-top: 12px;
+      color: #27ae60;
+    }
+
+    .error {
+      text-align: center;
+      color: #c0392b;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>FM POWER ANALYZER</h1>
+
+  <div class="status">
+    Equipo: <b id="device">--</b>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <div class="label">Voltaje A-N</div>
+      <div class="value" id="voltaje">--</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Corriente</div>
+      <div class="value" id="corriente">--</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Frecuencia</div>
+      <div class="value" id="frecuencia">--</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Potencia Activa</div>
+      <div class="value" id="ptot">--</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Potencia Reactiva</div>
+      <div class="value" id="qtot">--</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Potencia Aparente</div>
+      <div class="value" id="stot">--</div>
+    </div>
+  </div>
+
+  <div class="error" id="error"></div>
+
+  <script>
+    const device = "FMAN-0001";
+
+    async function actualizar() {
+      try {
+        const url =
+          "https://fm-power-analyzer-server.onrender.com/api/device/" +
+          device +
+          "?t=" + Date.now();
+
+        const res = await fetch(url, {
+          method: "GET",
+          cache: "no-store"
+        });
+
+        const data = await res.json();
+
+        console.log("Respuesta API:", data);
+
+        if (!data.ok) {
+          document.getElementById("error").innerText = "No se encontraron datos del dispositivo";
+          return;
+        }
+
+        document.getElementById("error").innerText = "";
+        document.getElementById("device").innerText = data.device_id;
+
+        document.getElementById("voltaje").innerText =
+          (data.data.voltage_an ?? "--") + " V";
+
+        document.getElementById("corriente").innerText =
+          (data.data.current_a ?? "--") + " A";
+
+        document.getElementById("frecuencia").innerText =
+          (data.data.frecuencia ?? "--") + " Hz";
+
+        document.getElementById("ptot").innerText =
+          (data.data.ptot ?? "--") + " kW";
+
+        document.getElementById("qtot").innerText =
+          (data.data.qtot ?? "--") + " kVAR";
+
+        document.getElementById("stot").innerText =
+          (data.data.stot ?? "--") + " kVA";
+      } catch (e) {
+        console.error("Error actualizando:", e);
+        document.getElementById("error").innerText = "Error conectando con la API";
+      }
+    }
+
+    setInterval(actualizar, 2000);
+    actualizar();
+  </script>
+</body>
+</html>
