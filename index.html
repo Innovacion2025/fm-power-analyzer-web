@@ -963,6 +963,39 @@
   <!-- BLOQUE 18: ORQUESTADOR GENERAL                        -->
   <!-- ===================================================== -->
 <script>
+  function limpiarGraficas() {
+    const labelsVacios = [];
+    const datosVacios = [];
+
+    if (chartVoltageAN) {
+      chartVoltageAN.data.labels = labelsVacios;
+      chartVoltageAN.data.datasets[0].data = datosVacios;
+      chartVoltageAN.update("none");
+    }
+
+    if (chartCurrentA) {
+      chartCurrentA.data.labels = labelsVacios;
+      chartCurrentA.data.datasets[0].data = datosVacios;
+      chartCurrentA.update("none");
+    }
+
+    if (chartFrequency) {
+      chartFrequency.data.labels = labelsVacios;
+      chartFrequency.data.datasets[0].data = datosVacios;
+      chartFrequency.update("none");
+    }
+
+    if (chartPowers) {
+      chartPowers.data.labels = labelsVacios;
+      chartPowers.data.datasets[0].data = datosVacios;
+      chartPowers.data.datasets[1].data = datosVacios;
+      chartPowers.data.datasets[2].data = datosVacios;
+      chartPowers.update("none");
+    }
+  }
+</script>
+
+<script>
   async function consultarTodo(mostrarAviso = false) {
     try {
       const day = document.getElementById("dayDate").value;
@@ -971,6 +1004,8 @@
       const json = await obtenerHistorico();
 
       if (!json.ok || !json.data || json.data.length === 0) {
+        limpiarGraficas();
+
         if (mostrarAviso) {
           mostrarToast("No hay datos para graficar en la fecha seleccionada");
         }
