@@ -1,734 +1,407 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FM POWER ANALYZER</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    :root {
-      --bg: #eef3f8;
-      --panel: #ffffff;
-      --panel-soft: #f8fbfe;
-      --text: #18324b;
-      --muted: #6d7f90;
-      --border: #e3ebf3;
-      --shadow: 0 14px 35px rgba(18, 41, 64, 0.10);
-      --green: #1fa36b;
-      --green-dark: #178557;
-      --blue: #2d9cdb;
-      --blue-soft: rgba(45, 156, 219, 0.12);
-      --danger: #c0392b;
-    }
+<title>FM POWER ANALYZER</title>
 
-    * {
-      box-sizing: border-box;
-    }
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    body {
-      margin: 0;
-      padding: 32px;
-      font-family: Arial, sans-serif;
-      background:
-        radial-gradient(circle at top left, #f7fbff 0%, #eef3f8 40%, #e9f0f7 100%);
-      color: var(--text);
-    }
+<style>
 
-    .page {
-      max-width: 1250px;
-      margin: 0 auto;
-    }
+:root{
+--bg:#eef3f8;
+--panel:#ffffff;
+--border:#e3ebf3;
+--text:#18324b;
+--muted:#6d7f90;
+--green:#1fa36b;
+--blue:#2d9cdb;
+--shadow:0 14px 35px rgba(18,41,64,0.10);
+}
 
-    .hero {
-      background: linear-gradient(135deg, #17324c 0%, #204c6f 100%);
-      color: #fff;
-      border-radius: 26px;
-      padding: 28px 30px;
-      box-shadow: 0 16px 40px rgba(20, 43, 67, 0.20);
-      margin-bottom: 26px;
-    }
+*{
+box-sizing:border-box;
+}
 
-    .hero-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
+body{
+margin:0;
+padding:30px;
+font-family:Arial, sans-serif;
+background:var(--bg);
+color:var(--text);
+}
 
-    .brand-title {
-      margin: 0;
-      font-size: 34px;
-      font-weight: 800;
-      letter-spacing: 0.4px;
-    }
+.page{
+max-width:1200px;
+margin:auto;
+}
 
-    .brand-subtitle {
-      margin-top: 6px;
-      font-size: 15px;
-      color: rgba(255,255,255,0.82);
-    }
+.hero{
+background:linear-gradient(135deg,#17324c,#204c6f);
+color:white;
+border-radius:20px;
+padding:25px;
+margin-bottom:25px;
+}
 
-    .device-pill {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 16px;
-      padding: 14px 18px;
-      min-width: 220px;
-      text-align: center;
-      backdrop-filter: blur(8px);
-    }
+.hero h1{
+margin:0;
+font-size:32px;
+}
 
-    .device-pill-label {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: rgba(255,255,255,0.75);
-      margin-bottom: 6px;
-    }
+.device{
+margin-top:10px;
+font-size:18px;
+}
 
-    .device-pill-value {
-      font-size: 22px;
-      font-weight: 800;
-      color: #fff;
-    }
+.cards{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px;
+margin-bottom:25px;
+}
 
-    .status-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 18px;
-      color: rgba(255,255,255,0.88);
-      font-size: 14px;
-      flex-wrap: wrap;
-    }
+.card{
+background:var(--panel);
+border-radius:20px;
+padding:22px;
+border:1px solid var(--border);
+box-shadow:var(--shadow);
+}
 
-    .status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #2dd881;
-      box-shadow: 0 0 0 6px rgba(45, 216, 129, 0.14);
-      display: inline-block;
-    }
+.card-title{
+font-size:14px;
+color:var(--muted);
+margin-bottom:10px;
+}
 
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-bottom: 26px;
-    }
+.card-value{
+font-size:34px;
+font-weight:bold;
+color:var(--green);
+}
 
-    .metric-card {
-      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 22px;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
+.chart-card{
+background:white;
+border-radius:22px;
+padding:25px;
+box-shadow:var(--shadow);
+border:1px solid var(--border);
+}
 
-    .metric-card::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 92px;
-      height: 92px;
-      background: radial-gradient(circle, rgba(45,156,219,0.10) 0%, rgba(45,156,219,0.00) 70%);
-      pointer-events: none;
-    }
+.chart-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+margin-bottom:15px;
+}
 
-    .metric-label {
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      color: var(--muted);
-      margin-bottom: 14px;
-    }
+.chart-header h2{
+margin:0;
+font-size:26px;
+}
 
-    .metric-value {
-      font-size: 38px;
-      font-weight: 800;
-      color: var(--green);
-      line-height: 1;
-      word-break: break-word;
-    }
+.controls{
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+align-items:end;
+}
 
-    .metric-unit {
-      margin-top: 10px;
-      font-size: 13px;
-      color: #8393a3;
-      font-weight: 600;
-    }
+.controls label{
+font-size:13px;
+color:var(--muted);
+}
 
-    .chart-card {
-      background: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: var(--shadow);
-    }
+.controls input{
+padding:8px 10px;
+border-radius:8px;
+border:1px solid var(--border);
+}
 
-    .chart-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-bottom: 22px;
-    }
+.controls button{
+background:var(--green);
+color:white;
+border:none;
+padding:9px 14px;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+}
 
-    .chart-title-wrap h2 {
-      margin: 0;
-      font-size: 30px;
-      color: var(--text);
-      font-weight: 800;
-    }
+.chart-wrap{
+background:#f8fafc;
+border-radius:16px;
+padding:15px;
+border:1px solid var(--border);
+}
 
-    .chart-subtitle {
-      margin-top: 7px;
-      color: var(--muted);
-      font-size: 14px;
-    }
+#chartVoltageAN{
+height:380px !important;
+}
 
-    .chart-controls {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      align-items: end;
-      justify-content: flex-end;
-    }
+.error{
+text-align:center;
+color:#c0392b;
+font-weight:bold;
+margin-top:15px;
+}
 
-    .chart-field {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
+@media(max-width:900px){
+.cards{
+grid-template-columns:1fr;
+}
+}
 
-    .chart-field label {
-      font-size: 13px;
-      color: #516476;
-      font-weight: 700;
-    }
-
-    .chart-field input {
-      min-width: 155px;
-      padding: 11px 14px;
-      border-radius: 12px;
-      border: 1px solid #d7e0e8;
-      background: #fff;
-      color: #1f2d3a;
-      font-size: 14px;
-      outline: none;
-      transition: 0.2s ease;
-    }
-
-    .chart-field input:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(45, 156, 219, 0.12);
-    }
-
-    .chart-button {
-      padding: 12px 18px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--green) 0%, #2bb673 100%);
-      color: white;
-      font-size: 14px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 10px 20px rgba(43, 182, 115, 0.25);
-      transition: 0.2s ease;
-    }
-
-    .chart-button:hover {
-      transform: translateY(-1px);
-      background: linear-gradient(135deg, var(--green-dark) 0%, #23a366 100%);
-    }
-
-    .chart-wrap {
-      background: linear-gradient(180deg, #f9fbfd 0%, #f6f9fc 100%);
-      border: 1px solid #e6edf4;
-      border-radius: 20px;
-      padding: 18px;
-    }
-
-    #chartVoltageAN {
-      width: 100%;
-      height: 390px !important;
-    }
-
-    .error {
-      text-align: center;
-      color: var(--danger);
-      margin-top: 18px;
-      font-weight: 800;
-      font-size: 15px;
-    }
-
-    @media (max-width: 1000px) {
-      .cards-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 760px) {
-      body {
-        padding: 18px;
-      }
-
-      .hero {
-        padding: 22px 20px;
-      }
-
-      .brand-title {
-        font-size: 28px;
-      }
-
-      .cards-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .chart-header {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .chart-controls {
-        justify-content: flex-start;
-      }
-
-      .chart-title-wrap h2 {
-        font-size: 24px;
-      }
-
-      .metric-value {
-        font-size: 34px;
-      }
-    }
-  </style>
+</style>
 </head>
+
 <body>
-  <div class="page">
-    <section class="hero">
-      <div class="hero-top">
-        <div>
-          <h1 class="brand-title">FM POWER ANALYZER</h1>
-          <div class="brand-subtitle">Monitoreo en tiempo real y análisis histórico de variables eléctricas</div>
-        </div>
 
-        <div class="device-pill">
-          <div class="device-pill-label">Equipo seleccionado</div>
-          <div class="device-pill-value" id="device">--</div>
-        </div>
-      </div>
+<div class="page">
 
-      <div class="status-row">
-        <span class="status-dot"></span>
-        <span>Conexión activa con la API y actualización automática del dashboard</span>
-      </div>
-    </section>
+<div class="hero">
+<h1>FM POWER ANALYZER</h1>
+<div class="device">Equipo: <b id="device">--</b></div>
+</div>
 
-    <section class="cards-grid">
-      <div class="metric-card">
-        <div class="metric-label">Voltaje A-N</div>
-        <div class="metric-value" id="voltaje">--</div>
-        <div class="metric-unit">Voltios (V)</div>
-      </div>
+<div class="cards">
 
-      <div class="metric-card">
-        <div class="metric-label">Corriente</div>
-        <div class="metric-value" id="corriente">--</div>
-        <div class="metric-unit">Amperios (A)</div>
-      </div>
+<div class="card">
+<div class="card-title">Voltaje A-N</div>
+<div class="card-value" id="voltaje">--</div>
+</div>
 
-      <div class="metric-card">
-        <div class="metric-label">Frecuencia</div>
-        <div class="metric-value" id="frecuencia">--</div>
-        <div class="metric-unit">Hertz (Hz)</div>
-      </div>
+<div class="card">
+<div class="card-title">Corriente</div>
+<div class="card-value" id="corriente">--</div>
+</div>
 
-      <div class="metric-card">
-        <div class="metric-label">Potencia Activa</div>
-        <div class="metric-value" id="ptot">--</div>
-        <div class="metric-unit">Kilovatios (kW)</div>
-      </div>
+<div class="card">
+<div class="card-title">Frecuencia</div>
+<div class="card-value" id="frecuencia">--</div>
+</div>
 
-      <div class="metric-card">
-        <div class="metric-label">Potencia Reactiva</div>
-        <div class="metric-value" id="qtot">--</div>
-        <div class="metric-unit">Kilovar (kVAR)</div>
-      </div>
+<div class="card">
+<div class="card-title">Potencia Activa</div>
+<div class="card-value" id="ptot">--</div>
+</div>
 
-      <div class="metric-card">
-        <div class="metric-label">Potencia Aparente</div>
-        <div class="metric-value" id="stot">--</div>
-        <div class="metric-unit">Kilovolt-amperio (kVA)</div>
-      </div>
-    </section>
+<div class="card">
+<div class="card-title">Potencia Reactiva</div>
+<div class="card-value" id="qtot">--</div>
+</div>
 
-    <section class="chart-card">
-      <div class="chart-header">
-        <div class="chart-title-wrap">
-          <h2>Voltaje A-N</h2>
-          <div class="chart-subtitle">Curva histórica del equipo seleccionado por rango de fechas</div>
-        </div>
+<div class="card">
+<div class="card-title">Potencia Aparente</div>
+<div class="card-value" id="stot">--</div>
+</div>
 
-        <div class="chart-controls">
-          <div class="chart-field">
-            <label for="fromDate">Desde</label>
-            <input type="date" id="fromDate">
-          </div>
+</div>
 
-          <div class="chart-field">
-            <label for="toDate">Hasta</label>
-            <input type="date" id="toDate">
-          </div>
+<div class="chart-card">
 
-          <div class="chart-field">
-            <label>&nbsp;</label>
-            <button class="chart-button" onclick="cargarCurvaVoltaje()">Actualizar curva</button>
-          </div>
-        </div>
-      </div>
+<div class="chart-header">
 
-      <div class="chart-wrap">
-        <canvas id="chartVoltageAN"></canvas>
-      </div>
+<h2>Curva Voltaje A-N</h2>
 
-      <div class="error" id="error"></div>
-    </section>
-  </div>
+<div class="controls">
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const device = params.get("device") || "FMAN-0001";
+<div>
+<label>Desde</label><br>
+<input type="date" id="fromDate">
+</div>
 
-    let chartVoltageAN = null;
+<div>
+<label>Hasta</label><br>
+<input type="date" id="toDate">
+</div>
 
-    function hoyTexto() {
-      const ahora = new Date();
-      const y = ahora.getFullYear();
-      const m = String(ahora.getMonth() + 1).padStart(2, "0");
-      const d = String(ahora.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
-    }
+<div>
+<label>&nbsp;</label><br>
+<button onclick="cargarCurvaVoltaje()">Consultar</button>
+</div>
 
-    async function actualizar() {
-      try {
-        const url =
-          "https://fm-power-analyzer-server.onrender.com/api/device/" +
-          device +
-          "?t=" + Date.now();
+</div>
 
-        const res = await fetch(url, {
-          method: "GET",
-          cache: "no-store"
-        });
+</div>
 
-        const data = await res.json();
-        console.log("Tiempo real:", data);
+<div class="chart-wrap">
+<canvas id="chartVoltageAN"></canvas>
+</div>
 
-        if (!data.ok) {
-          document.getElementById("error").innerText = "No se encontraron datos del dispositivo";
-          return;
-        }
+</div>
 
-        document.getElementById("error").innerText = "";
-        document.getElementById("device").innerText = data.device_id;
+<div class="error" id="error"></div>
 
-        document.getElementById("voltaje").innerText =
-          (data.data.voltage_an ?? "--") + " V";
+</div>
 
-        document.getElementById("corriente").innerText =
-          (data.data.current_a ?? "--") + " A";
-
-        document.getElementById("frecuencia").innerText =
-          (data.data.frecuencia ?? data.data.frequency ?? "--") + " Hz";
-
-        document.getElementById("ptot").innerText =
-          (data.data.ptot ?? data.data.power_total ?? "--") + " kW";
-
-        document.getElementById("qtot").innerText =
-          (data.data.qtot ?? "--") + " kVAR";
-
-        document.getElementById("stot").innerText =
-          (data.data.stot ?? "--") + " kVA";
-
-      } catch (e) {
-        console.error("Error actualizando:", e);
-        document.getElementById("error").innerText = "Error conectando con la API";
-      }
-    }
 
 <script>
-  async function cargarCurvaVoltaje() {
-    try {
-      const from = document.getElementById("fromDate").value;
-      const to = document.getElementById("toDate").value;
 
-      let url =
-        "https://fm-power-analyzer-server.onrender.com/api/history?device_id=" +
-        encodeURIComponent(device);
+const params = new URLSearchParams(window.location.search);
+const device = params.get("device") || "FMAN-0001";
 
-      if (from && to) {
-        url += "&from=" + encodeURIComponent(from) + "&to=" + encodeURIComponent(to);
-      }
+let chartVoltageAN=null;
 
-      url += "&t=" + Date.now();
+function hoyTexto(){
+const ahora=new Date();
+const y=ahora.getFullYear();
+const m=String(ahora.getMonth()+1).padStart(2,"0");
+const d=String(ahora.getDate()).padStart(2,"0");
+return `${y}-${m}-${d}`;
+}
 
-      const res = await fetch(url, {
-        method: "GET",
-        cache: "no-store"
-      });
+async function actualizar(){
 
-      const json = await res.json();
-      console.log("Histórico:", json);
+try{
 
-      if (!json.ok || !json.data || json.data.length === 0) {
-        document.getElementById("error").innerText = "No hay datos para graficar";
-        return;
-      }
+const url="https://fm-power-analyzer-server.onrender.com/api/device/"+device+"?t="+Date.now();
 
-      document.getElementById("error").innerText = "";
+const res=await fetch(url,{cache:"no-store"});
 
-      const labels = json.data.map(item => {
-        const fecha = new Date(item.created_at);
-        return fecha.toLocaleTimeString();
-      });
+const data=await res.json();
 
-      const values = json.data.map(item =>
-        item.voltage_an !== null ? Number(item.voltage_an) : null
-      );
+if(!data.ok){
+document.getElementById("error").innerText="No hay datos";
+return;
+}
 
-      const canvas = document.getElementById("chartVoltageAN");
-      const ctx = canvas.getContext("2d");
+document.getElementById("error").innerText="";
 
-      if (!chartVoltageAN) {
-        chartVoltageAN = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                label: "Voltaje A-N (V)",
-                data: values,
-                borderColor: "#2D9CDB",
-                backgroundColor: "rgba(45, 156, 219, 0.12)",
-                pointBackgroundColor: "#2D9CDB",
-                pointBorderColor: "#ffffff",
-                pointBorderWidth: 1.5,
-                pointRadius: 0,
-                pointHoverRadius: 4,
-                borderWidth: 3,
-                tension: 0.32,
-                fill: true,
-                spanGaps: true
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: false,
-            normalized: true,
-            interaction: {
-              mode: "index",
-              intersect: false
-            },
-            plugins: {
-              legend: {
-                display: true,
-                labels: {
-                  usePointStyle: true,
-                  pointStyle: "circle",
-                  color: "#334155",
-                  font: {
-                    size: 13,
-                    weight: "600"
-                  }
-                }
-              },
-              tooltip: {
-                backgroundColor: "rgba(17, 24, 39, 0.92)",
-                titleColor: "#fff",
-                bodyColor: "#fff",
-                borderColor: "rgba(255,255,255,0.08)",
-                borderWidth: 1,
-                padding: 12,
-                displayColors: true
-              }
-            },
-            scales: {
-              x: {
-                grid: {
-                  color: "rgba(148, 163, 184, 0.12)",
-                  drawBorder: false
-                },
-                ticks: {
-                  color: "#64748b",
-                  maxTicksLimit: 8,
-                  maxRotation: 0
-                }
-              },
-              y: {
-                grid: {
-                  color: "rgba(148, 163, 184, 0.14)",
-                  drawBorder: false
-                },
-                ticks: {
-                  color: "#64748b"
-                },
-                title: {
-                  display: true,
-                  text: "Voltaje (V)",
-                  color: "#475569",
-                  font: {
-                    size: 13,
-                    weight: "600"
-                  }
-                }
-              }
-            }
-          }
-        });
-      } else {
-        chartVoltageAN.data.labels = labels;
-        chartVoltageAN.data.datasets[0].data = values;
-        chartVoltageAN.update("none");
-      }
+document.getElementById("device").innerText=data.device_id;
 
-    } catch (e) {
-      console.error("Error cargando curva:", e);
-      document.getElementById("error").innerText = "Error al consultar curva";
-    }
-  }
-        document.getElementById("error").innerText = "";
+document.getElementById("voltaje").innerText=(data.data.voltage_an??"--")+" V";
 
-        const labels = json.data.map(item => {
-          const fecha = new Date(item.created_at);
-          return fecha.toLocaleString();
-        });
+document.getElementById("corriente").innerText=(data.data.current_a??"--")+" A";
 
-        const values = json.data.map(item =>
-          item.voltage_an !== null ? Number(item.voltage_an) : null
-        );
+document.getElementById("frecuencia").innerText=(data.data.frecuencia??data.data.frequency??"--")+" Hz";
 
-        const canvas = document.getElementById("chartVoltageAN");
-        const ctx = canvas.getContext("2d");
+document.getElementById("ptot").innerText=(data.data.ptot??"--")+" kW";
 
-        if (chartVoltageAN) {
-          chartVoltageAN.destroy();
-        }
+document.getElementById("qtot").innerText=(data.data.qtot??"--")+" kVAR";
 
-        chartVoltageAN = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                label: "Voltaje A-N (V)",
-                data: values,
-                borderColor: "#2D9CDB",
-                backgroundColor: "rgba(45, 156, 219, 0.12)",
-                pointBackgroundColor: "#2D9CDB",
-                pointBorderColor: "#ffffff",
-                pointBorderWidth: 1.5,
-                pointRadius: 0,
-                pointHoverRadius: 4,
-                borderWidth: 3,
-                tension: 0.32,
-                fill: true,
-                spanGaps: true
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-              mode: "index",
-              intersect: false
-            },
-            plugins: {
-              legend: {
-                display: true,
-                labels: {
-                  usePointStyle: true,
-                  pointStyle: "circle",
-                  color: "#334155",
-                  font: {
-                    size: 13,
-                    weight: "600"
-                  }
-                }
-              },
-              tooltip: {
-                backgroundColor: "rgba(17, 24, 39, 0.92)",
-                titleColor: "#fff",
-                bodyColor: "#fff",
-                borderColor: "rgba(255,255,255,0.08)",
-                borderWidth: 1,
-                padding: 12,
-                displayColors: true
-              }
-            },
-            scales: {
-              x: {
-                grid: {
-                  color: "rgba(148, 163, 184, 0.12)",
-                  drawBorder: false
-                },
-                ticks: {
-                  color: "#64748b",
-                  maxTicksLimit: 8,
-                  maxRotation: 0
-                }
-              },
-              y: {
-                grid: {
-                  color: "rgba(148, 163, 184, 0.14)",
-                  drawBorder: false
-                },
-                ticks: {
-                  color: "#64748b"
-                },
-                title: {
-                  display: true,
-                  text: "Voltaje (V)",
-                  color: "#475569",
-                  font: {
-                    size: 13,
-                    weight: "600"
-                  }
-                }
-              }
-            }
-          }
-        });
+document.getElementById("stot").innerText=(data.data.stot??"--")+" kVA";
 
-      } catch (e) {
-        console.error("Error cargando curva:", e);
-        document.getElementById("error").innerText = "Error al consultar curva";
-      }
-    }
+}
+catch(e){
 
-    window.addEventListener("load", () => {
-      const hoy = hoyTexto();
-      document.getElementById("fromDate").value = hoy;
-      document.getElementById("toDate").value = hoy;
+document.getElementById("error").innerText="Error conectando API";
 
-      actualizar();
-      cargarCurvaVoltaje();
+}
 
-      setInterval(() => {
-        actualizar();
-        cargarCurvaVoltaje();
-      }, 2000);
-    });
-  </script>
+}
+
+
+
+async function cargarCurvaVoltaje(){
+
+try{
+
+const from=document.getElementById("fromDate").value;
+const to=document.getElementById("toDate").value;
+
+let url="https://fm-power-analyzer-server.onrender.com/api/history?device_id="+device;
+
+if(from&&to){
+
+url+="&from="+from+"&to="+to;
+
+}
+
+const res=await fetch(url);
+
+const json=await res.json();
+
+if(!json.ok||!json.data){
+
+return;
+
+}
+
+const labels=json.data.map(item=>{
+
+const f=new Date(item.created_at);
+
+return f.toLocaleTimeString();
+
+});
+
+const values=json.data.map(item=>Number(item.voltage_an));
+
+const ctx=document.getElementById("chartVoltageAN").getContext("2d");
+
+if(!chartVoltageAN){
+
+chartVoltageAN=new Chart(ctx,{
+
+type:"line",
+
+data:{
+labels:labels,
+datasets:[{
+label:"Voltaje A-N (V)",
+data:values,
+borderColor:"#2d9cdb",
+backgroundColor:"rgba(45,156,219,0.1)",
+borderWidth:3,
+pointRadius:0,
+tension:0.3,
+fill:true
+}]
+},
+
+options:{
+responsive:true,
+maintainAspectRatio:false,
+animation:false
+}
+
+});
+
+}
+else{
+
+chartVoltageAN.data.labels=labels;
+chartVoltageAN.data.datasets[0].data=values;
+chartVoltageAN.update("none");
+
+}
+
+}
+catch(e){
+
+document.getElementById("error").innerText="Error al consultar curva";
+
+}
+
+}
+
+
+
+window.addEventListener("load",()=>{
+
+const hoy=hoyTexto();
+
+document.getElementById("fromDate").value=hoy;
+document.getElementById("toDate").value=hoy;
+
+actualizar();
+cargarCurvaVoltaje();
+
+setInterval(()=>{
+
+actualizar();
+cargarCurvaVoltaje();
+
+},2000);
+
+});
+
+</script>
+
 </body>
 </html>
