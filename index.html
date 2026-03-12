@@ -464,38 +464,148 @@
       }
     }
 
-    async function cargarCurvaVoltaje() {
-      try {
-        const from = document.getElementById("fromDate").value;
-        const to = document.getElementById("toDate").value;
+<script>
+  async function cargarCurvaVoltaje() {
+    try {
+      const from = document.getElementById("fromDate").value;
+      const to = document.getElementById("toDate").value;
 
-        let url =
-          "https://fm-power-analyzer-server.onrender.com/api/history?device_id=" +
-          encodeURIComponent(device);
+      let url =
+        "https://fm-power-analyzer-server.onrender.com/api/history?device_id=" +
+        encodeURIComponent(device);
 
-        if (from && to) {
-          url += "&from=" + encodeURIComponent(from) + "&to=" + encodeURIComponent(to);
-        }
+      if (from && to) {
+        url += "&from=" + encodeURIComponent(from) + "&to=" + encodeURIComponent(to);
+      }
 
-        url += "&t=" + Date.now();
+      url += "&t=" + Date.now();
 
-        const res = await fetch(url, {
-          method: "GET",
-          cache: "no-store"
-        });
+      const res = await fetch(url, {
+        method: "GET",
+        cache: "no-store"
+      });
 
-        const json = await res.json();
-        console.log("Histórico:", json);
+      const json = await res.json();
+      console.log("Histórico:", json);
 
-        if (!json.ok || !json.data || json.data.length === 0) {
-          document.getElementById("error").innerText = "No hay datos para graficar";
-          if (chartVoltageAN) {
-            chartVoltageAN.destroy();
-            chartVoltageAN = null;
+      if (!json.ok || !json.data || json.data.length === 0) {
+        document.getElementById("error").innerText = "No hay datos para graficar";
+        return;
+      }
+
+      document.getElementById("error").innerText = "";
+
+      const labels = json.data.map(item => {
+        const fecha = new Date(item.created_at);
+        return fecha.toLocaleTimeString();
+      });
+
+      const values = json.data.map(item =>
+        item.voltage_an !== null ? Number(item.voltage_an) : null
+      );
+
+      const canvas = document.getElementById("chartVoltageAN");
+      const ctx = canvas.getContext("2d");
+
+      if (!chartVoltageAN) {
+        chartVoltageAN = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Voltaje A-N (V)",
+                data: values,
+                borderColor: "#2D9CDB",
+                backgroundColor: "rgba(45, 156, 219, 0.12)",
+                pointBackgroundColor: "#2D9CDB",
+                pointBorderColor: "#ffffff",
+                pointBorderWidth: 1.5,
+                pointRadius: 0,
+                pointHoverRadius: 4,
+                borderWidth: 3,
+                tension: 0.32,
+                fill: true,
+                spanGaps: true
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+            normalized: true,
+            interaction: {
+              mode: "index",
+              intersect: false
+            },
+            plugins: {
+              legend: {
+                display: true,
+                labels: {
+                  usePointStyle: true,
+                  pointStyle: "circle",
+                  color: "#334155",
+                  font: {
+                    size: 13,
+                    weight: "600"
+                  }
+                }
+              },
+              tooltip: {
+                backgroundColor: "rgba(17, 24, 39, 0.92)",
+                titleColor: "#fff",
+                bodyColor: "#fff",
+                borderColor: "rgba(255,255,255,0.08)",
+                borderWidth: 1,
+                padding: 12,
+                displayColors: true
+              }
+            },
+            scales: {
+              x: {
+                grid: {
+                  color: "rgba(148, 163, 184, 0.12)",
+                  drawBorder: false
+                },
+                ticks: {
+                  color: "#64748b",
+                  maxTicksLimit: 8,
+                  maxRotation: 0
+                }
+              },
+              y: {
+                grid: {
+                  color: "rgba(148, 163, 184, 0.14)",
+                  drawBorder: false
+                },
+                ticks: {
+                  color: "#64748b"
+                },
+                title: {
+                  display: true,
+                  text: "Voltaje (V)",
+                  color: "#475569",
+                  font: {
+                    size: 13,
+                    weight: "600"
+                  }
+                }
+              }
+            }
           }
-          return;
-        }
+        });
+      } else {
+        chartVoltageAN.data.labels = labels;
+        chartVoltageAN.data.datasets[0].data = values;
+        chartVoltageAN.update("none");
+      }
 
+    } catch (e) {
+      console.error("Error cargando curva:", e);
+      document.getElementById("error").innerText = "Error al consultar curva";
+    }
+  }
         document.getElementById("error").innerText = "";
 
         const labels = json.data.map(item => {
