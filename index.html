@@ -196,169 +196,168 @@
 
   <div class="error" id="error"></div>
 
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const device = params.get("device") || "FMAN-0001";
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const device = params.get("device") || "FMAN-0001";
 
-  let chartVoltageAN = null;
+    let chartVoltageAN = null;
 
-  function hoyTexto() {
-    const ahora = new Date();
-    const y = ahora.getFullYear();
-    const m = String(ahora.getMonth() + 1).padStart(2, "0");
-    const d = String(ahora.getDate()).padStart(2, "0");
-    return `${y}-${m}-${d}`;
-  }
-
-  async function actualizar() {
-    try {
-      const url =
-        "https://fm-power-analyzer-server.onrender.com/api/device/" +
-        device +
-        "?t=" + Date.now();
-
-      const res = await fetch(url, {
-        method: "GET",
-        cache: "no-store"
-      });
-
-      const data = await res.json();
-      console.log("Tiempo real:", data);
-
-      if (!data.ok) {
-        document.getElementById("error").innerText = "No se encontraron datos del dispositivo";
-        return;
-      }
-
-      document.getElementById("error").innerText = "";
-      document.getElementById("device").innerText = data.device_id;
-
-      document.getElementById("voltaje").innerText =
-        (data.data.voltage_an ?? "--") + " V";
-
-      document.getElementById("corriente").innerText =
-        (data.data.current_a ?? "--") + " A";
-
-      document.getElementById("frecuencia").innerText =
-        (data.data.frecuencia ?? data.data.frequency ?? "--") + " Hz";
-
-      document.getElementById("ptot").innerText =
-        (data.data.ptot ?? data.data.power_total ?? "--") + " kW";
-
-      document.getElementById("qtot").innerText =
-        (data.data.qtot ?? "--") + " kVAR";
-
-      document.getElementById("stot").innerText =
-        (data.data.stot ?? "--") + " kVA";
-
-    } catch (e) {
-      console.error("Error actualizando:", e);
-      document.getElementById("error").innerText = "Error conectando con la API";
+    function hoyTexto() {
+      const ahora = new Date();
+      const y = ahora.getFullYear();
+      const m = String(ahora.getMonth() + 1).padStart(2, "0");
+      const d = String(ahora.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
     }
-  }
 
-  async function cargarCurvaVoltaje() {
-    try {
-      const fromInput = document.getElementById("fromDate");
-      const toInput = document.getElementById("toDate");
-      const canvas = document.getElementById("chartVoltageAN");
+    async function actualizar() {
+      try {
+        const url =
+          "https://fm-power-analyzer-server.onrender.com/api/device/" +
+          device +
+          "?t=" + Date.now();
 
-      if (!fromInput || !toInput || !canvas) {
-        console.error("No se encontraron fromDate, toDate o chartVoltageAN en el HTML");
-        return;
+        const res = await fetch(url, {
+          method: "GET",
+          cache: "no-store"
+        });
+
+        const data = await res.json();
+        console.log("Tiempo real:", data);
+
+        if (!data.ok) {
+          document.getElementById("error").innerText = "No se encontraron datos del dispositivo";
+          return;
+        }
+
+        document.getElementById("error").innerText = "";
+        document.getElementById("device").innerText = data.device_id;
+
+        document.getElementById("voltaje").innerText =
+          (data.data.voltage_an ?? "--") + " V";
+
+        document.getElementById("corriente").innerText =
+          (data.data.current_a ?? "--") + " A";
+
+        document.getElementById("frecuencia").innerText =
+          (data.data.frecuencia ?? data.data.frequency ?? "--") + " Hz";
+
+        document.getElementById("ptot").innerText =
+          (data.data.ptot ?? data.data.power_total ?? "--") + " kW";
+
+        document.getElementById("qtot").innerText =
+          (data.data.qtot ?? "--") + " kVAR";
+
+        document.getElementById("stot").innerText =
+          (data.data.stot ?? "--") + " kVA";
+
+      } catch (e) {
+        console.error("Error actualizando:", e);
+        document.getElementById("error").innerText = "Error conectando con la API";
       }
+    }
 
-      const from = fromInput.value || hoyTexto();
-      const to = toInput.value || hoyTexto();
+    async function cargarCurvaVoltaje() {
+      try {
+        const from = document.getElementById("fromDate").value;
+        const to = document.getElementById("toDate").value;
 
-      const url =
-        "https://fm-power-analyzer-server.onrender.com/api/history" +
-        "?device_id=" + encodeURIComponent(device) +
-        "&from=" + encodeURIComponent(from) +
-        "&to=" + encodeURIComponent(to) +
-        "&t=" + Date.now();
+        let url =
+          "https://fm-power-analyzer-server.onrender.com/api/history?device_id=" +
+          encodeURIComponent(device);
 
-      const res = await fetch(url, {
-        method: "GET",
-        cache: "no-store"
-      });
+        if (from && to) {
+          url += "&from=" + encodeURIComponent(from) + "&to=" + encodeURIComponent(to);
+        }
 
-      const json = await res.json();
-      console.log("Histórico:", json);
+        url += "&t=" + Date.now();
 
-      if (!json.ok) {
-        document.getElementById("error").innerText = "No se pudo cargar el histórico";
-        return;
-      }
+        const res = await fetch(url, {
+          method: "GET",
+          cache: "no-store"
+        });
 
-      if (!Array.isArray(json.data) || json.data.length === 0) {
-        document.getElementById("error").innerText = "No hay datos históricos para esa fecha";
+        const json = await res.json();
+        console.log("Histórico:", json);
+
+        if (!json.ok || !json.data || json.data.length === 0) {
+          document.getElementById("error").innerText = "No hay datos para graficar";
+          if (chartVoltageAN) {
+            chartVoltageAN.destroy();
+            chartVoltageAN = null;
+          }
+          return;
+        }
+
+        document.getElementById("error").innerText = "";
+
+        const labels = json.data.map(item => {
+          const fecha = new Date(item.created_at);
+          return fecha.toLocaleString();
+        });
+
+        const values = json.data.map(item =>
+          item.voltage_an !== null ? Number(item.voltage_an) : null
+        );
+
+        const canvas = document.getElementById("chartVoltageAN");
+        const ctx = canvas.getContext("2d");
+
         if (chartVoltageAN) {
           chartVoltageAN.destroy();
-          chartVoltageAN = null;
         }
-        return;
-      }
 
-      document.getElementById("error").innerText = "";
-
-      const labels = json.data.map(item => {
-        const fecha = new Date(item.created_at);
-        return fecha.toLocaleTimeString();
-      });
-
-      const values = json.data.map(item => {
-        if (item.voltage_an === null || item.voltage_an === undefined) return null;
-        return Number(item.voltage_an);
-      });
-
-      const ctx = canvas.getContext("2d");
-
-      if (chartVoltageAN) {
-        chartVoltageAN.destroy();
-      }
-
-      chartVoltageAN = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: "Voltaje A-N (V)",
-              data: values,
-              borderWidth: 2,
-              tension: 0.2,
-              spanGaps: true
+        chartVoltageAN = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Voltaje A-N (V)",
+                data: values,
+                borderWidth: 2,
+                tension: 0.2,
+                spanGaps: true
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: true
+              }
+            },
+            scales: {
+              x: {
+                ticks: {
+                  autoSkip: true,
+                  maxTicksLimit: 10
+                }
+              },
+              y: {
+                beginAtZero: false
+              }
             }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false
-        }
-      });
+          }
+        });
 
-    } catch (e) {
-      console.error("Error cargando curva:", e);
-      document.getElementById("error").innerText = "Error cargando la curva de voltaje";
+      } catch (e) {
+        console.error("Error cargando curva:", e);
+        document.getElementById("error").innerText = "Error al consultar curva";
+      }
     }
-  }
 
-  window.addEventListener("load", () => {
-    const fromInput = document.getElementById("fromDate");
-    const toInput = document.getElementById("toDate");
-
-    if (fromInput && toInput) {
+    window.addEventListener("load", () => {
       const hoy = hoyTexto();
-      fromInput.value = hoy;
-      toInput.value = hoy;
-    }
+      document.getElementById("fromDate").value = hoy;
+      document.getElementById("toDate").value = hoy;
 
-    actualizar();
-    cargarCurvaVoltaje();
-    setInterval(actualizar, 2000);
-  });
-</script>
-
+      actualizar();
+      cargarCurvaVoltaje();
+      setInterval(actualizar, 2000);
+    });
+  </script>
 </body>
 </html>
