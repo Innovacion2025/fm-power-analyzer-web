@@ -4,197 +4,404 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FM POWER ANALYZER</title>
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
+    :root {
+      --bg: #eef3f8;
+      --panel: #ffffff;
+      --panel-soft: #f8fbfe;
+      --text: #18324b;
+      --muted: #6d7f90;
+      --border: #e3ebf3;
+      --shadow: 0 14px 35px rgba(18, 41, 64, 0.10);
+      --green: #1fa36b;
+      --green-dark: #178557;
+      --blue: #2d9cdb;
+      --blue-soft: rgba(45, 156, 219, 0.12);
+      --danger: #c0392b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
       margin: 0;
-      padding: 40px;
+      padding: 32px;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, #f7fbff 0%, #eef3f8 40%, #e9f0f7 100%);
+      color: var(--text);
     }
 
-    h1 {
-      text-align: center;
-      color: #2c3e50;
-      margin-bottom: 10px;
+    .page {
+      max-width: 1250px;
+      margin: 0 auto;
     }
 
-    .status {
-      text-align: center;
-      margin-bottom: 25px;
-      font-size: 18px;
+    .hero {
+      background: linear-gradient(135deg, #17324c 0%, #204c6f 100%);
+      color: #fff;
+      border-radius: 26px;
+      padding: 28px 30px;
+      box-shadow: 0 16px 40px rgba(20, 43, 67, 0.20);
+      margin-bottom: 26px;
     }
 
-    .container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       gap: 20px;
-      max-width: 950px;
-      margin: auto;
+      flex-wrap: wrap;
     }
 
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    .brand-title {
+      margin: 0;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+    }
+
+    .brand-subtitle {
+      margin-top: 6px;
+      font-size: 15px;
+      color: rgba(255,255,255,0.82);
+    }
+
+    .device-pill {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 16px;
+      padding: 14px 18px;
+      min-width: 220px;
       text-align: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .device-pill-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 6px;
+    }
+
+    .device-pill-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+      color: rgba(255,255,255,0.88);
+      font-size: 14px;
+      flex-wrap: wrap;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #2dd881;
+      box-shadow: 0 0 0 6px rgba(45, 216, 129, 0.14);
+      display: inline-block;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 26px;
+    }
+
+    .metric-card {
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 92px;
+      height: 92px;
+      background: radial-gradient(circle, rgba(45,156,219,0.10) 0%, rgba(45,156,219,0.00) 70%);
+      pointer-events: none;
+    }
+
+    .metric-label {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .metric-value {
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1;
+      word-break: break-word;
+    }
+
+    .metric-unit {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #8393a3;
+      font-weight: 600;
     }
 
     .chart-card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      max-width: 950px;
-      margin: 25px auto 0 auto;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
     }
 
-    .chart-title {
-      font-size: 22px;
-      font-weight: bold;
-      color: #2c3e50;
-      margin-bottom: 15px;
-      text-align: center;
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .chart-title-wrap h2 {
+      margin: 0;
+      font-size: 30px;
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .chart-subtitle {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 14px;
     }
 
     .chart-controls {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       flex-wrap: wrap;
-      justify-content: center;
       align-items: end;
-      margin-bottom: 20px;
+      justify-content: flex-end;
     }
 
-    .chart-controls label {
-      display: block;
+    .chart-field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .chart-field label {
+      font-size: 13px;
+      color: #516476;
+      font-weight: 700;
+    }
+
+    .chart-field input {
+      min-width: 155px;
+      padding: 11px 14px;
+      border-radius: 12px;
+      border: 1px solid #d7e0e8;
+      background: #fff;
+      color: #1f2d3a;
       font-size: 14px;
-      color: #555;
-      margin-bottom: 6px;
-      text-align: left;
+      outline: none;
+      transition: 0.2s ease;
     }
 
-    .chart-controls input,
-    .chart-controls button {
-      padding: 10px 12px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 14px;
+    .chart-field input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(45, 156, 219, 0.12);
     }
 
-    .chart-controls button {
-      background: #27ae60;
-      color: white;
+    .chart-button {
+      padding: 12px 18px;
       border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--green) 0%, #2bb673 100%);
+      color: white;
+      font-size: 14px;
+      font-weight: 800;
       cursor: pointer;
-      font-weight: bold;
+      box-shadow: 0 10px 20px rgba(43, 182, 115, 0.25);
+      transition: 0.2s ease;
     }
 
-    .chart-controls button:hover {
-      background: #219150;
+    .chart-button:hover {
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, var(--green-dark) 0%, #23a366 100%);
     }
 
-    .label {
-      color: #666;
-      font-size: 18px;
-    }
-
-    .value {
-      font-size: 32px;
-      font-weight: bold;
-      margin-top: 12px;
-      color: #27ae60;
-    }
-
-    .error {
-      text-align: center;
-      color: #c0392b;
-      margin-top: 20px;
-      font-weight: bold;
+    .chart-wrap {
+      background: linear-gradient(180deg, #f9fbfd 0%, #f6f9fc 100%);
+      border: 1px solid #e6edf4;
+      border-radius: 20px;
+      padding: 18px;
     }
 
     #chartVoltageAN {
       width: 100%;
-      height: 350px !important;
+      height: 390px !important;
     }
 
-    @media (max-width: 900px) {
-      .container {
+    .error {
+      text-align: center;
+      color: var(--danger);
+      margin-top: 18px;
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    @media (max-width: 1000px) {
+      .cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        padding: 18px;
+      }
+
+      .hero {
+        padding: 22px 20px;
+      }
+
+      .brand-title {
+        font-size: 28px;
+      }
+
+      .cards-grid {
         grid-template-columns: 1fr;
       }
 
-      body {
-        padding: 20px;
+      .chart-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .chart-controls {
+        justify-content: flex-start;
+      }
+
+      .chart-title-wrap h2 {
+        font-size: 24px;
+      }
+
+      .metric-value {
+        font-size: 34px;
       }
     }
   </style>
 </head>
 <body>
+  <div class="page">
+    <section class="hero">
+      <div class="hero-top">
+        <div>
+          <h1 class="brand-title">FM POWER ANALYZER</h1>
+          <div class="brand-subtitle">Monitoreo en tiempo real y análisis histórico de variables eléctricas</div>
+        </div>
 
-  <h1>FM POWER ANALYZER</h1>
-
-  <div class="status">
-    Equipo: <b id="device">--</b>
-  </div>
-
-  <div class="container">
-    <div class="card">
-      <div class="label">Voltaje A-N</div>
-      <div class="value" id="voltaje">--</div>
-    </div>
-
-    <div class="card">
-      <div class="label">Corriente</div>
-      <div class="value" id="corriente">--</div>
-    </div>
-
-    <div class="card">
-      <div class="label">Frecuencia</div>
-      <div class="value" id="frecuencia">--</div>
-    </div>
-
-    <div class="card">
-      <div class="label">Potencia Activa</div>
-      <div class="value" id="ptot">--</div>
-    </div>
-
-    <div class="card">
-      <div class="label">Potencia Reactiva</div>
-      <div class="value" id="qtot">--</div>
-    </div>
-
-    <div class="card">
-      <div class="label">Potencia Aparente</div>
-      <div class="value" id="stot">--</div>
-    </div>
-  </div>
-
-  <div class="chart-card">
-    <div class="chart-title">Curva de Voltaje A-N</div>
-
-    <div class="chart-controls">
-      <div>
-        <label for="fromDate">Desde</label>
-        <input type="date" id="fromDate">
+        <div class="device-pill">
+          <div class="device-pill-label">Equipo seleccionado</div>
+          <div class="device-pill-value" id="device">--</div>
+        </div>
       </div>
 
-      <div>
-        <label for="toDate">Hasta</label>
-        <input type="date" id="toDate">
+      <div class="status-row">
+        <span class="status-dot"></span>
+        <span>Conexión activa con la API y actualización automática del dashboard</span>
+      </div>
+    </section>
+
+    <section class="cards-grid">
+      <div class="metric-card">
+        <div class="metric-label">Voltaje A-N</div>
+        <div class="metric-value" id="voltaje">--</div>
+        <div class="metric-unit">Voltios (V)</div>
       </div>
 
-      <div>
-        <button onclick="cargarCurvaVoltaje()">Consultar curva</button>
+      <div class="metric-card">
+        <div class="metric-label">Corriente</div>
+        <div class="metric-value" id="corriente">--</div>
+        <div class="metric-unit">Amperios (A)</div>
       </div>
-    </div>
 
-    <canvas id="chartVoltageAN"></canvas>
+      <div class="metric-card">
+        <div class="metric-label">Frecuencia</div>
+        <div class="metric-value" id="frecuencia">--</div>
+        <div class="metric-unit">Hertz (Hz)</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Potencia Activa</div>
+        <div class="metric-value" id="ptot">--</div>
+        <div class="metric-unit">Kilovatios (kW)</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Potencia Reactiva</div>
+        <div class="metric-value" id="qtot">--</div>
+        <div class="metric-unit">Kilovar (kVAR)</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Potencia Aparente</div>
+        <div class="metric-value" id="stot">--</div>
+        <div class="metric-unit">Kilovolt-amperio (kVA)</div>
+      </div>
+    </section>
+
+    <section class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title-wrap">
+          <h2>Voltaje A-N</h2>
+          <div class="chart-subtitle">Curva histórica del equipo seleccionado por rango de fechas</div>
+        </div>
+
+        <div class="chart-controls">
+          <div class="chart-field">
+            <label for="fromDate">Desde</label>
+            <input type="date" id="fromDate">
+          </div>
+
+          <div class="chart-field">
+            <label for="toDate">Hasta</label>
+            <input type="date" id="toDate">
+          </div>
+
+          <div class="chart-field">
+            <label>&nbsp;</label>
+            <button class="chart-button" onclick="cargarCurvaVoltaje()">Actualizar curva</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <canvas id="chartVoltageAN"></canvas>
+      </div>
+
+      <div class="error" id="error"></div>
+    </section>
   </div>
-
-  <div class="error" id="error"></div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
@@ -315,8 +522,16 @@
               {
                 label: "Voltaje A-N (V)",
                 data: values,
-                borderWidth: 2,
-                tension: 0.2,
+                borderColor: "#2D9CDB",
+                backgroundColor: "rgba(45, 156, 219, 0.12)",
+                pointBackgroundColor: "#2D9CDB",
+                pointBorderColor: "#ffffff",
+                pointBorderWidth: 1.5,
+                pointRadius: 0,
+                pointHoverRadius: 4,
+                borderWidth: 3,
+                tension: 0.32,
+                fill: true,
                 spanGaps: true
               }
             ]
@@ -324,20 +539,62 @@
           options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: {
+              mode: "index",
+              intersect: false
+            },
             plugins: {
               legend: {
-                display: true
+                display: true,
+                labels: {
+                  usePointStyle: true,
+                  pointStyle: "circle",
+                  color: "#334155",
+                  font: {
+                    size: 13,
+                    weight: "600"
+                  }
+                }
+              },
+              tooltip: {
+                backgroundColor: "rgba(17, 24, 39, 0.92)",
+                titleColor: "#fff",
+                bodyColor: "#fff",
+                borderColor: "rgba(255,255,255,0.08)",
+                borderWidth: 1,
+                padding: 12,
+                displayColors: true
               }
             },
             scales: {
               x: {
+                grid: {
+                  color: "rgba(148, 163, 184, 0.12)",
+                  drawBorder: false
+                },
                 ticks: {
-                  autoSkip: true,
-                  maxTicksLimit: 10
+                  color: "#64748b",
+                  maxTicksLimit: 8,
+                  maxRotation: 0
                 }
               },
               y: {
-                beginAtZero: false
+                grid: {
+                  color: "rgba(148, 163, 184, 0.14)",
+                  drawBorder: false
+                },
+                ticks: {
+                  color: "#64748b"
+                },
+                title: {
+                  display: true,
+                  text: "Voltaje (V)",
+                  color: "#475569",
+                  font: {
+                    size: 13,
+                    weight: "600"
+                  }
+                }
               }
             }
           }
@@ -356,7 +613,11 @@
 
       actualizar();
       cargarCurvaVoltaje();
-      setInterval(actualizar, 2000);
+
+      setInterval(() => {
+        actualizar();
+        cargarCurvaVoltaje();
+      }, 2000);
     });
   </script>
 </body>
