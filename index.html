@@ -465,7 +465,7 @@
 
         <div class="control-group">
           <label>&nbsp;</label>
-          <button class="btn-main" onclick="consultarTodo()">Consultar curvas</button>
+          <button class="btn-main" onclick="consultarTodo(true)">Consultar curvas</button>
         </div>
       </div>
     </section>
@@ -962,34 +962,37 @@
   <!-- ===================================================== -->
   <!-- BLOQUE 18: ORQUESTADOR GENERAL                        -->
   <!-- ===================================================== -->
-  <script>
-    async function consultarTodo() {
-      try {
-        const day = document.getElementById("dayDate").value;
-        document.getElementById("selectedDateText").innerText = day ? formatearFechaCorta(day) : "--";
+<script>
+  async function consultarTodo(mostrarAviso = false) {
+    try {
+      const day = document.getElementById("dayDate").value;
+      document.getElementById("selectedDateText").innerText = day ? formatearFechaCorta(day) : "--";
 
-        const json = await obtenerHistorico();
+      const json = await obtenerHistorico();
 
-        if (!json.ok || !json.data || json.data.length === 0) {
+      if (!json.ok || !json.data || json.data.length === 0) {
+        if (mostrarAviso) {
           mostrarToast("No hay datos para graficar en la fecha seleccionada");
-          return;
         }
-
-        document.getElementById("error").innerText = "";
-
-        const labels = json.data.map(item => formatearHora(item.created_at));
-        const rows = json.data;
-
-        actualizarGraficaVoltaje(labels, rows);
-        actualizarGraficaCorriente(labels, rows);
-        actualizarGraficaFrecuencia(labels, rows);
-        actualizarGraficaPotencias(labels, rows);
-
-      } catch (e) {
-        document.getElementById("error").innerText = "Error al consultar las curvas";
+        return;
       }
+
+      cerrarToast();
+      document.getElementById("error").innerText = "";
+
+      const labels = json.data.map(item => formatearHora(item.created_at));
+      const rows = json.data;
+
+      actualizarGraficaVoltaje(labels, rows);
+      actualizarGraficaCorriente(labels, rows);
+      actualizarGraficaFrecuencia(labels, rows);
+      actualizarGraficaPotencias(labels, rows);
+
+    } catch (e) {
+      document.getElementById("error").innerText = "Error al consultar las curvas";
     }
-  </script>
+  }
+</script>
 
   <!-- ===================================================== -->
   <!-- BLOQUE 19: INICIALIZACION                             -->
@@ -999,13 +1002,13 @@
       const hoy = hoyTexto();
       document.getElementById("dayDate").value = hoy;
       document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
-
+  
       actualizarTiempoReal();
-      consultarTodo();
-
+      consultarTodo(false);
+  
       setInterval(() => {
         actualizarTiempoReal();
-        consultarTodo();
+        consultarTodo(false);
       }, 2000);
     });
   </script>
