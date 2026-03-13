@@ -451,24 +451,57 @@
     <!-- =================================================== -->
     <!-- BLOQUE 7: BARRA DE FILTRO                           -->
     <!-- =================================================== -->
-    <section class="toolbar">
-      <div class="toolbar-left">
-        <h2>Consulta histórica</h2>
-        <p>Seleccione un solo día para actualizar las cuatro curvas.</p>
-      </div>
+<!-- =================================================== -->
+<!-- BLOQUE 7: BARRA DE FILTRO Y EXPORTACION CSV         -->
+<!-- =================================================== -->
+<section class="toolbar">
 
-      <div class="toolbar-controls">
-        <div class="control-group">
-          <label for="dayDate">Fecha</label>
-          <input type="date" id="dayDate">
-        </div>
+  <!-- CONSULTA DE CURVAS -->
+  <div class="toolbar-left">
+    <h2>Consulta histórica</h2>
+    <p>Seleccione un día específico para visualizar las curvas.</p>
+  </div>
 
-        <div class="control-group">
-          <label>&nbsp;</label>
-          <button class="btn-main" onclick="consultarTodo(true)">Consultar curvas</button>
-        </div>
-      </div>
-    </section>
+  <div class="toolbar-controls">
+
+    <div class="control-group">
+      <label for="dayDate">Fecha curvas</label>
+      <input type="date" id="dayDate">
+    </div>
+
+    <div class="control-group">
+      <label>&nbsp;</label>
+      <button class="btn-main" onclick="consultarTodo()">Consultar curvas</button>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =================================================== -->
+<!-- BLOQUE 7A: EXPORTACION CSV                          -->
+<!-- =================================================== -->
+<section class="toolbar" style="margin-top:10px">
+  <div class="toolbar-left">
+    <h2>Exportar datos</h2>
+    <p>Descargar histórico en CSV por rango de fechas.</p>
+  </div>
+  <div class="toolbar-controls">
+    <div class="control-group">
+      <label for="csvFrom">Desde</label>
+      <input type="date" id="csvFrom">
+    </div>
+    <div class="control-group">
+      <label for="csvTo">Hasta</label>
+      <input type="date" id="csvTo">
+    </div>
+    <div class="control-group">
+      <label>&nbsp;</label>
+      <button class="btn-main" onclick="descargarCSV()">Descargar CSV</button>
+    </div>
+  </div>
+</section>
 
     <!-- =================================================== -->
     <!-- BLOQUE 8: GRAFICAS 2x2                              -->
@@ -617,6 +650,21 @@
 
     function cerrarToast() {
       document.getElementById("toast").classList.remove("show");
+    }
+
+    function descargarCSV() {
+      const from = document.getElementById("csvFrom").value;
+      const to = document.getElementById("csvTo").value;
+      if (!from || !to) {
+        alert("Seleccione el rango de fechas para descargar el CSV");
+        return;
+      }
+      const url =
+        "https://fm-power-analyzer-server.onrender.com/api/history/export" +
+        "?device_id=" + encodeURIComponent(device) +
+        "&from=" + encodeURIComponent(from) +
+        "&to=" + encodeURIComponent(to);
+      window.open(url, "_blank");
     }
   </script>
 
