@@ -1091,7 +1091,7 @@
   <!-- ===================================================== -->
   <!-- BLOQUE 18: ORQUESTADOR GENERAL                        -->
   <!-- ===================================================== -->
-  <script>
+    <script>
     async function consultarTodo() {
       try {
         console.log("consultarTodo ejecutado");
@@ -1117,12 +1117,14 @@
         if (!json.ok || !json.data) {
           document.getElementById("error").innerText = "Error consultando histórico";
           limpiarGraficas();
+          mostrarToast("No se pudo consultar el histórico");
           return;
         }
   
         if (json.data.length === 0) {
-          document.getElementById("error").innerText = "No hay datos para graficar en la fecha seleccionada";
+          document.getElementById("error").innerText = "";
           limpiarGraficas();
+          mostrarToast("No hay datos para graficar en la fecha seleccionada");
           return;
         }
   
@@ -1140,8 +1142,9 @@
   
       } catch (e) {
         console.error("Error en consultarTodo:", e);
-        document.getElementById("error").innerText = "Error al consultar las curvas";
+        document.getElementById("error").innerText = "";
         limpiarGraficas();
+        mostrarToast("Error al consultar las curvas");
       }
     }
   </script>
