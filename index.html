@@ -1185,16 +1185,16 @@
   
     if (csvFrom) csvFrom.value = hoy;
     if (csvTo) csvTo.value = hoy;
-  
+      
     // carga inicial
     actualizarTiempoReal();
     consultarTodo();
-  
+    
     // tiempo real de valores instantáneos
     setInterval(() => {
       actualizarTiempoReal();
     }, 2000);
-  
+    
     // actualización de gráficas históricas
     setInterval(() => {
       consultarTodo();
