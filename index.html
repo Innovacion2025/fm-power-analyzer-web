@@ -879,13 +879,30 @@
     }
   </script>
 
-  <!-- ===================================================== -->
-  <!-- BLOQUE 13: CONSULTA DEL HISTORICO                     -->
-  <!-- ===================================================== -->
+<!-- ===================================================== -->
+<!-- BLOQUE 13: CONSULTA DEL HISTORICO                     -->
+<!-- ===================================================== -->
   <script>
     async function obtenerHistorico() {
-      const url = obtenerUrlHistory();
+      const day = document.getElementById("dayDate").value;
+  
+      if (!day) {
+        throw new Error("No hay fecha seleccionada");
+      }
+  
+      const url =
+        "https://fm-power-analyzer-server.onrender.com/api/history" +
+        "?device_id=" + encodeURIComponent(device) +
+        "&from=" + encodeURIComponent(day) +
+        "&to=" + encodeURIComponent(day) +
+        "&t=" + Date.now();
+  
       const res = await fetch(url, { cache: "no-store" });
+  
+      if (!res.ok) {
+        throw new Error("La API respondió con error");
+      }
+  
       return await res.json();
     }
   </script>
@@ -1088,13 +1105,45 @@
     }
   </script>
 
-  <!-- ===================================================== -->
-  <!-- BLOQUE 18: ORQUESTADOR GENERAL                        -->
-  <!-- ===================================================== -->
-    <script>
+<!-- ===================================================== -->
+<!-- BLOQUE 18: ORQUESTADOR GENERAL                        -->
+<!-- ===================================================== -->
+  <script>
+    function limpiarGraficas() {
+      const labelsVacios = [];
+      const datosVacios = [];
+  
+      if (chartVoltageAN) {
+        chartVoltageAN.data.labels = labelsVacios;
+        chartVoltageAN.data.datasets[0].data = datosVacios;
+        chartVoltageAN.update("none");
+      }
+  
+      if (chartCurrentA) {
+        chartCurrentA.data.labels = labelsVacios;
+        chartCurrentA.data.datasets[0].data = datosVacios;
+        chartCurrentA.update("none");
+      }
+  
+      if (chartFrequency) {
+        chartFrequency.data.labels = labelsVacios;
+        chartFrequency.data.datasets[0].data = datosVacios;
+        chartFrequency.update("none");
+      }
+  
+      if (chartPowers) {
+        chartPowers.data.labels = labelsVacios;
+        chartPowers.data.datasets[0].data = datosVacios;
+        chartPowers.data.datasets[1].data = datosVacios;
+        chartPowers.data.datasets[2].data = datosVacios;
+        chartPowers.update("none");
+      }
+    }
+  
     async function consultarTodo() {
       try {
-        console.log("consultarTodo ejecutado");
+        cerrarToast();
+        document.getElementById("error").innerText = "";
   
         const dayInput = document.getElementById("dayDate");
         const selectedDateText = document.getElementById("selectedDateText");
@@ -1104,7 +1153,8 @@
         const day = dayInput.value;
   
         if (!day) {
-          document.getElementById("error").innerText = "Seleccione una fecha";
+          limpiarGraficas();
+          mostrarToast("Seleccione una fecha para consultar");
           return;
         }
   
@@ -1114,21 +1164,19 @@
   
         const json = await obtenerHistorico();
   
-        if (!json.ok || !json.data) {
-          document.getElementById("error").innerText = "Error consultando histórico";
+        console.log("Respuesta histórico:", json);
+  
+        if (!json || json.ok !== true || !Array.isArray(json.data)) {
           limpiarGraficas();
-          mostrarToast("No se pudo consultar el histórico");
+          mostrarToast("Error consultando el histórico");
           return;
         }
   
         if (json.data.length === 0) {
-          document.getElementById("error").innerText = "";
           limpiarGraficas();
           mostrarToast("No hay datos para graficar en la fecha seleccionada");
           return;
         }
-  
-        document.getElementById("error").innerText = "";
   
         const labels = json.data.map(item => formatearHora(item.created_at));
         const rows = json.data;
@@ -1142,7 +1190,6 @@
   
       } catch (e) {
         console.error("Error en consultarTodo:", e);
-        document.getElementById("error").innerText = "";
         limpiarGraficas();
         mostrarToast("Error al consultar las curvas");
       }
@@ -1165,7 +1212,6 @@
       if (csvFrom) csvFrom.value = hoy;
       if (csvTo) csvTo.value = hoy;
   
-      // SOLO tiempo real de valores instantáneos
       actualizarTiempoReal();
   
       setInterval(() => {
