@@ -1140,16 +1140,9 @@
       }
     }
   
-    async function consultarTodo() {
+    async function consultarTodo(manual = true) {
       try {
-  
         const errorBox = document.getElementById("error");
-  
-        cerrarToast();
-        limpiarGraficas();
-  
-        errorBox.innerText = "Cargando datos del día seleccionado...";
-  
         const dayInput = document.getElementById("dayDate");
         const selectedDateText = document.getElementById("selectedDateText");
   
@@ -1158,8 +1151,12 @@
         const day = dayInput.value;
   
         if (!day) {
-          errorBox.innerText = "";
-          mostrarToast("Seleccione una fecha");
+          if (manual) {
+            cerrarToast();
+            limpiarGraficas();
+            errorBox.innerText = "";
+            mostrarToast("Seleccione una fecha");
+          }
           return;
         }
   
@@ -1167,17 +1164,30 @@
           selectedDateText.innerText = formatearFechaCorta(day);
         }
   
+        if (manual) {
+          cerrarToast();
+          limpiarGraficas();
+          errorBox.innerText = "Cargando datos del día seleccionado...";
+        }
+  
         const json = await obtenerHistorico();
   
         if (!json || json.ok !== true || !Array.isArray(json.data)) {
-          errorBox.innerText = "";
-          mostrarToast("Error consultando el histórico");
+          if (manual) {
+            errorBox.innerText = "";
+            limpiarGraficas();
+            mostrarToast("Error consultando el histórico");
+          }
           return;
         }
   
         if (json.data.length === 0) {
+          limpiarGraficas();
           errorBox.innerText = "";
-          mostrarToast("No hay datos para graficar en la fecha seleccionada");
+  
+          if (manual) {
+            mostrarToast("No hay datos para graficar en la fecha seleccionada");
+          }
           return;
         }
   
@@ -1193,12 +1203,19 @@
   
       } catch (e) {
         console.error("Error en consultarTodo:", e);
-        document.getElementById("error").innerText = "";
-        mostrarToast("Error al consultar las curvas");
+  
+        if (manual) {
+          document.getElementById("error").innerText = "";
+          limpiarGraficas();
+          mostrarToast("Error al consultar las curvas");
+        }
       }
     }
   </script>
 
+<!-- ===================================================== -->
+<!-- BLOQUE 19: INICIALIZACION                             -->
+<!-- ===================================================== -->
 <!-- ===================================================== -->
 <!-- BLOQUE 19: INICIALIZACION                             -->
 <!-- ===================================================== -->
@@ -1222,12 +1239,12 @@
         actualizarTiempoReal();
       }, 2000);
   
-      // consultar curvas una vez al inicio
-      consultarTodo();
+      // carga inicial de curvas sin limpiar ni mostrar toast
+      consultarTodo(false);
   
-      // refrescar curvas cada 10 segundos
+      // auto-refresh de curvas sin comportamiento "manual"
       setInterval(() => {
-        consultarTodo();
+        consultarTodo(false);
       }, 10000);
     });
   </script>
