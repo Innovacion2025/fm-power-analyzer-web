@@ -1125,34 +1125,45 @@
 </script>
 
 <script>
-  async function consultarTodo(mostrarAviso = false) {
+  async function consultarTodo() {
     try {
-      const day = document.getElementById("dayDate").value;
-      document.getElementById("selectedDateText").innerText = day ? formatearFechaCorta(day) : "--";
-
+      const dayInput = document.getElementById("dayDate");
+      const selectedDateText = document.getElementById("selectedDateText");
+  
+      if (!dayInput) return;
+  
+      const day = dayInput.value;
+  
+      if (selectedDateText) {
+        selectedDateText.innerText = day ? formatearFechaCorta(day) : "--";
+      }
+  
       const json = await obtenerHistorico();
-
-      if (!json.ok || !json.data || json.data.length === 0) {
-        limpiarGraficas();
-
-        if (mostrarAviso) {
-          mostrarToast("No hay datos para graficar en la fecha seleccionada");
-        }
+  
+      if (!json.ok || !json.data) {
+        document.getElementById("error").innerText = "Error consultando histórico";
         return;
       }
-
-      cerrarToast();
+  
+      if (json.data.length === 0) {
+        document.getElementById("error").innerText = "No hay datos para graficar en la fecha seleccionada";
+        return;
+      }
+  
       document.getElementById("error").innerText = "";
-
+  
       const labels = json.data.map(item => formatearHora(item.created_at));
       const rows = json.data;
-
+  
       actualizarGraficaVoltaje(labels, rows);
       actualizarGraficaCorriente(labels, rows);
       actualizarGraficaFrecuencia(labels, rows);
       actualizarGraficaPotencias(labels, rows);
-
+  
+      console.log("Gráficas actualizadas:", new Date().toLocaleTimeString(), "puntos:", rows.length);
+  
     } catch (e) {
+      console.error("Error en consultarTodo:", e);
       document.getElementById("error").innerText = "Error al consultar las curvas";
     }
   }
@@ -1163,17 +1174,32 @@
   <!-- ===================================================== -->
   <script>
     window.addEventListener("load", () => {
-      const hoy = hoyTexto();
-      document.getElementById("dayDate").value = hoy;
-      document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
+    const hoy = hoyTexto();
   
+    document.getElementById("dayDate").value = hoy;
+    document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
+  
+    // si quieres, inicializa también el rango CSV con hoy
+    const csvFrom = document.getElementById("csvFrom");
+    const csvTo = document.getElementById("csvTo");
+  
+    if (csvFrom) csvFrom.value = hoy;
+    if (csvTo) csvTo.value = hoy;
+  
+    // carga inicial
+    actualizarTiempoReal();
+    consultarTodo();
+  
+    // tiempo real de valores instantáneos
+    setInterval(() => {
       actualizarTiempoReal();
-      consultarTodo(false);
+    }, 2000);
   
-      setInterval(() => {
-        actualizarTiempoReal();
-        }, 2000);
-    });
-  </script>
+    // actualización de gráficas históricas
+    setInterval(() => {
+      consultarTodo();
+    }, 10000);
+  });
+</script>
 </body>
 </html>
