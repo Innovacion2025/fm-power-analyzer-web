@@ -290,186 +290,111 @@
   </style>
 
 <!-- ===================================================== -->
-<!-- BLOQUE 4: BARRA PREMIUM DE FILTROS                    -->
+<!-- BLOQUE 4: ESTILOS BARRA HISTORIAL                     -->
 <!-- ===================================================== -->
   <style>
-    .toolbar-main {
-      display: grid;
-      grid-template-columns: 1.2fr 2fr;
-      align-items: center;
-      gap: 24px;
-      background: rgba(255,255,255,0.96);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 18px 20px;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.06);
-      margin-bottom: 14px;
-    }
   
-    .toolbar-main-left {
-      min-width: 240px;
-    }
+  .toolbar-main{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:30px;
+    background:white;
+    border:1px solid #e5e9e6;
+    border-radius:18px;
+    padding:18px 22px;
+    box-shadow:0 8px 18px rgba(0,0,0,0.05);
+    margin-bottom:14px;
+  }
   
-    .toolbar-main-title {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 900;
-      color: var(--green);
-      line-height: 1.1;
-    }
+  .toolbar-main-left{
+    max-width:420px;
+  }
   
-    .toolbar-main-subtitle {
-      margin: 6px 0 0 0;
-      font-size: 13px;
-      color: #738089;
-    }
+  .toolbar-main-title{
+    margin:0;
+    font-size:22px;
+    font-weight:900;
+    color:var(--green);
+  }
   
-    .toolbar-main-right {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+  .toolbar-main-subtitle{
+    margin:4px 0 0 0;
+    font-size:13px;
+    color:#7c878e;
+  }
   
-    .toolbar-premium {
-      display: flex;
-      align-items: end;
-      justify-content: center;
-      gap: 26px;
-      flex-wrap: wrap;
-      width: 100%;
-    }
+  .toolbar-main-right{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:26px;
+  }
   
-    .toolbar-section {
-      display: flex;
-      align-items: end;
-      gap: 10px;
-      flex-wrap: nowrap;
-      position: relative;
-    }
+  .toolbar-group{
+    display:flex;
+    align-items:end;
+    gap:12px;
+  }
   
-    .toolbar-section + .toolbar-section {
-      padding-left: 22px;
-    }
+  .toolbar-group + .toolbar-group{
+    padding-left:26px;
+    border-left:1px solid #e5e9e6;
+  }
   
-    .toolbar-section + .toolbar-section::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 8px;
-      bottom: 8px;
-      width: 1px;
-      background: #e4e8e5;
-    }
+  .toolbar-group-title{
+    position:absolute;
+    margin-top:-18px;
+    font-size:11px;
+    font-weight:800;
+    color:#8b959c;
+    letter-spacing:0.8px;
+  }
   
-    .toolbar-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      height: 38px;
-      padding: 0 12px;
-      border-radius: 10px;
-      background: #f5f7f6;
-      border: 1px solid #e2e8e4;
-      color: var(--green);
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      white-space: nowrap;
-    }
+  .control-group{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
   
-    .control-group {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
+  .control-group label{
+    font-size:11px;
+    color:#7a858c;
+    font-weight:600;
+  }
   
-    .control-group label {
-      font-size: 11px;
-      font-weight: 600;
-      color: #7a858c;
-    }
+  .control-group input{
+    height:38px;
+    padding:0 12px;
+    border-radius:10px;
+    border:1px solid #d9dfdc;
+    font-family:'Rubik',sans-serif;
+  }
   
-    .control-group input {
-      min-width: 150px;
-      height: 38px;
-      padding: 0 12px;
-      border-radius: 10px;
-      border: 1px solid #d9dfdc;
-      background: #fff;
-      font-family: 'Rubik', sans-serif;
-      font-size: 13px;
-      outline: none;
-    }
+  .btn-main,
+  .btn-secondary{
+    height:38px;
+    padding:0 16px;
+    border-radius:10px;
+    border:none;
+    font-weight:800;
+    font-family:'Rubik',sans-serif;
+    cursor:pointer;
+  }
   
-    .control-group input:focus {
-      border-color: var(--orange);
-      box-shadow: 0 0 0 3px rgba(236,99,31,0.10);
-    }
+  .btn-main{
+    background:linear-gradient(135deg,var(--orange),#ff7b36);
+    color:white;
+  }
   
-    .btn-main,
-    .btn-secondary {
-      height: 38px;
-      padding: 0 16px;
-      border: none;
-      border-radius: 10px;
-      font-family: 'Rubik', sans-serif;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      white-space: nowrap;
-    }
+  .btn-secondary{
+    background:var(--green);
+    color:white;
+  }
   
-    .btn-main {
-      background: linear-gradient(135deg, var(--orange) 0%, #ff7b36 100%);
-      color: white;
-      box-shadow: 0 8px 16px rgba(236,99,31,0.22);
-    }
-  
-    .btn-secondary {
-      background: linear-gradient(135deg, var(--green) 0%, #556c5d 100%);
-      color: white;
-      box-shadow: 0 8px 16px rgba(65,84,71,0.18);
-    }
-  
-    .btn-main:hover,
-    .btn-secondary:hover {
-      transform: translateY(-1px);
-    }
-  
-    @media (max-width: 1200px) {
-      .toolbar-main {
-        grid-template-columns: 1fr;
-        gap: 18px;
-      }
-  
-      .toolbar-main-right {
-        justify-content: flex-start;
-      }
-  
-      .toolbar-premium {
-        justify-content: flex-start;
-      }
-    }
-  
-    @media (max-width: 900px) {
-      .toolbar-section {
-        flex-wrap: wrap;
-      }
-  
-      .toolbar-section + .toolbar-section {
-        padding-left: 0;
-      }
-  
-      .toolbar-section + .toolbar-section::before {
-        display: none;
-      }
-  
-      .toolbar-premium {
-        gap: 14px;
-      }
-    }
   </style>
+  
+    
   <!-- ===================================================== -->
   <!-- BLOQUE 5: GRID DE GRAFICAS 2x2                        -->
   <!-- ===================================================== -->
@@ -595,59 +520,48 @@
     </section>
 
 <!-- =================================================== -->
-<!-- BLOQUE 7: BARRA UNIFICADA DE CONSULTA Y EXPORTACION -->
+<!-- BLOQUE 7: HISTORIAL Y EXPORTACION                   -->
 <!-- =================================================== -->
     <section class="toolbar-main">
-    
       <div class="toolbar-main-left">
         <h2 class="toolbar-main-title">Historial y exportación</h2>
         <p class="toolbar-main-subtitle">
           Consulte curvas por un día específico y descargue archivos CSV por rango de fechas.
         </p>
       </div>
-
       <div class="toolbar-main-right">
-        <div class="toolbar-controls-compact">
-      
-          <!-- CONSULTA DE CURVAS -->
-          <div class="toolbar-group">
-            <div class="toolbar-group-title">Curvas</div>
-      
-            <div class="control-group">
-              <label for="dayDate">Fecha</label>
-              <input type="date" id="dayDate">
-            </div>
-      
-            <div class="control-group">
-              <label>&nbsp;</label>
-              <button class="btn-main" onclick="consultarTodo()">Consultar</button>
-            </div>
+        <!-- CURVAS -->
+        <div class="toolbar-group" style="position:relative">
+          <div class="toolbar-group-title">CURVAS</div>
+          <div class="control-group">
+            <label for="dayDate">Fecha</label>
+            <input type="date" id="dayDate">
           </div>
-      
-          <!-- EXPORTACION CSV -->
-          <div class="toolbar-group">
-            <div class="toolbar-group-title">Exportación CSV</div>
-      
-            <div class="control-group">
-              <label for="csvFrom">Desde</label>
-              <input type="date" id="csvFrom">
-            </div>
-      
-            <div class="control-group">
-              <label for="csvTo">Hasta</label>
-              <input type="date" id="csvTo">
-            </div>
-      
-            <div class="control-group">
-              <label>&nbsp;</label>
-              <button class="btn-secondary" onclick="descargarCSV()">Descargar CSV</button>
-            </div>
+          <div class="control-group">
+            <label>&nbsp;</label>
+            <button class="btn-main" onclick="consultarTodo()">Consultar</button>
           </div>
-      
+        </div>
+        <!-- EXPORTACION CSV -->
+        <div class="toolbar-group" style="position:relative">
+          <div class="toolbar-group-title">EXPORTACIÓN CSV</div>
+          <div class="control-group">
+            <label for="csvFrom">Desde</label>
+            <input type="date" id="csvFrom">
+          </div>
+          <div class="control-group">
+            <label for="csvTo">Hasta</label>
+            <input type="date" id="csvTo">
+          </div>
+          <div class="control-group">
+            <label>&nbsp;</label>
+            <button class="btn-secondary" onclick="descargarCSV()">Descargar CSV</button>
+          </div>
         </div>
       </div>
     </section>
 
+    
     <!-- =================================================== -->
     <!-- BLOQUE 8: GRAFICAS 2x2                              -->
     <!-- =================================================== -->
