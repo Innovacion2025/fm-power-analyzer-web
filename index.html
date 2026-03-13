@@ -390,7 +390,7 @@
   }
   
   .btn-secondary{
-    background:var(--green);
+    background:linear-gradient(135deg,var(--orange),#ff7b36);
     color:white;
   }
   
@@ -524,46 +524,42 @@
 <!-- =================================================== -->
 <!-- BLOQUE 7: HISTORIAL Y EXPORTACION                   -->
 <!-- =================================================== -->
-    <section class="toolbar-main">
-      <div class="toolbar-main-left">
-        <h2 class="toolbar-main-title">Historial y exportación</h2>
-        <p class="toolbar-main-subtitle">
-          Consulte curvas diarias o descargue archivos CSV por rango de fechas.
-        </p>
-      </div>
-      <div class="toolbar-main-right">
-        <!-- CURVAS -->
-        <div class="toolbar-group" style="position:relative">
-          <div class="toolbar-group-title">CURVAS</div>
-          <div class="control-group">
-            <label for="dayDate">Fecha</label>
-            <input type="date" id="dayDate">
-          </div>
-          <div class="control-group">
-            <label>&nbsp;</label>
-            <button class="btn-main" onclick="consultarTodo()">Consultar</button>
-          </div>
-        </div>
-        <!-- EXPORTACION CSV -->
-        <div class="toolbar-group" style="position:relative">
-          <div class="toolbar-group-title">EXPORTACIÓN CSV</div>
-          <div class="control-group">
-            <label for="csvFrom">Desde</label>
-            <input type="date" id="csvFrom">
-          </div>
-          <div class="control-group">
-            <label for="csvTo">Hasta</label>
-            <input type="date" id="csvTo">
-          </div>
-          <div class="control-group">
-            <label>&nbsp;</label>
-            <button class="btn-secondary" onclick="descargarCSV()">Descargar CSV</button>
-          </div>
+  <section class="toolbar-main">
+    <div class="toolbar-main-left">
+      <h2 class="toolbar-main-title">Historial y exportación</h2>
+      <p class="toolbar-main-subtitle">
+        Seleccione una fecha para consultar curvas diarias o descargue archivos CSV por rango de fechas.
+      </p>
+    </div>
+    <div class="toolbar-main-right">
+      <!-- CURVAS -->
+      <div class="toolbar-group" style="position:relative">
+        <div class="toolbar-group-title">CURVAS</div>
+        <div class="control-group">
+          <label for="dayDate">Fecha</label>
+          <input type="date" id="dayDate">
         </div>
       </div>
-    </section>
-
-    
+  
+      <!-- EXPORTACION CSV -->
+      <div class="toolbar-group" style="position:relative">
+        <div class="toolbar-group-title">EXPORTACIÓN CSV</div>
+        <div class="control-group">
+          <label for="csvFrom">Desde</label>
+          <input type="date" id="csvFrom">
+        </div>
+        <div class="control-group">
+          <label for="csvTo">Hasta</label>
+          <input type="date" id="csvTo">
+        </div>
+        <div class="control-group">
+          <label>&nbsp;</label>
+          <button class="btn-secondary" onclick="descargarCSV()">Descargar CSV</button>
+        </div>
+      </div>
+    </div>
+  </section>
+      
     <!-- =================================================== -->
     <!-- BLOQUE 8: GRAFICAS 2x2                              -->
     <!-- =================================================== -->
@@ -1140,7 +1136,7 @@
       }
     }
   
-    async function consultarTodo(manual = true) {
+    async function consultarTodo() {
       try {
         const errorBox = document.getElementById("error");
         const dayInput = document.getElementById("dayDate");
@@ -1150,13 +1146,13 @@
   
         const day = dayInput.value;
   
+        cerrarToast();
+        limpiarGraficas();
+        errorBox.innerText = "Cargando datos del día seleccionado...";
+  
         if (!day) {
-          if (manual) {
-            cerrarToast();
-            limpiarGraficas();
-            errorBox.innerText = "";
-            mostrarToast("Seleccione una fecha");
-          }
+          errorBox.innerText = "";
+          mostrarToast("Seleccione una fecha");
           return;
         }
   
@@ -1164,30 +1160,19 @@
           selectedDateText.innerText = formatearFechaCorta(day);
         }
   
-        if (manual) {
-          cerrarToast();
-          limpiarGraficas();
-          errorBox.innerText = "Cargando datos del día seleccionado...";
-        }
-  
         const json = await obtenerHistorico();
   
         if (!json || json.ok !== true || !Array.isArray(json.data)) {
-          if (manual) {
-            errorBox.innerText = "";
-            limpiarGraficas();
-            mostrarToast("Error consultando el histórico");
-          }
+          errorBox.innerText = "";
+          limpiarGraficas();
+          mostrarToast("Error consultando el histórico");
           return;
         }
   
         if (json.data.length === 0) {
-          limpiarGraficas();
           errorBox.innerText = "";
-  
-          if (manual) {
-            mostrarToast("No hay datos para graficar en la fecha seleccionada");
-          }
+          limpiarGraficas();
+          mostrarToast("No hay datos para graficar en la fecha seleccionada");
           return;
         }
   
@@ -1203,12 +1188,9 @@
   
       } catch (e) {
         console.error("Error en consultarTodo:", e);
-  
-        if (manual) {
-          document.getElementById("error").innerText = "";
-          limpiarGraficas();
-          mostrarToast("Error al consultar las curvas");
-        }
+        document.getElementById("error").innerText = "";
+        limpiarGraficas();
+        mostrarToast("Error al consultar las curvas");
       }
     }
   </script>
@@ -1232,20 +1214,26 @@
       if (csvFrom) csvFrom.value = hoy;
       if (csvTo) csvTo.value = hoy;
   
-      // valores instantáneos
       actualizarTiempoReal();
+      consultarTodo();
   
       setInterval(() => {
         actualizarTiempoReal();
       }, 2000);
   
-      // carga inicial de curvas sin limpiar ni mostrar toast
-      consultarTodo(false);
-  
-      // auto-refresh de curvas sin comportamiento "manual"
       setInterval(() => {
-        consultarTodo(false);
+        consultarTodo();
       }, 10000);
+    });
+  
+    document.addEventListener("DOMContentLoaded", () => {
+      const dayDate = document.getElementById("dayDate");
+  
+      if (dayDate) {
+        dayDate.addEventListener("change", () => {
+          consultarTodo();
+        });
+      }
     });
   </script>
 </body>
