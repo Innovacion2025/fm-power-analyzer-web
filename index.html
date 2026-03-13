@@ -289,58 +289,88 @@
     }
   </style>
 
-  <!-- ===================================================== -->
-  <!-- BLOQUE 4: BARRA DE FILTRO                             -->
-  <!-- ===================================================== -->
+<!-- ===================================================== -->
+<!-- BLOQUE 4: BARRA SUPERIOR DE FILTROS                   -->
+<!-- ===================================================== -->
   <style>
-    .toolbar {
+    .toolbar-main {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 16px;
+      gap: 20px;
       flex-wrap: wrap;
       background: var(--panel);
       border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 14px 16px;
+      border-radius: 20px;
+      padding: 16px 18px;
       box-shadow: var(--shadow-soft);
       margin-bottom: 14px;
     }
-
-    .toolbar-left h2 {
+  
+    .toolbar-main-left {
+      min-width: 220px;
+      flex: 1;
+    }
+  
+    .toolbar-main-title {
       margin: 0;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 800;
       color: var(--green);
     }
-
-    .toolbar-left p {
-      margin: 3px 0 0 0;
+  
+    .toolbar-main-subtitle {
+      margin: 4px 0 0 0;
       font-size: 12px;
-      color: #6f7b83;
+      color: #738089;
     }
-
-    .toolbar-controls {
+  
+    .toolbar-main-right {
       display: flex;
-      gap: 10px;
+      gap: 18px;
       flex-wrap: wrap;
       align-items: end;
+      justify-content: flex-end;
     }
-
+  
+    .toolbar-group {
+      display: flex;
+      gap: 10px;
+      align-items: end;
+      flex-wrap: wrap;
+      padding-left: 16px;
+      border-left: 1px solid #e3e7e4;
+    }
+  
+    .toolbar-group:first-child {
+      border-left: none;
+      padding-left: 0;
+    }
+  
+    .toolbar-group-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #7d8a91;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+      width: 100%;
+    }
+  
     .control-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }
-
+  
     .control-group label {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 500;
-      color: #6f7b83;
+      color: #7a858c;
     }
-
+  
     .control-group input {
-      min-width: 165px;
+      min-width: 150px;
       padding: 9px 11px;
       border-radius: 10px;
       border: 1px solid #d9dfdc;
@@ -349,27 +379,62 @@
       font-size: 13px;
       outline: none;
     }
-
+  
     .control-group input:focus {
       border-color: var(--orange);
       box-shadow: 0 0 0 3px rgba(236,99,31,0.10);
     }
-
-    .btn-main {
+  
+    .btn-main,
+    .btn-secondary {
       padding: 10px 14px;
       border: none;
       border-radius: 10px;
-      background: linear-gradient(135deg, var(--orange) 0%, #ff7b36 100%);
-      color: white;
       font-family: 'Rubik', sans-serif;
       font-size: 13px;
       font-weight: 800;
       cursor: pointer;
+      white-space: nowrap;
+    }
+  
+    .btn-main {
+      background: linear-gradient(135deg, var(--orange) 0%, #ff7b36 100%);
+      color: white;
       box-shadow: 0 8px 16px rgba(236,99,31,0.22);
     }
-
-    .btn-main:hover {
+  
+    .btn-secondary {
+      background: var(--green);
+      color: white;
+      box-shadow: 0 8px 16px rgba(65,84,71,0.18);
+    }
+  
+    .btn-main:hover,
+    .btn-secondary:hover {
       transform: translateY(-1px);
+    }
+  
+    @media (max-width: 1100px) {
+      .toolbar-main {
+        align-items: stretch;
+      }
+  
+      .toolbar-main-right {
+        justify-content: flex-start;
+      }
+  
+      .toolbar-group {
+        border-left: none;
+        padding-left: 0;
+        width: 100%;
+        padding-top: 8px;
+        border-top: 1px solid #ecefed;
+      }
+  
+      .toolbar-group:first-child {
+        border-top: none;
+        padding-top: 0;
+      }
     }
   </style>
 
@@ -498,56 +563,56 @@
     </section>
 
 <!-- =================================================== -->
-<!-- BLOQUE 7: BARRA DE FILTRO Y EXPORTACION CSV         -->
+<!-- BLOQUE 7: BARRA UNIFICADA DE CONSULTA Y EXPORTACION -->
 <!-- =================================================== -->
-<section class="toolbar">
-
-  <!-- CONSULTA DE CURVAS -->
-  <div class="toolbar-left">
-    <h2>Consulta histórica</h2>
-    <p>Seleccione un día específico para visualizar las curvas.</p>
-  </div>
-
-  <div class="toolbar-controls">
-
-    <div class="control-group">
-      <label for="dayDate">Fecha curvas</label>
-      <input type="date" id="dayDate">
-    </div>
-
-    <div class="control-group">
-      <label>&nbsp;</label>
-      <button class="btn-main" onclick="consultarTodo()">Consultar curvas</button>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =================================================== -->
-<!-- BLOQUE 7A: EXPORTACION CSV                          -->
-<!-- =================================================== -->
-<section class="toolbar" style="margin-top:10px">
-  <div class="toolbar-left">
-    <h2>Exportar datos</h2>
-    <p>Descargar histórico en CSV por rango de fechas.</p>
-  </div>
-  <div class="toolbar-controls">
-    <div class="control-group">
-      <label for="csvFrom">Desde</label>
-      <input type="date" id="csvFrom">
-    </div>
-    <div class="control-group">
-      <label for="csvTo">Hasta</label>
-      <input type="date" id="csvTo">
-    </div>
-    <div class="control-group">
-      <label>&nbsp;</label>
-      <button class="btn-main" onclick="descargarCSV()">Descargar CSV</button>
-    </div>
-  </div>
-</section>
+    <section class="toolbar-main">
+    
+      <div class="toolbar-main-left">
+        <h2 class="toolbar-main-title">Historial y exportación</h2>
+        <p class="toolbar-main-subtitle">
+          Consulte curvas por un día específico y descargue archivos CSV por rango de fechas.
+        </p>
+      </div>
+    
+      <div class="toolbar-main-right">
+    
+        <!-- CONSULTA DE CURVAS -->
+        <div class="toolbar-group">
+          <div class="toolbar-group-title">Curvas</div>
+    
+          <div class="control-group">
+            <label for="dayDate">Fecha</label>
+            <input type="date" id="dayDate">
+          </div>
+    
+          <div class="control-group">
+            <label>&nbsp;</label>
+            <button class="btn-main" onclick="consultarTodo()">Consultar</button>
+          </div>
+        </div>
+    
+        <!-- EXPORTACION CSV -->
+        <div class="toolbar-group">
+          <div class="toolbar-group-title">Exportación CSV</div>
+    
+          <div class="control-group">
+            <label for="csvFrom">Desde</label>
+            <input type="date" id="csvFrom">
+          </div>
+    
+          <div class="control-group">
+            <label for="csvTo">Hasta</label>
+            <input type="date" id="csvTo">
+          </div>
+    
+          <div class="control-group">
+            <label>&nbsp;</label>
+            <button class="btn-secondary" onclick="descargarCSV()">Descargar CSV</button>
+          </div>
+        </div>
+    
+      </div>
+    </section>
 
     <!-- =================================================== -->
     <!-- BLOQUE 8: GRAFICAS 2x2                              -->
