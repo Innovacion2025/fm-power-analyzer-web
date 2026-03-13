@@ -1091,115 +1091,84 @@
   <!-- ===================================================== -->
   <!-- BLOQUE 18: ORQUESTADOR GENERAL                        -->
   <!-- ===================================================== -->
-<script>
-  function limpiarGraficas() {
-    const labelsVacios = [];
-    const datosVacios = [];
-
-    if (chartVoltageAN) {
-      chartVoltageAN.data.labels = labelsVacios;
-      chartVoltageAN.data.datasets[0].data = datosVacios;
-      chartVoltageAN.update("none");
-    }
-
-    if (chartCurrentA) {
-      chartCurrentA.data.labels = labelsVacios;
-      chartCurrentA.data.datasets[0].data = datosVacios;
-      chartCurrentA.update("none");
-    }
-
-    if (chartFrequency) {
-      chartFrequency.data.labels = labelsVacios;
-      chartFrequency.data.datasets[0].data = datosVacios;
-      chartFrequency.update("none");
-    }
-
-    if (chartPowers) {
-      chartPowers.data.labels = labelsVacios;
-      chartPowers.data.datasets[0].data = datosVacios;
-      chartPowers.data.datasets[1].data = datosVacios;
-      chartPowers.data.datasets[2].data = datosVacios;
-      chartPowers.update("none");
-    }
-  }
-</script>
-
-<script>
-  async function consultarTodo() {
-    try {
-      const dayInput = document.getElementById("dayDate");
-      const selectedDateText = document.getElementById("selectedDateText");
+  <script>
+    async function consultarTodo() {
+      try {
+        console.log("consultarTodo ejecutado");
   
-      if (!dayInput) return;
+        const dayInput = document.getElementById("dayDate");
+        const selectedDateText = document.getElementById("selectedDateText");
   
-      const day = dayInput.value;
+        if (!dayInput) return;
   
-      if (selectedDateText) {
-        selectedDateText.innerText = day ? formatearFechaCorta(day) : "--";
+        const day = dayInput.value;
+  
+        if (!day) {
+          document.getElementById("error").innerText = "Seleccione una fecha";
+          return;
+        }
+  
+        if (selectedDateText) {
+          selectedDateText.innerText = formatearFechaCorta(day);
+        }
+  
+        const json = await obtenerHistorico();
+  
+        if (!json.ok || !json.data) {
+          document.getElementById("error").innerText = "Error consultando histórico";
+          limpiarGraficas();
+          return;
+        }
+  
+        if (json.data.length === 0) {
+          document.getElementById("error").innerText = "No hay datos para graficar en la fecha seleccionada";
+          limpiarGraficas();
+          return;
+        }
+  
+        document.getElementById("error").innerText = "";
+  
+        const labels = json.data.map(item => formatearHora(item.created_at));
+        const rows = json.data;
+  
+        actualizarGraficaVoltaje(labels, rows);
+        actualizarGraficaCorriente(labels, rows);
+        actualizarGraficaFrecuencia(labels, rows);
+        actualizarGraficaPotencias(labels, rows);
+  
+        console.log("Gráficas actualizadas:", new Date().toLocaleTimeString(), "puntos:", rows.length);
+  
+      } catch (e) {
+        console.error("Error en consultarTodo:", e);
+        document.getElementById("error").innerText = "Error al consultar las curvas";
+        limpiarGraficas();
       }
-  
-      const json = await obtenerHistorico();
-  
-      if (!json.ok || !json.data) {
-        document.getElementById("error").innerText = "Error consultando histórico";
-        return;
-      }
-  
-      if (json.data.length === 0) {
-        document.getElementById("error").innerText = "No hay datos para graficar en la fecha seleccionada";
-        return;
-      }
-  
-      document.getElementById("error").innerText = "";
-  
-      const labels = json.data.map(item => formatearHora(item.created_at));
-      const rows = json.data;
-  
-      actualizarGraficaVoltaje(labels, rows);
-      actualizarGraficaCorriente(labels, rows);
-      actualizarGraficaFrecuencia(labels, rows);
-      actualizarGraficaPotencias(labels, rows);
-  
-      console.log("Gráficas actualizadas:", new Date().toLocaleTimeString(), "puntos:", rows.length);
-  
-    } catch (e) {
-      console.error("Error en consultarTodo:", e);
-      document.getElementById("error").innerText = "Error al consultar las curvas";
     }
-  }
-</script>
+  </script>
 
-  <!-- ===================================================== -->
-  <!-- BLOQUE 19: INICIALIZACION                             -->
-  <!-- ===================================================== -->
+<!-- ===================================================== -->
+<!-- BLOQUE 19: INICIALIZACION                             -->
+<!-- ===================================================== -->
   <script>
     window.addEventListener("load", () => {
-    const hoy = hoyTexto();
+      const hoy = hoyTexto();
   
-    document.getElementById("dayDate").value = hoy;
-    document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
+      document.getElementById("dayDate").value = hoy;
+      document.getElementById("selectedDateText").innerText = "--";
   
-    // si quieres, inicializa también el rango CSV con hoy
-    const csvFrom = document.getElementById("csvFrom");
-    const csvTo = document.getElementById("csvTo");
+      const csvFrom = document.getElementById("csvFrom");
+      const csvTo = document.getElementById("csvTo");
   
-    if (csvFrom) csvFrom.value = hoy;
-    if (csvTo) csvTo.value = hoy;
-      
-    // carga inicial
-    actualizarTiempoReal();
-    consultarTodo();
-    
-    // tiempo real de valores instantáneos
-    setInterval(() => {
+      if (csvFrom) csvFrom.value = hoy;
+      if (csvTo) csvTo.value = hoy;
+  
+      // SOLO tiempo real de valores instantáneos
       actualizarTiempoReal();
-    }, 2000);
-    
-    // actualización de gráficas históricas
-    setInterval(() => {
-      consultarTodo();
-    }, 10000);
-  });
-</script>
+  
+      setInterval(() => {
+        actualizarTiempoReal();
+      }, 2000);
+    });
+  </script>
 </body>
 </html>
