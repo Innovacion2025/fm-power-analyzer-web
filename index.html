@@ -1105,9 +1105,14 @@
 <!-- BLOQUE 18: ORQUESTADOR GENERAL                        -->
 <!-- ===================================================== -->
   <script>
+    let ultimoTimestampHistorico = null;
+    let fechaHistoricaActual = null;
+  
     function limpiarGraficas() {
       const labelsVacios = [];
       const datosVacios = [];
+  
+      ultimoTimestampHistorico = null;
   
       if (chartVoltageAN) {
         chartVoltageAN.data.labels = labelsVacios;
@@ -1136,7 +1141,62 @@
       }
     }
   
-    async function consultarTodo() {
+    function agregarSoloPuntosNuevos(rowsNuevos) {
+      if (!rowsNuevos || rowsNuevos.length === 0) return;
+  
+      for (const item of rowsNuevos) {
+        const label = formatearHora(item.created_at);
+  
+        if (chartVoltageAN) {
+          chartVoltageAN.data.labels.push(label);
+          chartVoltageAN.data.datasets[0].data.push(
+            item.voltage_an !== null ? Number(item.voltage_an) : null
+          );
+        }
+  
+        if (chartCurrentA) {
+          chartCurrentA.data.labels.push(label);
+          chartCurrentA.data.datasets[0].data.push(
+            item.current_a !== null ? Number(item.current_a) : null
+          );
+        }
+  
+        if (chartFrequency) {
+          chartFrequency.data.labels.push(label);
+          chartFrequency.data.datasets[0].data.push(
+            item.frequency !== null ? Number(item.frequency) : null
+          );
+        }
+  
+        if (chartPowers) {
+          const ptot = item.raw_payload && item.raw_payload.ptot !== undefined
+            ? Number(item.raw_payload.ptot)
+            : null;
+  
+          const qtot = item.raw_payload && item.raw_payload.qtot !== undefined
+            ? Number(item.raw_payload.qtot)
+            : null;
+  
+          const stot = item.raw_payload && item.raw_payload.stot !== undefined
+            ? Number(item.raw_payload.stot)
+            : null;
+  
+          chartPowers.data.labels.push(label);
+          chartPowers.data.datasets[0].data.push(ptot);
+          chartPowers.data.datasets[1].data.push(qtot);
+          chartPowers.data.datasets[2].data.push(stot);
+        }
+      }
+  
+      if (chartVoltageAN) chartVoltageAN.update("none");
+      if (chartCurrentA) chartCurrentA.update("none");
+      if (chartFrequency) chartFrequency.update("none");
+      if (chartPowers) chartPowers.update("none");
+  
+      ultimoTimestampHistorico = rowsNuevos[rowsNuevos.length - 1].created_at;
+    }
+  
+    async function consultarTodo(forzarRecargaCompleta = false) {
       try {
         const errorBox = document.getElementById("error");
         const dayInput = document.getElementById("dayDate");
@@ -1146,11 +1206,8 @@
   
         const day = dayInput.value;
   
-        cerrarToast();
-        limpiarGraficas();
-        errorBox.innerText = "Cargando datos del día seleccionado...";
-  
         if (!day) {
+          limpiarGraficas();
           errorBox.innerText = "";
           mostrarToast("Seleccione una fecha");
           return;
@@ -1158,6 +1215,14 @@
   
         if (selectedDateText) {
           selectedDateText.innerText = formatearFechaCorta(day);
+        }
+  
+        const esNuevaFecha = fechaHistoricaActual !== day;
+  
+        if (forzarRecargaCompleta || esNuevaFecha) {
+          cerrarToast();
+          limpiarGraficas();
+          errorBox.innerText = "Cargando datos del día seleccionado...";
         }
   
         const json = await obtenerHistorico();
@@ -1172,19 +1237,33 @@
         if (json.data.length === 0) {
           errorBox.innerText = "";
           limpiarGraficas();
+          fechaHistoricaActual = day;
           mostrarToast("No hay datos para graficar en la fecha seleccionada");
           return;
         }
   
         errorBox.innerText = "";
   
-        const labels = json.data.map(item => formatearHora(item.created_at));
-        const rows = json.data;
+        if (forzarRecargaCompleta || esNuevaFecha || !chartVoltageAN) {
+          const labels = json.data.map(item => formatearHora(item.created_at));
+          const rows = json.data;
   
-        actualizarGraficaVoltaje(labels, rows);
-        actualizarGraficaCorriente(labels, rows);
-        actualizarGraficaFrecuencia(labels, rows);
-        actualizarGraficaPotencias(labels, rows);
+          actualizarGraficaVoltaje(labels, rows);
+          actualizarGraficaCorriente(labels, rows);
+          actualizarGraficaFrecuencia(labels, rows);
+          actualizarGraficaPotencias(labels, rows);
+  
+          ultimoTimestampHistorico = rows[rows.length - 1].created_at;
+          fechaHistoricaActual = day;
+          return;
+        }
+  
+        const rowsNuevos = json.data.filter(item => {
+          return !ultimoTimestampHistorico || item.created_at > ultimoTimestampHistorico;
+        });
+  
+        agregarSoloPuntosNuevos(rowsNuevos);
+        fechaHistoricaActual = day;
   
       } catch (e) {
         console.error("Error en consultarTodo:", e);
@@ -1195,9 +1274,6 @@
     }
   </script>
 
-<!-- ===================================================== -->
-<!-- BLOQUE 19: INICIALIZACION                             -->
-<!-- ===================================================== -->
 <!-- ===================================================== -->
 <!-- BLOQUE 19: INICIALIZACION                             -->
 <!-- ===================================================== -->
@@ -1215,14 +1291,19 @@
       if (csvTo) csvTo.value = hoy;
   
       actualizarTiempoReal();
-      consultarTodo();
+      consultarTodo(true);
   
       setInterval(() => {
         actualizarTiempoReal();
       }, 2000);
   
       setInterval(() => {
-        consultarTodo();
+        const daySeleccionado = document.getElementById("dayDate").value;
+        const hoyActual = hoyTexto();
+  
+        if (daySeleccionado === hoyActual) {
+          consultarTodo(false);
+        }
       }, 10000);
     });
   
@@ -1231,7 +1312,7 @@
   
       if (dayDate) {
         dayDate.addEventListener("change", () => {
-          consultarTodo();
+          consultarTodo(true);
         });
       }
     });
