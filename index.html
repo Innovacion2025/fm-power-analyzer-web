@@ -1994,6 +1994,9 @@
     window.addEventListener("load", async () => {
       const hoy = hoyTexto();
   
+      // =========================
+      // SETEO INICIAL DE FECHAS
+      // =========================
       document.getElementById("dayDate").value = hoy;
       document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
   
@@ -2003,37 +2006,59 @@
       if (csvFrom) csvFrom.value = hoy;
       if (csvTo) csvTo.value = hoy;
   
+      // =========================
+      // CARGAR MEDIDORES
+      // =========================
       const okMeters = await cargarMedidores();
       if (!okMeters) return;
   
+      // =========================
+      // PRIMERA CARGA
+      // =========================
       await actualizarTiempoReal();
       await consultarTodo(true);
   
+      // =========================
+      // TIEMPO REAL (cada 2s)
+      // =========================
       setInterval(() => {
         actualizarTiempoReal();
       }, 2000);
   
+      // =========================
+      // HISTÓRICO (cada 5s)
+      // =========================
       setInterval(() => {
         const daySeleccionado = document.getElementById("dayDate").value;
         const hoyActual = hoyTexto();
   
+        // Solo auto-actualiza si estás viendo el día actual
         if (daySeleccionado === hoyActual) {
-          consultarTodo(false);
+          consultarTodo(true);
         }
-      }, 10000);
+      }, 5000);
     });
   
+    // =====================================================
+    // EVENTOS DE INTERFAZ
+    // =====================================================
     document.addEventListener("DOMContentLoaded", () => {
       const dayDate = document.getElementById("dayDate");
       const pmSelect = document.getElementById("pmSelect");
       const phasePowerModeSelect = document.getElementById("phasePowerMode");
   
+      // =========================
+      // CAMBIO DE FECHA
+      // =========================
       if (dayDate) {
         dayDate.addEventListener("change", () => {
           consultarTodo(true);
         });
       }
   
+      // =========================
+      // CAMBIO DE PM
+      // =========================
       if (pmSelect) {
         pmSelect.addEventListener("change", async () => {
           actualizarMeterSeleccionadoDesdeSelect();
@@ -2042,6 +2067,9 @@
         });
       }
   
+      // =========================
+      // CAMBIO DE TIPO DE POTENCIA POR FASE
+      // =========================
       if (phasePowerModeSelect) {
         phasePowerModeSelect.addEventListener("change", async (e) => {
           phasePowerMode = e.target.value;
@@ -2050,5 +2078,6 @@
       }
     });
   </script>
+  
 </body>
 </html>
