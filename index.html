@@ -1033,8 +1033,6 @@
   
     let ultimoTimestampHistorico = null;
     let ultimoTimestampLive = null;
-    let ultimoPayloadTiempoReal = null;
-  
     let fechaHistoricaActual = null;
     let pmHistoricoActual = null;
   
@@ -1046,11 +1044,11 @@
       return `${y}-${m}-${d}`;
     }
   
-    function formatearHoraDesdeMs(ms) {
-      if (ms === null || ms === undefined || ms === "") return "--";
-      const f = new Date(Number(ms));
+    function formatearHoraReal(fechaIso) {
+      if (!fechaIso) return "--";
+      const f = new Date(fechaIso);
       if (isNaN(f.getTime())) return "--";
-      return f.toLocaleTimeString([], {
+      return f.toLocaleTimeString("es-EC", {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit"
@@ -1114,6 +1112,7 @@
         "Slave: " + (currentMeter?.pm_slave ?? "--");
     }
   </script>
+  
   <!-- ===================================================== -->
   <!-- BLOQUE 18: CARGA DE MEDIDORES                        -->
   <!-- ===================================================== -->
@@ -1925,7 +1924,7 @@
           return aMs - bMs;
         });
   
-        const labels = json.data.map(item => formatearHoraDesdeMs(item.timestamp_ms));
+        const labels = json.data.map(item => formatearHoraReal(item.created_at));
         const rows = json.data;
   
         actualizarGraficaVoltajes(labels, rows);
@@ -1954,7 +1953,7 @@
       }
     }
   </script>
-  
+    
   <!-- ===================================================== -->
   <!-- BLOQUE 29A: AGREGAR ULTIMO PUNTO DESDE TIEMPO REAL   -->
   <!-- ===================================================== -->
@@ -1991,7 +1990,7 @@
         return;
       }
   
-      const label = formatearHoraDesdeMs(ts);
+      const label = formatearHoraReal(d.created_at);
       const cfg = getPhasePowerConfig();
   
       if (chartVoltages) {
@@ -2048,7 +2047,7 @@
       console.log("[CURVA] Punto agregado correctamente a las gráficas");
       console.log("[CURVA] nuevo ultimoTimestampHistorico:", ts);
     }
-  </script>
+  </script></script>
   
   <!-- ===================================================== -->
   <!-- BLOQUE 30: INICIALIZACION Y EVENTOS                  -->
@@ -2096,16 +2095,6 @@
           console.log("[INTERVALO] No agrega punto porque no estás viendo el día actual");
         }
       }, 2000);
-  
-      setInterval(() => {
-        const daySeleccionado = document.getElementById("dayDate").value;
-        const hoyActual = hoyTexto();
-  
-        if (daySeleccionado === hoyActual) {
-          console.log("[RESYNC] Reconstruyendo curva completa...");
-          consultarTodo(true);
-        }
-      }, 60000);
     });
   
     document.addEventListener("DOMContentLoaded", () => {
