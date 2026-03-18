@@ -1990,7 +1990,9 @@
         return;
       }
   
-      const label = formatearHoraReal(d.created_at);
+      // Para el punto vivo usar updated_at, no created_at
+      const fechaVisible = d.updated_at || d.created_at;
+      const label = formatearHoraReal(fechaVisible);
       const cfg = getPhasePowerConfig();
   
       if (chartVoltages) {
@@ -2044,11 +2046,12 @@
       ultimoTimestampHistorico = ts;
       ultimoTimestampLive = ts;
   
+      console.log("[CURVA] fechaVisible usada:", fechaVisible);
       console.log("[CURVA] Punto agregado correctamente a las gráficas");
       console.log("[CURVA] nuevo ultimoTimestampHistorico:", ts);
     }
-  </script></script>
-  
+  </script>
+    
   <!-- ===================================================== -->
   <!-- BLOQUE 30: INICIALIZACION Y EVENTOS                  -->
   <!-- ===================================================== -->
