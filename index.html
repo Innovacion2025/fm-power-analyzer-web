@@ -520,85 +520,85 @@
 <body>
   <div class="page">
 
-    <!-- =================================================== -->
-    <!-- BLOQUE 6: HERO / ENCABEZADO                         -->
-    <!-- =================================================== -->
-    <section class="hero">
-      <div class="hero-row">
-        <div>
-          <h1 class="hero-title">FM POWER ANALYZER</h1>
-          <div class="hero-subtitle">Monitoreo eléctrico en tiempo real.</div>
+<!-- =================================================== -->
+<!-- BLOQUE 6: HERO / ENCABEZADO                         -->
+<!-- =================================================== -->
+<section class="hero">
+  <div class="hero-row">
+    <div>
+      <h1 class="hero-title">FM POWER ANALYZER</h1>
+      <div class="hero-subtitle">Monitoreo eléctrico en tiempo real.</div>
 
-          <div class="status-line">
-            <span class="status-dot"></span>
-            <span id="heroDeviceName">Gateway: --</span>
-            <span class="meter-badge" id="heroPmName">PM: --</span>
-            <span class="meter-badge" id="heroPmSlave">Slave: --</span>
-          </div>
-        </div>
-
-        <div class="hero-info">
-          <div class="hero-pill">
-            <div class="hero-pill-label">Gateway ID</div>
-            <div class="hero-pill-value" id="device">--</div>
-          </div>
-
-          <div class="hero-pill">
-            <div class="hero-pill-label">Fecha consultada</div>
-            <div class="hero-pill-value" id="selectedDateText">--</div>
-          </div>
-        </div>
+      <div class="status-line">
+        <span class="status-dot"></span>
+        <span id="heroDeviceName">Gateway: --</span>
+        <span id="heroPmName">PM: --</span>
+        <span id="heroPmSlave">Slave: --</span>
       </div>
-    </section>
+    </div>
 
-    <!-- =================================================== -->
-    <!-- BLOQUE 7: HISTORIAL Y EXPORTACION                   -->
-    <!-- =================================================== -->
-    <section class="toolbar-main">
-      <div class="toolbar-main-left">
-        <h2 class="toolbar-main-title">Historial y exportación</h2>
-        <p class="toolbar-main-subtitle">
-          Seleccione el PM a visualizar, consulte curvas diarias y descargue archivos CSV por rango de fechas.
-        </p>
+    <div class="hero-info">
+      <div class="hero-pill">
+        <div class="hero-pill-label">Gateway ID</div>
+        <div class="hero-pill-value" id="device">--</div>
       </div>
 
-      <div class="toolbar-main-right">
-        <!-- SELECCION PM -->
-        <div class="toolbar-group" style="position:relative">
-          <div class="toolbar-group-title">MEDIDOR</div>
-          <div class="control-group">
-            <label for="pmSelect">PM disponible</label>
-            <select id="pmSelect"></select>
-          </div>
-        </div>
-
-        <!-- CURVAS -->
-        <div class="toolbar-group" style="position:relative">
-          <div class="toolbar-group-title">CURVAS</div>
-          <div class="control-group">
-            <label for="dayDate">Fecha</label>
-            <input type="date" id="dayDate">
-          </div>
-        </div>
-
-        <!-- EXPORTACION CSV -->
-        <div class="toolbar-group" style="position:relative">
-          <div class="toolbar-group-title">EXPORTACIÓN CSV</div>
-          <div class="control-group">
-            <label for="csvFrom">Desde</label>
-            <input type="date" id="csvFrom">
-          </div>
-          <div class="control-group">
-            <label for="csvTo">Hasta</label>
-            <input type="date" id="csvTo">
-          </div>
-          <div class="control-group">
-            <label>&nbsp;</label>
-            <button class="btn-secondary" onclick="descargarCSV()">Descargar CSV</button>
-          </div>
-        </div>
+      <div class="hero-pill">
+        <div class="hero-pill-label">Fecha consultada</div>
+        <div class="hero-pill-value" id="selectedDateText">--</div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
+
+  <!-- =================================================== -->
+<!-- BLOQUE 7: HISTORIAL Y EXPORTACION                   -->
+<!-- =================================================== -->
+<section class="toolbar-main">
+  <div class="toolbar-main-left">
+    <h2 class="toolbar-main-title">Historial y exportación</h2>
+    <p class="toolbar-main-subtitle">
+      Seleccione el PM a visualizar, consulte curvas diarias y descargue archivos CSV por rango de fechas.
+    </p>
+  </div>
+
+  <div class="toolbar-main-right">
+    <!-- MEDIDOR -->
+    <div class="toolbar-group" style="position:relative">
+      <div class="toolbar-group-title">MEDIDOR</div>
+      <div class="control-group">
+        <label for="pmSelect">PM disponible</label>
+        <select id="pmSelect"></select>
+      </div>
+    </div>
+
+    <!-- CURVAS -->
+    <div class="toolbar-group" style="position:relative">
+      <div class="toolbar-group-title">CURVAS</div>
+      <div class="control-group">
+        <label for="dayDate">Fecha</label>
+        <input type="date" id="dayDate">
+      </div>
+    </div>
+
+    <!-- EXPORTACION CSV -->
+    <div class="toolbar-group" style="position:relative">
+      <div class="toolbar-group-title">EXPORTACIÓN CSV</div>
+      <div class="control-group">
+        <label for="csvFrom">Desde</label>
+        <input type="date" id="csvFrom">
+      </div>
+      <div class="control-group">
+        <label for="csvTo">Hasta</label>
+        <input type="date" id="csvTo">
+      </div>
+      <div class="control-group">
+        <label>&nbsp;</label>
+        <button class="btn-secondary" onclick="descargarCSV()">Descargar CSV</button>
+      </div>
+    </div>
+  </div>
+</section>
 
     <!-- =================================================== -->
     <!-- BLOQUE 8: GRAFICAS 2x2                              -->
@@ -702,245 +702,233 @@
   </div>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 10: VARIABLES GLOBALES Y UTILIDADES            -->
-  <!-- ===================================================== -->
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const device = params.get("device") || "FMPAN-0001";
-    const API_BASE = "https://fm-power-analyzer-server.onrender.com";
+<!-- BLOQUE 10: VARIABLES GLOBALES Y UTILIDADES            -->
+<!-- ===================================================== -->
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const device = params.get("device") || "FMPAN-0001";
+  const API_BASE = "https://fm-power-analyzer-server.onrender.com";
 
-    let chartVoltageAN = null;
-    let chartCurrentA = null;
-    let chartFrequency = null;
-    let chartPowers = null;
+  let chartVoltageAN = null;
+  let chartCurrentA = null;
+  let chartFrequency = null;
+  let chartPowers = null;
 
-    let meters = [];
-    let currentMeter = null;
+  let meters = [];
+  let currentMeter = null;
 
-    function hoyTexto() {
-      const ahora = new Date();
-      const y = ahora.getFullYear();
-      const m = String(ahora.getMonth() + 1).padStart(2, "0");
-      const d = String(ahora.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
+  function hoyTexto() {
+    const ahora = new Date();
+    const y = ahora.getFullYear();
+    const m = String(ahora.getMonth() + 1).padStart(2, "0");
+    const d = String(ahora.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  }
+
+  function formatearHora(fechaIso) {
+    const f = new Date(fechaIso);
+    return f.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    });
+  }
+
+  function formatearFechaCorta(fechaIso) {
+    const f = new Date(fechaIso + "T00:00:00");
+    return f.toLocaleDateString("es-EC");
+  }
+
+  function mostrarToast(mensaje) {
+    document.getElementById("toastMessage").innerText = mensaje;
+    document.getElementById("toast").classList.add("show");
+  }
+
+  function cerrarToast() {
+    document.getElementById("toast").classList.remove("show");
+  }
+
+  function valorSeguro(...valores) {
+    for (const v of valores) {
+      if (v !== undefined && v !== null && v !== "") return v;
     }
+    return null;
+  }
 
-    function formatearHora(fechaIso) {
-      const f = new Date(fechaIso);
-      return f.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit"
-      });
-    }
+  function numeroSeguro(...valores) {
+    const v = valorSeguro(...valores);
+    if (v === null) return null;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }
 
-    function formatearFechaCorta(fechaIso) {
-      const f = new Date(fechaIso + "T00:00:00");
-      return f.toLocaleDateString("es-EC");
-    }
+  function textoValor(v, sufijo = "") {
+    if (v === null || v === undefined || v === "") return "--";
+    return `${v}${sufijo}`;
+  }
 
-    function mostrarToast(mensaje) {
-      document.getElementById("toastMessage").innerText = mensaje;
-      document.getElementById("toast").classList.add("show");
-    }
+  function getCurrentPmSlave() {
+    if (!currentMeter) return null;
+    return Number(currentMeter.pm_slave);
+  }
 
-    function cerrarToast() {
-      document.getElementById("toast").classList.remove("show");
-    }
+  function actualizarEncabezadoMeter() {
+    document.getElementById("device").innerText = currentMeter?.device_id || device;
+    document.getElementById("heroDeviceName").innerText =
+      "Gateway: " + (currentMeter?.device_name || currentMeter?.device_id || "--");
+    document.getElementById("heroPmName").innerText =
+      "PM: " + (currentMeter?.pm_name || "--");
+    document.getElementById("heroPmSlave").innerText =
+      "Slave: " + (currentMeter?.pm_slave ?? "--");
+  }
 
-    function valorSeguro(...valores) {
-      for (const v of valores) {
-        if (v !== undefined && v !== null && v !== "") return v;
-      }
-      return null;
-    }
+  async function cargarMedidores() {
+    try {
+      const url = `${API_BASE}/api/meters/${encodeURIComponent(device)}?t=${Date.now()}`;
+      const res = await fetch(url, { cache: "no-store" });
+      const json = await res.json();
 
-    function numeroSeguro(...valores) {
-      const v = valorSeguro(...valores);
-      if (v === null) return null;
-      const n = Number(v);
-      return Number.isFinite(n) ? n : null;
-    }
-
-    function textoValor(v, sufijo = "") {
-      if (v === null || v === undefined || v === "") return "--";
-      return `${v}${sufijo}`;
-    }
-
-    function getCurrentPmSlave() {
-      if (!currentMeter) return null;
-      return Number(currentMeter.pm_slave);
-    }
-
-    function actualizarEncabezadoMeter() {
-      document.getElementById("device").innerText = currentMeter?.device_id || device;
-      document.getElementById("heroDeviceName").innerText =
-        "Gateway: " + (currentMeter?.device_name || currentMeter?.device_id || "--");
-      document.getElementById("heroPmName").innerText =
-        "PM: " + (currentMeter?.pm_name || "--");
-      document.getElementById("heroPmSlave").innerText =
-        "Slave: " + (currentMeter?.pm_slave ?? "--");
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 10A: CARGAR MEDIDORES DISPONIBLES              -->
-  <!-- ===================================================== -->
-  <script>
-    async function cargarMedidores() {
-      try {
-        const url = `${API_BASE}/api/meters/${encodeURIComponent(device)}?t=${Date.now()}`;
-        const res = await fetch(url, { cache: "no-store" });
-        const json = await res.json();
-
-        if (!json || json.ok !== true || !Array.isArray(json.data) || json.data.length === 0) {
-          document.getElementById("error").innerText = "No se encontraron medidores para este gateway";
-          return false;
-        }
-
-        meters = json.data.slice().sort((a, b) => Number(a.pm_slave) - Number(b.pm_slave));
-
-        const pmSelect = document.getElementById("pmSelect");
-        pmSelect.innerHTML = "";
-
-        meters.forEach((meter, index) => {
-          const opt = document.createElement("option");
-          opt.value = String(meter.pm_slave);
-          opt.textContent = `${meter.pm_name || "PM sin nombre"} (Slave ${meter.pm_slave})`;
-          if (index === 0) opt.selected = true;
-          pmSelect.appendChild(opt);
-        });
-
-        const pmFromUrl = params.get("pm_slave");
-        const firstSlave = pmFromUrl ? Number(pmFromUrl) : Number(meters[0].pm_slave);
-
-        const meterInicial =
-          meters.find(m => Number(m.pm_slave) === Number(firstSlave)) || meters[0];
-
-        pmSelect.value = String(meterInicial.pm_slave);
-        currentMeter = meterInicial;
-        actualizarEncabezadoMeter();
-
-        document.getElementById("error").innerText = "";
-        return true;
-
-      } catch (e) {
-        document.getElementById("error").innerText = "Error consultando los medidores del gateway";
+      if (!json || json.ok !== true || !Array.isArray(json.data) || json.data.length === 0) {
+        document.getElementById("error").innerText = "No se encontraron medidores para este gateway";
         return false;
       }
-    }
 
-    function actualizarMeterSeleccionadoDesdeSelect() {
+      meters = json.data.slice().sort((a, b) => Number(a.pm_slave) - Number(b.pm_slave));
+
       const pmSelect = document.getElementById("pmSelect");
-      const slave = Number(pmSelect.value);
+      pmSelect.innerHTML = "";
 
-      const found = meters.find(m => Number(m.pm_slave) === slave);
-      if (found) {
-        currentMeter = found;
-        actualizarEncabezadoMeter();
-      }
+      meters.forEach((meter, index) => {
+        const opt = document.createElement("option");
+        opt.value = String(meter.pm_slave);
+        opt.textContent = `${meter.pm_name || "PM sin nombre"} (Slave ${meter.pm_slave})`;
+        if (index === 0) opt.selected = true;
+        pmSelect.appendChild(opt);
+      });
+
+      const pmFromUrl = params.get("pm_slave");
+      const firstSlave = pmFromUrl ? Number(pmFromUrl) : Number(meters[0].pm_slave);
+
+      const meterInicial =
+        meters.find(m => Number(m.pm_slave) === Number(firstSlave)) || meters[0];
+
+      pmSelect.value = String(meterInicial.pm_slave);
+      currentMeter = meterInicial;
+      actualizarEncabezadoMeter();
+
+      document.getElementById("error").innerText = "";
+      return true;
+    } catch (e) {
+      document.getElementById("error").innerText = "Error consultando los medidores del gateway";
+      return false;
     }
-  </script>
+  }
+
+  function actualizarMeterSeleccionadoDesdeSelect() {
+    const pmSelect = document.getElementById("pmSelect");
+    const slave = Number(pmSelect.value);
+
+    const found = meters.find(m => Number(m.pm_slave) === slave);
+    if (found) {
+      currentMeter = found;
+      actualizarEncabezadoMeter();
+    }
+  }
+</script>
+  
+  <!-- ===================================================== -->
+<!-- BLOQUE 10A: FUNCION DESCARGAR CSV CON SPINNER         -->
+<!-- ===================================================== -->
+<script>
+  function descargarCSV() {
+    const from = document.getElementById("csvFrom").value;
+    const to = document.getElementById("csvTo").value;
+    const pm_slave = getCurrentPmSlave();
+
+    if (!pm_slave) {
+      mostrarToast("Seleccione un PM antes de descargar");
+      return;
+    }
+
+    if (!from || !to) {
+      mostrarToast("Seleccione el rango de fechas para descargar el CSV");
+      return;
+    }
+
+    const url =
+      `${API_BASE}/api/history/export` +
+      `?device_id=${encodeURIComponent(device)}` +
+      `&pm_slave=${encodeURIComponent(pm_slave)}` +
+      `&from=${encodeURIComponent(from)}` +
+      `&to=${encodeURIComponent(to)}`;
+
+    const spinner = document.getElementById("downloadSpinner");
+    spinner.style.display = "flex";
+
+    setTimeout(() => {
+      window.location.href = url;
+    }, 500);
+
+    setTimeout(() => {
+      spinner.style.display = "none";
+    }, 4000);
+  }
+</script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 10B: FUNCION DESCARGAR CSV CON SPINNER         -->
-  <!-- ===================================================== -->
-  <script>
-    function descargarCSV() {
-      const from = document.getElementById("csvFrom").value;
-      const to = document.getElementById("csvTo").value;
+<!-- BLOQUE 11: TIEMPO REAL PARA VALORES INSTANTANEOS      -->
+<!-- ===================================================== -->
+<script>
+  async function actualizarTiempoReal() {
+    try {
       const pm_slave = getCurrentPmSlave();
 
-      if (!pm_slave) {
-        mostrarToast("Seleccione un PM antes de descargar");
-        return;
-      }
-
-      if (!from || !to) {
-        mostrarToast("Seleccione el rango de fechas para descargar el CSV");
-        return;
-      }
+      if (!pm_slave) return;
 
       const url =
-        `${API_BASE}/api/history/export` +
-        `?device_id=${encodeURIComponent(device)}` +
-        `&pm_slave=${encodeURIComponent(pm_slave)}` +
-        `&from=${encodeURIComponent(from)}` +
-        `&to=${encodeURIComponent(to)}`;
+        `${API_BASE}/api/device/${encodeURIComponent(device)}` +
+        `?pm_slave=${encodeURIComponent(pm_slave)}` +
+        `&t=${Date.now()}`;
 
-      const spinner = document.getElementById("downloadSpinner");
-      spinner.style.display = "flex";
+      const res = await fetch(url, { cache: "no-store" });
+      const data = await res.json();
 
-      setTimeout(() => {
-        window.location.href = url;
-      }, 500);
-
-      setTimeout(() => {
-        spinner.style.display = "none";
-      }, 4000);
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 11: TIEMPO REAL PARA VALORES INSTANTANEOS      -->
-  <!-- ===================================================== -->
-  <script>
-    async function actualizarTiempoReal() {
-      try {
-        const pm_slave = getCurrentPmSlave();
-
-        if (!pm_slave) return;
-
-        const url =
-          `${API_BASE}/api/device/${encodeURIComponent(device)}` +
-          `?pm_slave=${encodeURIComponent(pm_slave)}` +
-          `&t=${Date.now()}`;
-
-        const res = await fetch(url, { cache: "no-store" });
-        const data = await res.json();
-
-        if (!data || data.ok !== true) {
-          document.getElementById("error").innerText = "No hay datos del PM seleccionado";
-          return;
-        }
-
-        const d = data.data || data;
-
-        document.getElementById("error").innerText = "";
-
-        const deviceId = valorSeguro(d.device_id, currentMeter?.device_id, device);
-        const deviceName = valorSeguro(d.device_name, currentMeter?.device_name, deviceId);
-        const pmName = valorSeguro(d.pm_name, currentMeter?.pm_name, "PM");
-        const pmSlave = valorSeguro(d.pm_slave, currentMeter?.pm_slave, pm_slave);
-
-        currentMeter = {
-          device_id: deviceId,
-          device_name: deviceName,
-          pm_name: pmName,
-          pm_slave: pmSlave
-        };
-
-        actualizarEncabezadoMeter();
-
-        const voltageA = numeroSeguro(d.voltage_a, d.voltage_an);
-        const currentA = numeroSeguro(d.current_a);
-        const frequency = numeroSeguro(d.frecuencia, d.frequency);
-        const pTot = numeroSeguro(d.p_tot, d.ptot);
-        const qTot = numeroSeguro(d.q_tot, d.qtot);
-        const sTot = numeroSeguro(d.s_tot, d.stot);
-
-        document.getElementById("liveVoltage").innerText = textoValor(voltageA, " V");
-        document.getElementById("liveCurrent").innerText = textoValor(currentA, " A");
-        document.getElementById("liveFrequency").innerText = textoValor(frequency, " Hz");
-        document.getElementById("livePowers").innerText =
-          `${textoValor(pTot)} | ${textoValor(qTot)} | ${textoValor(sTot)}`;
-
-      } catch (e) {
-        document.getElementById("error").innerText = "Error conectando con la API";
+      if (!data || data.ok !== true) {
+        document.getElementById("error").innerText = "No hay datos del PM seleccionado";
+        return;
       }
-    }
-  </script>
 
+      const d = data.data || {};
+
+      document.getElementById("error").innerText = "";
+
+      currentMeter = {
+        device_id: valorSeguro(d.device_id, currentMeter?.device_id, device),
+        device_name: valorSeguro(d.device_name, currentMeter?.device_name),
+        pm_name: valorSeguro(d.pm_name, currentMeter?.pm_name),
+        pm_slave: valorSeguro(d.pm_slave, currentMeter?.pm_slave, pm_slave)
+      };
+
+      actualizarEncabezadoMeter();
+
+      const voltageA = numeroSeguro(d.voltage_a, d.voltage_an);
+      const currentA = numeroSeguro(d.current_a);
+      const frequency = numeroSeguro(d.frecuencia, d.frequency);
+      const pTot = numeroSeguro(d.p_tot, d.ptot);
+      const qTot = numeroSeguro(d.q_tot, d.qtot);
+      const sTot = numeroSeguro(d.s_tot, d.stot);
+
+      document.getElementById("liveVoltage").innerText = textoValor(voltageA, " V");
+      document.getElementById("liveCurrent").innerText = textoValor(currentA, " A");
+      document.getElementById("liveFrequency").innerText = textoValor(frequency, " Hz");
+      document.getElementById("livePowers").innerText =
+        `${textoValor(pTot)} | ${textoValor(qTot)} | ${textoValor(sTot)}`;
+    } catch (e) {
+      document.getElementById("error").innerText = "Error conectando con la API";
+    }
+  }
+</script>
+  
   <!-- ===================================================== -->
   <!-- BLOQUE 12: OPCIONES COMUNES DE GRAFICAS               -->
   <!-- ===================================================== -->
@@ -1028,38 +1016,38 @@
   </script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 13: CONSULTA DEL HISTORICO                     -->
-  <!-- ===================================================== -->
-  <script>
-    async function obtenerHistorico() {
-      const day = document.getElementById("dayDate").value;
-      const pm_slave = getCurrentPmSlave();
+<!-- BLOQUE 13: CONSULTA DEL HISTORICO                     -->
+<!-- ===================================================== -->
+<script>
+  async function obtenerHistorico() {
+    const day = document.getElementById("dayDate").value;
+    const pm_slave = getCurrentPmSlave();
 
-      if (!day) {
-        throw new Error("No hay fecha seleccionada");
-      }
-
-      if (!pm_slave) {
-        throw new Error("No hay PM seleccionado");
-      }
-
-      const url =
-        `${API_BASE}/api/history` +
-        `?device_id=${encodeURIComponent(device)}` +
-        `&pm_slave=${encodeURIComponent(pm_slave)}` +
-        `&from=${encodeURIComponent(day)}` +
-        `&to=${encodeURIComponent(day)}` +
-        `&t=${Date.now()}`;
-
-      const res = await fetch(url, { cache: "no-store" });
-
-      if (!res.ok) {
-        throw new Error("La API respondió con error");
-      }
-
-      return await res.json();
+    if (!day) {
+      throw new Error("No hay fecha seleccionada");
     }
-  </script>
+
+    if (!pm_slave) {
+      throw new Error("No hay PM seleccionado");
+    }
+
+    const url =
+      `${API_BASE}/api/history` +
+      `?device_id=${encodeURIComponent(device)}` +
+      `&pm_slave=${encodeURIComponent(pm_slave)}` +
+      `&from=${encodeURIComponent(day)}` +
+      `&to=${encodeURIComponent(day)}` +
+      `&t=${Date.now()}`;
+
+    const res = await fetch(url, { cache: "no-store" });
+
+    if (!res.ok) {
+      throw new Error("La API respondió con error");
+    }
+
+    return await res.json();
+  }
+</script>
 
   <!-- ===================================================== -->
   <!-- BLOQUE 14: GRAFICA DE VOLTAJE                         -->
@@ -1251,230 +1239,232 @@
   </script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 18: ORQUESTADOR GENERAL                        -->
-  <!-- ===================================================== -->
-  <script>
-    let ultimoTimestampHistorico = null;
-    let fechaHistoricaActual = null;
-    let pmHistoricoActual = null;
+<!-- BLOQUE 18: ORQUESTADOR GENERAL                        -->
+<!-- ===================================================== -->
+<script>
+  let ultimoTimestampHistorico = null;
+  let fechaHistoricaActual = null;
+  let pmHistoricoActual = null;
 
-    function limpiarGraficas() {
-      const labelsVacios = [];
-      const datosVacios = [];
+  function limpiarGraficas() {
+    const labelsVacios = [];
+    const datosVacios = [];
 
-      ultimoTimestampHistorico = null;
+    ultimoTimestampHistorico = null;
+
+    if (chartVoltageAN) {
+      chartVoltageAN.data.labels = labelsVacios;
+      chartVoltageAN.data.datasets[0].data = datosVacios;
+      chartVoltageAN.update("none");
+    }
+
+    if (chartCurrentA) {
+      chartCurrentA.data.labels = labelsVacios;
+      chartCurrentA.data.datasets[0].data = datosVacios;
+      chartCurrentA.update("none");
+    }
+
+    if (chartFrequency) {
+      chartFrequency.data.labels = labelsVacios;
+      chartFrequency.data.datasets[0].data = datosVacios;
+      chartFrequency.update("none");
+    }
+
+    if (chartPowers) {
+      chartPowers.data.labels = labelsVacios;
+      chartPowers.data.datasets[0].data = datosVacios;
+      chartPowers.data.datasets[1].data = datosVacios;
+      chartPowers.data.datasets[2].data = datosVacios;
+      chartPowers.update("none");
+    }
+  }
+
+  function agregarSoloPuntosNuevos(rowsNuevos) {
+    if (!rowsNuevos || rowsNuevos.length === 0) return;
+
+    for (const item of rowsNuevos) {
+      const label = formatearHora(item.created_at);
 
       if (chartVoltageAN) {
-        chartVoltageAN.data.labels = labelsVacios;
-        chartVoltageAN.data.datasets[0].data = datosVacios;
-        chartVoltageAN.update("none");
+        chartVoltageAN.data.labels.push(label);
+        chartVoltageAN.data.datasets[0].data.push(
+          numeroSeguro(item.voltage_a, item.voltage_an)
+        );
       }
 
       if (chartCurrentA) {
-        chartCurrentA.data.labels = labelsVacios;
-        chartCurrentA.data.datasets[0].data = datosVacios;
-        chartCurrentA.update("none");
+        chartCurrentA.data.labels.push(label);
+        chartCurrentA.data.datasets[0].data.push(
+          numeroSeguro(item.current_a)
+        );
       }
 
       if (chartFrequency) {
-        chartFrequency.data.labels = labelsVacios;
-        chartFrequency.data.datasets[0].data = datosVacios;
-        chartFrequency.update("none");
+        chartFrequency.data.labels.push(label);
+        chartFrequency.data.datasets[0].data.push(
+          numeroSeguro(item.frecuencia, item.frequency)
+        );
       }
 
       if (chartPowers) {
-        chartPowers.data.labels = labelsVacios;
-        chartPowers.data.datasets[0].data = datosVacios;
-        chartPowers.data.datasets[1].data = datosVacios;
-        chartPowers.data.datasets[2].data = datosVacios;
-        chartPowers.update("none");
+        chartPowers.data.labels.push(label);
+        chartPowers.data.datasets[0].data.push(
+          numeroSeguro(item.p_tot, item.ptot, item.raw_payload?.p_tot, item.raw_payload?.ptot)
+        );
+        chartPowers.data.datasets[1].data.push(
+          numeroSeguro(item.q_tot, item.qtot, item.raw_payload?.q_tot, item.raw_payload?.qtot)
+        );
+        chartPowers.data.datasets[2].data.push(
+          numeroSeguro(item.s_tot, item.stot, item.raw_payload?.s_tot, item.raw_payload?.stot)
+        );
       }
     }
 
-    function agregarSoloPuntosNuevos(rowsNuevos) {
-      if (!rowsNuevos || rowsNuevos.length === 0) return;
+    if (chartVoltageAN) chartVoltageAN.update("none");
+    if (chartCurrentA) chartCurrentA.update("none");
+    if (chartFrequency) chartFrequency.update("none");
+    if (chartPowers) chartPowers.update("none");
 
-      for (const item of rowsNuevos) {
-        const label = formatearHora(item.created_at);
+    ultimoTimestampHistorico = rowsNuevos[rowsNuevos.length - 1].created_at;
+  }
 
-        if (chartVoltageAN) {
-          chartVoltageAN.data.labels.push(label);
-          chartVoltageAN.data.datasets[0].data.push(
-            numeroSeguro(item.voltage_a, item.voltage_an)
-          );
-        }
+  async function consultarTodo(forzarRecargaCompleta = false) {
+    try {
+      const errorBox = document.getElementById("error");
+      const dayInput = document.getElementById("dayDate");
+      const selectedDateText = document.getElementById("selectedDateText");
+      const pm_slave = getCurrentPmSlave();
 
-        if (chartCurrentA) {
-          chartCurrentA.data.labels.push(label);
-          chartCurrentA.data.datasets[0].data.push(
-            numeroSeguro(item.current_a)
-          );
-        }
+      if (!dayInput || !pm_slave) return;
 
-        if (chartFrequency) {
-          chartFrequency.data.labels.push(label);
-          chartFrequency.data.datasets[0].data.push(
-            numeroSeguro(item.frecuencia, item.frequency)
-          );
-        }
+      const day = dayInput.value;
 
-        if (chartPowers) {
-          const ptot = numeroSeguro(item.p_tot, item.ptot, item.raw_payload?.p_tot, item.raw_payload?.ptot);
-          const qtot = numeroSeguro(item.q_tot, item.qtot, item.raw_payload?.q_tot, item.raw_payload?.qtot);
-          const stot = numeroSeguro(item.s_tot, item.stot, item.raw_payload?.s_tot, item.raw_payload?.stot);
-
-          chartPowers.data.labels.push(label);
-          chartPowers.data.datasets[0].data.push(ptot);
-          chartPowers.data.datasets[1].data.push(qtot);
-          chartPowers.data.datasets[2].data.push(stot);
-        }
-      }
-
-      if (chartVoltageAN) chartVoltageAN.update("none");
-      if (chartCurrentA) chartCurrentA.update("none");
-      if (chartFrequency) chartFrequency.update("none");
-      if (chartPowers) chartPowers.update("none");
-
-      ultimoTimestampHistorico = rowsNuevos[rowsNuevos.length - 1].created_at;
-    }
-
-    async function consultarTodo(forzarRecargaCompleta = false) {
-      try {
-        const errorBox = document.getElementById("error");
-        const dayInput = document.getElementById("dayDate");
-        const selectedDateText = document.getElementById("selectedDateText");
-        const pm_slave = getCurrentPmSlave();
-
-        if (!dayInput || !pm_slave) return;
-
-        const day = dayInput.value;
-
-        if (!day) {
-          limpiarGraficas();
-          errorBox.innerText = "";
-          mostrarToast("Seleccione una fecha");
-          return;
-        }
-
-        if (selectedDateText) {
-          selectedDateText.innerText = formatearFechaCorta(day);
-        }
-
-        const esNuevaFecha = fechaHistoricaActual !== day;
-        const esNuevoPm = Number(pmHistoricoActual) !== Number(pm_slave);
-
-        if (forzarRecargaCompleta || esNuevaFecha || esNuevoPm) {
-          cerrarToast();
-          limpiarGraficas();
-          errorBox.innerText = "Cargando datos del día seleccionado...";
-        }
-
-        const json = await obtenerHistorico();
-
-        if (!json || json.ok !== true || !Array.isArray(json.data)) {
-          errorBox.innerText = "";
-          limpiarGraficas();
-          mostrarToast("Error consultando el histórico");
-          return;
-        }
-
-        if (json.data.length === 0) {
-          errorBox.innerText = "";
-          limpiarGraficas();
-          fechaHistoricaActual = day;
-          pmHistoricoActual = pm_slave;
-          mostrarToast("No hay datos para graficar en la fecha seleccionada");
-          return;
-        }
-
+      if (!day) {
+        limpiarGraficas();
         errorBox.innerText = "";
+        mostrarToast("Seleccione una fecha");
+        return;
+      }
 
-        if (forzarRecargaCompleta || esNuevaFecha || esNuevoPm || !chartVoltageAN) {
-          const labels = json.data.map(item => formatearHora(item.created_at));
-          const rows = json.data;
+      if (selectedDateText) {
+        selectedDateText.innerText = formatearFechaCorta(day);
+      }
 
-          actualizarGraficaVoltaje(labels, rows);
-          actualizarGraficaCorriente(labels, rows);
-          actualizarGraficaFrecuencia(labels, rows);
-          actualizarGraficaPotencias(labels, rows);
+      const esNuevaFecha = fechaHistoricaActual !== day;
+      const esNuevoPm = Number(pmHistoricoActual) !== Number(pm_slave);
 
-          ultimoTimestampHistorico = rows[rows.length - 1].created_at;
-          fechaHistoricaActual = day;
-          pmHistoricoActual = pm_slave;
-          return;
-        }
+      if (forzarRecargaCompleta || esNuevaFecha || esNuevoPm) {
+        cerrarToast();
+        limpiarGraficas();
+        errorBox.innerText = "Cargando datos del día seleccionado...";
+      }
 
-        const rowsNuevos = json.data.filter(item => {
-          return !ultimoTimestampHistorico || item.created_at > ultimoTimestampHistorico;
-        });
+      const json = await obtenerHistorico();
 
-        agregarSoloPuntosNuevos(rowsNuevos);
+      if (!json || json.ok !== true || !Array.isArray(json.data)) {
+        errorBox.innerText = "";
+        limpiarGraficas();
+        mostrarToast("Error consultando el histórico");
+        return;
+      }
+
+      if (json.data.length === 0) {
+        errorBox.innerText = "";
+        limpiarGraficas();
         fechaHistoricaActual = day;
         pmHistoricoActual = pm_slave;
-
-      } catch (e) {
-        console.error("Error en consultarTodo:", e);
-        document.getElementById("error").innerText = "";
-        limpiarGraficas();
-        mostrarToast("Error al consultar las curvas");
+        mostrarToast("No hay datos para graficar en la fecha seleccionada");
+        return;
       }
+
+      errorBox.innerText = "";
+
+      if (forzarRecargaCompleta || esNuevaFecha || esNuevoPm || !chartVoltageAN) {
+        const labels = json.data.map(item => formatearHora(item.created_at));
+        const rows = json.data;
+
+        actualizarGraficaVoltaje(labels, rows);
+        actualizarGraficaCorriente(labels, rows);
+        actualizarGraficaFrecuencia(labels, rows);
+        actualizarGraficaPotencias(labels, rows);
+
+        ultimoTimestampHistorico = rows[rows.length - 1].created_at;
+        fechaHistoricaActual = day;
+        pmHistoricoActual = pm_slave;
+        return;
+      }
+
+      const rowsNuevos = json.data.filter(item => {
+        return !ultimoTimestampHistorico || item.created_at > ultimoTimestampHistorico;
+      });
+
+      agregarSoloPuntosNuevos(rowsNuevos);
+      fechaHistoricaActual = day;
+      pmHistoricoActual = pm_slave;
+
+    } catch (e) {
+      console.error("Error en consultarTodo:", e);
+      document.getElementById("error").innerText = "";
+      limpiarGraficas();
+      mostrarToast("Error al consultar las curvas");
     }
-  </script>
+  }
+</script>
 
-  <!-- ===================================================== -->
-  <!-- BLOQUE 19: INICIALIZACION                             -->
-  <!-- ===================================================== -->
-  <script>
-    window.addEventListener("load", async () => {
-      const hoy = hoyTexto();
+<!-- ===================================================== -->
+<!-- BLOQUE 19: INICIALIZACION                             -->
+<!-- ===================================================== -->
+<script>
+  window.addEventListener("load", async () => {
+    const hoy = hoyTexto();
 
-      document.getElementById("dayDate").value = hoy;
-      document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
+    document.getElementById("dayDate").value = hoy;
+    document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
 
-      const csvFrom = document.getElementById("csvFrom");
-      const csvTo = document.getElementById("csvTo");
+    const csvFrom = document.getElementById("csvFrom");
+    const csvTo = document.getElementById("csvTo");
 
-      if (csvFrom) csvFrom.value = hoy;
-      if (csvTo) csvTo.value = hoy;
+    if (csvFrom) csvFrom.value = hoy;
+    if (csvTo) csvTo.value = hoy;
 
-      const okMeters = await cargarMedidores();
-      if (!okMeters) return;
+    const okMeters = await cargarMedidores();
+    if (!okMeters) return;
 
-      await actualizarTiempoReal();
-      await consultarTodo(true);
+    await actualizarTiempoReal();
+    await consultarTodo(true);
 
-      setInterval(() => {
-        actualizarTiempoReal();
-      }, 2000);
+    setInterval(() => {
+      actualizarTiempoReal();
+    }, 2000);
 
-      setInterval(() => {
-        const daySeleccionado = document.getElementById("dayDate").value;
-        const hoyActual = hoyTexto();
+    setInterval(() => {
+      const daySeleccionado = document.getElementById("dayDate").value;
+      const hoyActual = hoyTexto();
 
-        if (daySeleccionado === hoyActual) {
-          consultarTodo(false);
-        }
-      }, 10000);
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const dayDate = document.getElementById("dayDate");
-      const pmSelect = document.getElementById("pmSelect");
-
-      if (dayDate) {
-        dayDate.addEventListener("change", () => {
-          consultarTodo(true);
-        });
+      if (daySeleccionado === hoyActual) {
+        consultarTodo(false);
       }
+    }, 10000);
+  });
 
-      if (pmSelect) {
-        pmSelect.addEventListener("change", async () => {
-          actualizarMeterSeleccionadoDesdeSelect();
-          await actualizarTiempoReal();
-          await consultarTodo(true);
-        });
-      }
-    });
-  </script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const dayDate = document.getElementById("dayDate");
+    const pmSelect = document.getElementById("pmSelect");
+
+    if (dayDate) {
+      dayDate.addEventListener("change", () => {
+        consultarTodo(true);
+      });
+    }
+
+    if (pmSelect) {
+      pmSelect.addEventListener("change", async () => {
+        actualizarMeterSeleccionadoDesdeSelect();
+        await actualizarTiempoReal();
+        await consultarTodo(true);
+      });
+    }
+  });
+</script>
 </body>
 </html>
