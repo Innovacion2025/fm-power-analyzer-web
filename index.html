@@ -1329,8 +1329,9 @@
         setQualityBar("bar_desbalance_v", "q_desbalance_v", numeroSeguro(d.desbalance_v), 100);
         setQualityBar("bar_desbalance_i", "q_desbalance_i", numeroSeguro(d.desbalance_i), 200);
   
+        // Guardar solo el payload vivo.
+        // NO actualizar ultimoTimestampLive aqui.
         ultimoPayloadTiempoReal = d;
-        ultimoTimestampLive = numeroSeguro(d.timestamp_ms);
   
         return d;
       } catch (e) {
@@ -1958,7 +1959,12 @@
       const ts = numeroSeguro(d.timestamp_ms);
   
       if (!Number.isFinite(ts)) return;
-      if (ultimoTimestampLive !== null && ts <= Number(ultimoTimestampLive)) return;
+  
+      const ultimoGraficado = ultimoTimestampHistorico !== null
+        ? Number(ultimoTimestampHistorico)
+        : null;
+  
+      if (ultimoGraficado !== null && ts <= ultimoGraficado) return;
   
       const label = formatearHoraDesdeMs(ts);
       const cfg = getPhasePowerConfig();
@@ -2011,8 +2017,8 @@
         chartFrequency.update("none");
       }
   
-      ultimoTimestampLive = ts;
       ultimoTimestampHistorico = ts;
+      ultimoTimestampLive = ts;
     }
   </script>
     
