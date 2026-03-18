@@ -1905,8 +1905,16 @@
           return;
         }
   
+        // =====================================================
+        // 🔥 ORDENAR DATOS POR FECHA (IMPORTANTE)
+        // =====================================================
+        json.data.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+  
         errorBox.innerText = "";
   
+        // =====================================================
+        // 🔄 RECARGA COMPLETA
+        // =====================================================
         if (forzarRecargaCompleta || esNuevaFecha || esNuevoPm || !chartVoltages) {
           const labels = json.data.map(item => formatearHora(item.created_at));
           const rows = json.data;
@@ -1924,11 +1932,26 @@
           return;
         }
   
+        // =====================================================
+        // 🔥 FILTRAR SOLO PUNTOS NUEVOS (CORREGIDO)
+        // =====================================================
+        const ultimoMs = ultimoTimestampHistorico
+          ? new Date(ultimoTimestampHistorico).getTime()
+          : null;
+  
         const rowsNuevos = json.data.filter(item => {
-          return !ultimoTimestampHistorico || item.created_at > ultimoTimestampHistorico;
+          const itemMs = new Date(item.created_at).getTime();
+          return ultimoMs === null || itemMs > ultimoMs;
         });
   
-        agregarSoloPuntosNuevos(rowsNuevos);
+        // =====================================================
+        // ➕ AGREGAR SOLO NUEVOS PUNTOS
+        // =====================================================
+        if (rowsNuevos.length > 0) {
+          agregarSoloPuntosNuevos(rowsNuevos);
+          ultimoTimestampHistorico = rowsNuevos[rowsNuevos.length - 1].created_at;
+        }
+  
         fechaHistoricaActual = day;
         pmHistoricoActual = pm_slave;
   
