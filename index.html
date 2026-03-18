@@ -1033,6 +1033,7 @@
   
     let ultimoTimestampHistorico = null;
     let ultimoTimestampLive = null;
+    let ultimaHoraVisible = null;
     let fechaHistoricaActual = null;
     let pmHistoricoActual = null;
   
@@ -1331,6 +1332,7 @@
         console.log("====================================");
         console.log("[TIEMPO REAL] pm_slave:", pm_slave);
         console.log("[TIEMPO REAL] timestamp_ms:", d.timestamp_ms);
+        console.log("[TIEMPO REAL] visible_at:", d.visible_at);
         console.log("[TIEMPO REAL] payload:", d);
   
         return d;
@@ -1755,48 +1757,49 @@
   <!-- ===================================================== -->
   <script>
     function limpiarGraficas() {
-      const labelsVacios = [];
-      const datosVacios = [];
+    const labelsVacios = [];
+    const datosVacios = [];
   
-      ultimoTimestampHistorico = null;
-      ultimoTimestampLive = null;
+    ultimoTimestampHistorico = null;
+    ultimoTimestampLive = null;
+    ultimaHoraVisible = null;
   
-      if (chartVoltages) {
-        chartVoltages.data.labels = labelsVacios;
-        chartVoltages.data.datasets.forEach(ds => ds.data = datosVacios);
-        chartVoltages.update("none");
-      }
-  
-      if (chartCurrents) {
-        chartCurrents.data.labels = labelsVacios;
-        chartCurrents.data.datasets.forEach(ds => ds.data = datosVacios);
-        chartCurrents.update("none");
-      }
-  
-      if (chartPowers) {
-        chartPowers.data.labels = labelsVacios;
-        chartPowers.data.datasets.forEach(ds => ds.data = datosVacios);
-        chartPowers.update("none");
-      }
-  
-      if (chartPhasePowers) {
-        chartPhasePowers.data.labels = labelsVacios;
-        chartPhasePowers.data.datasets.forEach(ds => ds.data = datosVacios);
-        chartPhasePowers.update("none");
-      }
-  
-      if (chartPf) {
-        chartPf.data.labels = labelsVacios;
-        chartPf.data.datasets.forEach(ds => ds.data = datosVacios);
-        chartPf.update("none");
-      }
-  
-      if (chartFrequency) {
-        chartFrequency.data.labels = labelsVacios;
-        chartFrequency.data.datasets.forEach(ds => ds.data = datosVacios);
-        chartFrequency.update("none");
-      }
+    if (chartVoltages) {
+      chartVoltages.data.labels = labelsVacios;
+      chartVoltages.data.datasets.forEach(ds => ds.data = datosVacios);
+      chartVoltages.update("none");
     }
+  
+    if (chartCurrents) {
+      chartCurrents.data.labels = labelsVacios;
+      chartCurrents.data.datasets.forEach(ds => ds.data = datosVacios);
+      chartCurrents.update("none");
+    }
+  
+    if (chartPowers) {
+      chartPowers.data.labels = labelsVacios;
+      chartPowers.data.datasets.forEach(ds => ds.data = datosVacios);
+      chartPowers.update("none");
+    }
+  
+    if (chartPhasePowers) {
+      chartPhasePowers.data.labels = labelsVacios;
+      chartPhasePowers.data.datasets.forEach(ds => ds.data = datosVacios);
+      chartPhasePowers.update("none");
+    }
+  
+    if (chartPf) {
+      chartPf.data.labels = labelsVacios;
+      chartPf.data.datasets.forEach(ds => ds.data = datosVacios);
+      chartPf.update("none");
+    }
+  
+    if (chartFrequency) {
+      chartFrequency.data.labels = labelsVacios;
+      chartFrequency.data.datasets.forEach(ds => ds.data = datosVacios);
+      chartFrequency.update("none");
+    }
+  }
   </script>
 
   <!-- ===================================================== -->
@@ -1924,7 +1927,7 @@
           return aMs - bMs;
         });
   
-        const labels = json.data.map(item => formatearHoraReal(item.created_at));
+        const labels = json.data.map(item => formatearHoraReal(item.visible_at));
         const rows = json.data;
   
         actualizarGraficaVoltajes(labels, rows);
@@ -1936,6 +1939,7 @@
   
         ultimoTimestampHistorico = rows[rows.length - 1].timestamp_ms;
         ultimoTimestampLive = ultimoTimestampHistorico;
+        ultimaHoraVisible = rows[rows.length - 1].visible_at || null;
         fechaHistoricaActual = day;
         pmHistoricoActual = pm_slave;
         errorBox.innerText = "";
@@ -1959,180 +1963,95 @@
   <!-- ===================================================== -->
   <script>
     function agregarPuntoDesdeTiempoReal(d) {
-      console.log("====================================");
-      console.log("[CURVA] Intentando agregar punto vivo");
-      console.log("[CURVA] d:", d);
+    console.log("====================================");
+    console.log("[CURVA] Intentando agregar punto vivo");
+    console.log("[CURVA] d:", d);
   
-      if (!d) {
-        console.log("[CURVA] No hay payload vivo");
-        return;
-      }
-  
-      const ts = numeroSeguro(d.timestamp_ms);
-      const ultimoGraficado = ultimoTimestampHistorico !== null
-        ? Number(ultimoTimestampHistorico)
-        : null;
-  
-      console.log("[CURVA] ts nuevo:", ts);
-      console.log("[CURVA] ultimoTimestampHistorico:", ultimoGraficado);
-      console.log(
-        "[CURVA] condicion ts <= ultimoGraficado:",
-        ultimoGraficado !== null ? ts <= ultimoGraficado : "sin ultimo"
-      );
-  
-      if (!Number.isFinite(ts)) {
-        console.log("[CURVA] timestamp_ms no es valido");
-        return;
-      }
-  
-      if (ultimoGraficado !== null && ts <= ultimoGraficado) {
-        console.log("[CURVA] Punto rechazado: timestamp repetido o menor");
-        return;
-      }
-  
-      // Para el punto vivo usar updated_at, no created_at
-      const fechaVisible = d.updated_at || d.created_at;
-      const label = formatearHoraReal(fechaVisible);
-      const cfg = getPhasePowerConfig();
-  
-      if (chartVoltages) {
-        chartVoltages.data.labels.push(label);
-        chartVoltages.data.datasets[0].data.push(numeroSeguro(d.voltage_a, d.voltage_an));
-        chartVoltages.data.datasets[1].data.push(numeroSeguro(d.voltage_b));
-        chartVoltages.data.datasets[2].data.push(numeroSeguro(d.voltage_c));
-        chartVoltages.update("none");
-      }
-  
-      if (chartCurrents) {
-        chartCurrents.data.labels.push(label);
-        chartCurrents.data.datasets[0].data.push(numeroSeguro(d.current_a));
-        chartCurrents.data.datasets[1].data.push(numeroSeguro(d.current_b));
-        chartCurrents.data.datasets[2].data.push(numeroSeguro(d.current_c));
-        chartCurrents.data.datasets[3].data.push(numeroSeguro(d.current_n));
-        chartCurrents.update("none");
-      }
-  
-      if (chartPowers) {
-        chartPowers.data.labels.push(label);
-        chartPowers.data.datasets[0].data.push(numeroSeguro(d.p_tot, d.ptot));
-        chartPowers.data.datasets[1].data.push(numeroSeguro(d.q_tot, d.qtot));
-        chartPowers.data.datasets[2].data.push(numeroSeguro(d.s_tot, d.stot));
-        chartPowers.update("none");
-      }
-  
-      if (chartPhasePowers) {
-        chartPhasePowers.data.labels.push(label);
-        chartPhasePowers.data.datasets[0].data.push(numeroSeguro(d[cfg.keyA]));
-        chartPhasePowers.data.datasets[1].data.push(numeroSeguro(d[cfg.keyB]));
-        chartPhasePowers.data.datasets[2].data.push(numeroSeguro(d[cfg.keyC]));
-        chartPhasePowers.update("none");
-      }
-  
-      if (chartPf) {
-        chartPf.data.labels.push(label);
-        chartPf.data.datasets[0].data.push(corregirPfFase(numeroSeguro(d.pf_a)));
-        chartPf.data.datasets[1].data.push(corregirPfFase(numeroSeguro(d.pf_b)));
-        chartPf.data.datasets[2].data.push(corregirPfFase(numeroSeguro(d.pf_c)));
-        chartPf.data.datasets[3].data.push(numeroSeguro(d.pf_tot));
-        chartPf.update("none");
-      }
-  
-      if (chartFrequency) {
-        chartFrequency.data.labels.push(label);
-        chartFrequency.data.datasets[0].data.push(numeroSeguro(d.frecuencia, d.frequency));
-        chartFrequency.update("none");
-      }
-  
-      ultimoTimestampHistorico = ts;
-      ultimoTimestampLive = ts;
-  
-      console.log("[CURVA] fechaVisible usada:", fechaVisible);
-      console.log("[CURVA] Punto agregado correctamente a las gráficas");
-      console.log("[CURVA] nuevo ultimoTimestampHistorico:", ts);
+    if (!d) {
+      console.log("[CURVA] No hay payload vivo");
+      return;
     }
-  </script>
-    
-  <!-- ===================================================== -->
-  <!-- BLOQUE 30: INICIALIZACION Y EVENTOS                  -->
-  <!-- ===================================================== -->
-  <script>
-    window.addEventListener("load", async () => {
-      const hoy = hoyTexto();
   
-      document.getElementById("dayDate").value = hoy;
-      document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
+    const ts = numeroSeguro(d.timestamp_ms);
+    const ultimoGraficado = ultimoTimestampHistorico !== null
+      ? Number(ultimoTimestampHistorico)
+      : null;
   
-      const csvFrom = document.getElementById("csvFrom");
-      const csvTo = document.getElementById("csvTo");
+    console.log("[CURVA] ts nuevo:", ts);
+    console.log("[CURVA] ultimoTimestampHistorico:", ultimoGraficado);
   
-      if (csvFrom) csvFrom.value = hoy;
-      if (csvTo) csvTo.value = hoy;
+    if (!Number.isFinite(ts)) {
+      console.log("[CURVA] timestamp_ms no es valido");
+      return;
+    }
   
-      const okMeters = await cargarMedidores();
-      if (!okMeters) return;
+    if (ultimoGraficado !== null && ts <= ultimoGraficado) {
+      console.log("[CURVA] Punto rechazado: timestamp repetido o menor");
+      return;
+    }
   
-      const primerDato = await actualizarTiempoReal();
-      await consultarTodo(true);
+    const visibleAt = d.visible_at || d.updated_at || d.created_at || null;
+    const label = formatearHoraReal(visibleAt);
+    const cfg = getPhasePowerConfig();
   
-      if (document.getElementById("dayDate").value === hoyTexto()) {
-        console.log("[LOAD] Intentando agregar primer punto vivo");
-        agregarPuntoDesdeTiempoReal(primerDato);
-      }
+    if (chartVoltages) {
+      chartVoltages.data.labels.push(label);
+      chartVoltages.data.datasets[0].data.push(numeroSeguro(d.voltage_a, d.voltage_an));
+      chartVoltages.data.datasets[1].data.push(numeroSeguro(d.voltage_b));
+      chartVoltages.data.datasets[2].data.push(numeroSeguro(d.voltage_c));
+    }
   
-      setInterval(async () => {
-        const daySeleccionado = document.getElementById("dayDate").value;
-        const hoyActual = hoyTexto();
+    if (chartCurrents) {
+      chartCurrents.data.labels.push(label);
+      chartCurrents.data.datasets[0].data.push(numeroSeguro(d.current_a));
+      chartCurrents.data.datasets[1].data.push(numeroSeguro(d.current_b));
+      chartCurrents.data.datasets[2].data.push(numeroSeguro(d.current_c));
+      chartCurrents.data.datasets[3].data.push(numeroSeguro(d.current_n));
+    }
   
-        console.log("====================================");
-        console.log("[INTERVALO] Ejecutando ciclo vivo");
-        console.log("[INTERVALO] daySeleccionado:", daySeleccionado, "hoyActual:", hoyActual);
+    if (chartPowers) {
+      chartPowers.data.labels.push(label);
+      chartPowers.data.datasets[0].data.push(numeroSeguro(d.p_tot, d.ptot));
+      chartPowers.data.datasets[1].data.push(numeroSeguro(d.q_tot, d.qtot));
+      chartPowers.data.datasets[2].data.push(numeroSeguro(d.s_tot, d.stot));
+    }
   
-        const datoVivo = await actualizarTiempoReal();
+    if (chartPhasePowers) {
+      chartPhasePowers.data.labels.push(label);
+      chartPhasePowers.data.datasets[0].data.push(numeroSeguro(d[cfg.keyA]));
+      chartPhasePowers.data.datasets[1].data.push(numeroSeguro(d[cfg.keyB]));
+      chartPhasePowers.data.datasets[2].data.push(numeroSeguro(d[cfg.keyC]));
+    }
   
-        console.log("[INTERVALO] datoVivo recibido:", datoVivo);
+    if (chartPf) {
+      chartPf.data.labels.push(label);
+      chartPf.data.datasets[0].data.push(corregirPfFase(numeroSeguro(d.pf_a)));
+      chartPf.data.datasets[1].data.push(corregirPfFase(numeroSeguro(d.pf_b)));
+      chartPf.data.datasets[2].data.push(corregirPfFase(numeroSeguro(d.pf_c)));
+      chartPf.data.datasets[3].data.push(numeroSeguro(d.pf_tot));
+    }
   
-        if (daySeleccionado === hoyActual) {
-          console.log("[INTERVALO] Agregando punto a curva...");
-          agregarPuntoDesdeTiempoReal(datoVivo);
-        } else {
-          console.log("[INTERVALO] No agrega punto porque no estás viendo el día actual");
-        }
-      }, 2000);
-    });
+    if (chartFrequency) {
+      chartFrequency.data.labels.push(label);
+      chartFrequency.data.datasets[0].data.push(numeroSeguro(d.frecuencia, d.frequency));
+    }
   
-    document.addEventListener("DOMContentLoaded", () => {
-      const dayDate = document.getElementById("dayDate");
-      const pmSelect = document.getElementById("pmSelect");
-      const phasePowerModeSelect = document.getElementById("phasePowerMode");
+    if (chartVoltages) chartVoltages.update("none");
+    if (chartCurrents) chartCurrents.update("none");
+    if (chartPowers) chartPowers.update("none");
+    if (chartPhasePowers) chartPhasePowers.update("none");
+    if (chartPf) chartPf.update("none");
+    if (chartFrequency) chartFrequency.update("none");
   
-      if (dayDate) {
-        dayDate.addEventListener("change", () => {
-          console.log("[EVENTO] Cambio de fecha");
-          consultarTodo(true);
-        });
-      }
+    ultimoTimestampHistorico = ts;
+    ultimoTimestampLive = ts;
+    ultimaHoraVisible = visibleAt;
   
-      if (pmSelect) {
-        pmSelect.addEventListener("change", async () => {
-          console.log("[EVENTO] Cambio de PM");
-          actualizarMeterSeleccionadoDesdeSelect();
-          const datoVivo = await actualizarTiempoReal();
-          await consultarTodo(true);
-  
-          if (document.getElementById("dayDate").value === hoyTexto()) {
-            agregarPuntoDesdeTiempoReal(datoVivo);
-          }
-        });
-      }
-  
-      if (phasePowerModeSelect) {
-        phasePowerModeSelect.addEventListener("change", async (e) => {
-          console.log("[EVENTO] Cambio de modo potencia por fase:", e.target.value);
-          phasePowerMode = e.target.value;
-          await consultarTodo(true);
-        });
-      }
-    });
+    console.log("[CURVA] visible_at usado:", visibleAt);
+    console.log("[CURVA] label usado:", label);
+    console.log("[CURVA] Punto agregado correctamente a las gráficas");
+    console.log("[CURVA] nuevo ultimoTimestampHistorico:", ts);
+  }
   </script>
     
 </body>
