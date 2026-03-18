@@ -1329,10 +1329,6 @@
         setQualityBar("bar_desbalance_v", "q_desbalance_v", numeroSeguro(d.desbalance_v), 100);
         setQualityBar("bar_desbalance_i", "q_desbalance_i", numeroSeguro(d.desbalance_i), 200);
   
-        // Guardar solo el payload vivo.
-        // NO actualizar ultimoTimestampLive aqui.
-        ultimoPayloadTiempoReal = d;
-  
         return d;
       } catch (e) {
         document.getElementById("error").innerText = "Error conectando con la API";
@@ -1952,19 +1948,19 @@
   <!-- BLOQUE 29A: AGREGAR ULTIMO PUNTO DESDE TIEMPO REAL   -->
   <!-- ===================================================== -->
   <script>
-    function agregarPuntoDesdeTiempoReal() {
-      if (!ultimoPayloadTiempoReal) return;
+    function agregarPuntoDesdeTiempoReal(d) {
+      if (!d) return;
   
-      const d = ultimoPayloadTiempoReal;
       const ts = numeroSeguro(d.timestamp_ms);
-  
       if (!Number.isFinite(ts)) return;
   
       const ultimoGraficado = ultimoTimestampHistorico !== null
         ? Number(ultimoTimestampHistorico)
         : null;
   
-      if (ultimoGraficado !== null && ts <= ultimoGraficado) return;
+      if (ultimoGraficado !== null && ts <= ultimoGraficado) {
+        return;
+      }
   
       const label = formatearHoraDesdeMs(ts);
       const cfg = getPhasePowerConfig();
@@ -2041,18 +2037,22 @@
       const okMeters = await cargarMedidores();
       if (!okMeters) return;
   
-      await actualizarTiempoReal();
+      const primerDato = await actualizarTiempoReal();
       await consultarTodo(true);
   
-      // Tiempo real visual
+      if (document.getElementById("dayDate").value === hoyTexto()) {
+        agregarPuntoDesdeTiempoReal(primerDato);
+      }
+  
+      // Tiempo real + punto vivo en curva
       setInterval(async () => {
         const daySeleccionado = document.getElementById("dayDate").value;
         const hoyActual = hoyTexto();
   
-        await actualizarTiempoReal();
+        const datoVivo = await actualizarTiempoReal();
   
         if (daySeleccionado === hoyActual) {
-          agregarPuntoDesdeTiempoReal();
+          agregarPuntoDesdeTiempoReal(datoVivo);
         }
       }, 2000);
   
@@ -2081,8 +2081,12 @@
       if (pmSelect) {
         pmSelect.addEventListener("change", async () => {
           actualizarMeterSeleccionadoDesdeSelect();
-          await actualizarTiempoReal();
+          const datoVivo = await actualizarTiempoReal();
           await consultarTodo(true);
+  
+          if (document.getElementById("dayDate").value === hoyTexto()) {
+            agregarPuntoDesdeTiempoReal(datoVivo);
+          }
         });
       }
   
