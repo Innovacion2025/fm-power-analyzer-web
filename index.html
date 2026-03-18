@@ -1329,9 +1329,15 @@
         setQualityBar("bar_desbalance_v", "q_desbalance_v", numeroSeguro(d.desbalance_v), 100);
         setQualityBar("bar_desbalance_i", "q_desbalance_i", numeroSeguro(d.desbalance_i), 200);
   
+        console.log("====================================");
+        console.log("[TIEMPO REAL] pm_slave:", pm_slave);
+        console.log("[TIEMPO REAL] timestamp_ms:", d.timestamp_ms);
+        console.log("[TIEMPO REAL] payload:", d);
+  
         return d;
       } catch (e) {
         document.getElementById("error").innerText = "Error conectando con la API";
+        console.error("[TIEMPO REAL] Error:", e);
         return null;
       }
     }
@@ -1935,30 +1941,53 @@
         pmHistoricoActual = pm_slave;
         errorBox.innerText = "";
   
+        console.log("====================================");
+        console.log("[HISTORICO] Curva reconstruida");
+        console.log("[HISTORICO] total puntos:", rows.length);
+        console.log("[HISTORICO] ultimo timestamp cargado:", rows[rows.length - 1]?.timestamp_ms);
+  
       } catch (e) {
-        console.error("Error en consultarTodo:", e);
+        console.error("[HISTORICO] Error en consultarTodo:", e);
         document.getElementById("error").innerText = "";
         limpiarGraficas();
         mostrarToast("Error al consultar las curvas");
       }
     }
   </script>
-
+  
   <!-- ===================================================== -->
   <!-- BLOQUE 29A: AGREGAR ULTIMO PUNTO DESDE TIEMPO REAL   -->
   <!-- ===================================================== -->
   <script>
     function agregarPuntoDesdeTiempoReal(d) {
-      if (!d) return;
+      console.log("====================================");
+      console.log("[CURVA] Intentando agregar punto vivo");
+      console.log("[CURVA] d:", d);
+  
+      if (!d) {
+        console.log("[CURVA] No hay payload vivo");
+        return;
+      }
   
       const ts = numeroSeguro(d.timestamp_ms);
-      if (!Number.isFinite(ts)) return;
-  
       const ultimoGraficado = ultimoTimestampHistorico !== null
         ? Number(ultimoTimestampHistorico)
         : null;
   
+      console.log("[CURVA] ts nuevo:", ts);
+      console.log("[CURVA] ultimoTimestampHistorico:", ultimoGraficado);
+      console.log(
+        "[CURVA] condicion ts <= ultimoGraficado:",
+        ultimoGraficado !== null ? ts <= ultimoGraficado : "sin ultimo"
+      );
+  
+      if (!Number.isFinite(ts)) {
+        console.log("[CURVA] timestamp_ms no es valido");
+        return;
+      }
+  
       if (ultimoGraficado !== null && ts <= ultimoGraficado) {
+        console.log("[CURVA] Punto rechazado: timestamp repetido o menor");
         return;
       }
   
@@ -2015,9 +2044,12 @@
   
       ultimoTimestampHistorico = ts;
       ultimoTimestampLive = ts;
+  
+      console.log("[CURVA] Punto agregado correctamente a las gráficas");
+      console.log("[CURVA] nuevo ultimoTimestampHistorico:", ts);
     }
   </script>
-    
+  
   <!-- ===================================================== -->
   <!-- BLOQUE 30: INICIALIZACION Y EVENTOS                  -->
   <!-- ===================================================== -->
@@ -2041,27 +2073,36 @@
       await consultarTodo(true);
   
       if (document.getElementById("dayDate").value === hoyTexto()) {
+        console.log("[LOAD] Intentando agregar primer punto vivo");
         agregarPuntoDesdeTiempoReal(primerDato);
       }
   
-      // Tiempo real + punto vivo en curva
       setInterval(async () => {
         const daySeleccionado = document.getElementById("dayDate").value;
         const hoyActual = hoyTexto();
   
+        console.log("====================================");
+        console.log("[INTERVALO] Ejecutando ciclo vivo");
+        console.log("[INTERVALO] daySeleccionado:", daySeleccionado, "hoyActual:", hoyActual);
+  
         const datoVivo = await actualizarTiempoReal();
   
+        console.log("[INTERVALO] datoVivo recibido:", datoVivo);
+  
         if (daySeleccionado === hoyActual) {
+          console.log("[INTERVALO] Agregando punto a curva...");
           agregarPuntoDesdeTiempoReal(datoVivo);
+        } else {
+          console.log("[INTERVALO] No agrega punto porque no estás viendo el día actual");
         }
       }, 2000);
   
-      // Resincronización completa ocasional
       setInterval(() => {
         const daySeleccionado = document.getElementById("dayDate").value;
         const hoyActual = hoyTexto();
   
         if (daySeleccionado === hoyActual) {
+          console.log("[RESYNC] Reconstruyendo curva completa...");
           consultarTodo(true);
         }
       }, 60000);
@@ -2074,12 +2115,14 @@
   
       if (dayDate) {
         dayDate.addEventListener("change", () => {
+          console.log("[EVENTO] Cambio de fecha");
           consultarTodo(true);
         });
       }
   
       if (pmSelect) {
         pmSelect.addEventListener("change", async () => {
+          console.log("[EVENTO] Cambio de PM");
           actualizarMeterSeleccionadoDesdeSelect();
           const datoVivo = await actualizarTiempoReal();
           await consultarTodo(true);
@@ -2092,12 +2135,13 @@
   
       if (phasePowerModeSelect) {
         phasePowerModeSelect.addEventListener("change", async (e) => {
+          console.log("[EVENTO] Cambio de modo potencia por fase:", e.target.value);
           phasePowerMode = e.target.value;
           await consultarTodo(true);
         });
       }
     });
   </script>
-  
+    
 </body>
 </html>
