@@ -1011,105 +1011,116 @@
     </div>
   </div>
 
-  <!-- ===================================================== -->
-  <!-- BLOQUE 17: VARIABLES GLOBALES Y UTILIDADES           -->
-  <!-- ===================================================== -->
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const device = params.get("device") || "FMPAN-0001";
-    const API_BASE = "https://fm-power-analyzer-server.onrender.com";
-  
-    let chartVoltages = null;
-    let chartCurrents = null;
-    let chartPowers = null;
-    let chartPhasePowers = null;
-    let chartPf = null;
-    let chartFrequency = null;
+<!-- ===================================================== -->
+<!-- BLOQUE 17: VARIABLES GLOBALES Y UTILIDADES           -->
+<!-- ===================================================== -->
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const device = params.get("device") || "FMPAN-0001";
+  const API_BASE = "https://fm-power-analyzer-server.onrender.com";
 
-    let phasePowerMode = "activa";
-  
-    let meters = [];
-    let currentMeter = null;
-  
-    let ultimoTimestampHistorico = null;
-    let fechaHistoricaActual = null;
-    let pmHistoricoActual = null;
-  
-    function hoyTexto() {
-      const ahora = new Date();
-      const y = ahora.getFullYear();
-      const m = String(ahora.getMonth() + 1).padStart(2, "0");
-      const d = String(ahora.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
-    }
-  
-    function formatearHora(fechaIso) {
-      const f = new Date(fechaIso);
-      return f.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit"
-      });
-    }
-  
-    function formatearFechaCorta(fechaIso) {
-      const f = new Date(fechaIso + "T00:00:00");
-      return f.toLocaleDateString("es-EC");
-    }
-  
-    function mostrarToast(mensaje) {
-      document.getElementById("toastMessage").innerText = mensaje;
-      document.getElementById("toast").classList.add("show");
-    }
-  
-    function cerrarToast() {
-      document.getElementById("toast").classList.remove("show");
-    }
-  
-    function valorSeguro(...valores) {
-      for (const v of valores) {
-        if (v !== undefined && v !== null && v !== "") return v;
-      }
-      return null;
-    }
-  
-    function numeroSeguro(...valores) {
-      const v = valorSeguro(...valores);
-      if (v === null) return null;
-      const n = Number(v);
-      return Number.isFinite(n) ? n : null;
-    }
-  
-    function textoValor(v, sufijo = "", decimales = 3) {
-      if (v === null || v === undefined || v === "") return "--";
-      const n = Number(v);
-      if (!Number.isFinite(n)) return "--";
-      return `${n.toFixed(decimales)}${sufijo}`;
-    }
-  
-    function getCurrentPmSlave() {
-      if (!currentMeter) return null;
-      return Number(currentMeter.pm_slave);
-    }
-  
-    function corregirPfFase(v) {
-      if (v === null || v === undefined || v === "") return null;
-      const n = Number(v);
-      if (!Number.isFinite(n)) return null;
-      return 2 - n;
-    }
-  
-    function actualizarEncabezadoMeter() {
-      document.getElementById("device").innerText = currentMeter?.device_id || device;
-      document.getElementById("heroDeviceName").innerText =
-        "Gateway: " + (currentMeter?.device_name || currentMeter?.device_id || "--");
-      document.getElementById("heroPmName").innerText =
-        "PM: " + (currentMeter?.pm_name || "--");
-      document.getElementById("heroPmSlave").innerText =
-        "Slave: " + (currentMeter?.pm_slave ?? "--");
-    }
-  </script>
+  let chartVoltages = null;
+  let chartCurrents = null;
+  let chartPowers = null;
+  let chartPhasePowers = null;
+  let chartPf = null;
+  let chartFrequency = null;
 
+  let phasePowerMode = "activa";
+
+  let meters = [];
+  let currentMeter = null;
+
+  let ultimoTimestampHistorico = null;
+  let fechaHistoricaActual = null;
+  let pmHistoricoActual = null;
+
+  function hoyTexto() {
+    const ahora = new Date();
+    const y = ahora.getFullYear();
+    const m = String(ahora.getMonth() + 1).padStart(2, "0");
+    const d = String(ahora.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  }
+
+  function formatearHora(fechaIso) {
+    const f = new Date(fechaIso);
+    return f.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    });
+  }
+
+  function formatearHoraDesdeMs(ms) {
+    if (ms === null || ms === undefined || ms === "") return "--";
+    const f = new Date(Number(ms));
+    if (isNaN(f.getTime())) return "--";
+    return f.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    });
+  }
+
+  function formatearFechaCorta(fechaIso) {
+    const f = new Date(fechaIso + "T00:00:00");
+    return f.toLocaleDateString("es-EC");
+  }
+
+  function mostrarToast(mensaje) {
+    document.getElementById("toastMessage").innerText = mensaje;
+    document.getElementById("toast").classList.add("show");
+  }
+
+  function cerrarToast() {
+    document.getElementById("toast").classList.remove("show");
+  }
+
+  function valorSeguro(...valores) {
+    for (const v of valores) {
+      if (v !== undefined && v !== null && v !== "") return v;
+    }
+    return null;
+  }
+
+  function numeroSeguro(...valores) {
+    const v = valorSeguro(...valores);
+    if (v === null) return null;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function textoValor(v, sufijo = "", decimales = 3) {
+    if (v === null || v === undefined || v === "") return "--";
+    const n = Number(v);
+    if (!Number.isFinite(n)) return "--";
+    return `${n.toFixed(decimales)}${sufijo}`;
+  }
+
+  function getCurrentPmSlave() {
+    if (!currentMeter) return null;
+    return Number(currentMeter.pm_slave);
+  }
+
+  function corregirPfFase(v) {
+    if (v === null || v === undefined || v === "") return null;
+    const n = Number(v);
+    if (!Number.isFinite(n)) return null;
+    return 2 - n;
+  }
+
+  function actualizarEncabezadoMeter() {
+    document.getElementById("device").innerText = currentMeter?.device_id || device;
+    document.getElementById("heroDeviceName").innerText =
+      "Gateway: " + (currentMeter?.device_name || currentMeter?.device_id || "--");
+    document.getElementById("heroPmName").innerText =
+      "PM: " + (currentMeter?.pm_name || "--");
+    document.getElementById("heroPmSlave").innerText =
+      "Slave: " + (currentMeter?.pm_slave ?? "--");
+  }
+</script>
+  
   <!-- ===================================================== -->
   <!-- BLOQUE 18: CARGA DE MEDIDORES                        -->
   <!-- ===================================================== -->
@@ -1527,9 +1538,9 @@
       const va = rows.map(item => numeroSeguro(item.voltage_a, item.voltage_an));
       const vb = rows.map(item => numeroSeguro(item.voltage_b));
       const vc = rows.map(item => numeroSeguro(item.voltage_c));
-
+  
       const ctx = document.getElementById("chartVoltages").getContext("2d");
-
+  
       if (!chartVoltages) {
         chartVoltages = new Chart(ctx, {
           type: "line",
@@ -1562,9 +1573,9 @@
       const ib = rows.map(item => numeroSeguro(item.current_b));
       const ic = rows.map(item => numeroSeguro(item.current_c));
       const inN = rows.map(item => numeroSeguro(item.current_n));
-
+  
       const ctx = document.getElementById("chartCurrents").getContext("2d");
-
+  
       if (!chartCurrents) {
         chartCurrents = new Chart(ctx, {
           type: "line",
@@ -1589,7 +1600,7 @@
       }
     }
   </script>
-
+  
   <!-- ===================================================== -->
   <!-- BLOQUE 25: GRAFICA DE POTENCIAS                      -->
   <!-- ===================================================== -->
@@ -1598,17 +1609,17 @@
       const activa = rows.map(item =>
         numeroSeguro(item.p_tot, item.ptot, item.raw_payload?.p_tot, item.raw_payload?.ptot)
       );
-
+  
       const reactiva = rows.map(item =>
         numeroSeguro(item.q_tot, item.qtot, item.raw_payload?.q_tot, item.raw_payload?.qtot)
       );
-
+  
       const aparente = rows.map(item =>
         numeroSeguro(item.s_tot, item.stot, item.raw_payload?.s_tot, item.raw_payload?.stot)
       );
-
+  
       const ctx = document.getElementById("chartPowers").getContext("2d");
-
+  
       if (!chartPowers) {
         chartPowers = new Chart(ctx, {
           type: "line",
@@ -1673,7 +1684,7 @@
       }
     }
   </script>
-
+    
   <!-- ===================================================== -->
   <!-- BLOQUE 26: GRAFICA DE FACTOR DE POTENCIA             -->
   <!-- ===================================================== -->
@@ -1683,9 +1694,9 @@
       const pfb = rows.map(item => corregirPfFase(numeroSeguro(item.pf_b)));
       const pfc = rows.map(item => corregirPfFase(numeroSeguro(item.pf_c)));
       const pft = rows.map(item => numeroSeguro(item.pf_tot));
-
+  
       const ctx = document.getElementById("chartPf").getContext("2d");
-
+  
       if (!chartPf) {
         chartPf = new Chart(ctx, {
           type: "line",
@@ -1796,7 +1807,7 @@
       const cfg = getPhasePowerConfig();
   
       for (const item of rowsNuevos) {
-        const label = formatearHora(item.created_at);
+        const label = formatearHoraDesdeMs(item.timestamp_ms);
   
         if (chartVoltages) {
           chartVoltages.data.labels.push(label);
@@ -1848,10 +1859,10 @@
       if (chartPf) chartPf.update("none");
       if (chartFrequency) chartFrequency.update("none");
   
-      ultimoTimestampHistorico = rowsNuevos[rowsNuevos.length - 1].created_at;
+      ultimoTimestampHistorico = rowsNuevos[rowsNuevos.length - 1].timestamp_ms;
     }
   </script>
-  
+    
   <!-- ===================================================== -->
   <!-- BLOQUE 29: ORQUESTADOR GENERAL                       -->
   <!-- ===================================================== -->
@@ -1905,18 +1916,16 @@
           return;
         }
   
-        // =====================================================
-        // 🔥 ORDENAR DATOS POR FECHA (IMPORTANTE)
-        // =====================================================
-        json.data.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+        json.data.sort((a, b) => {
+          const aMs = Number(a.timestamp_ms || 0);
+          const bMs = Number(b.timestamp_ms || 0);
+          return aMs - bMs;
+        });
   
         errorBox.innerText = "";
   
-        // =====================================================
-        // 🔄 RECARGA COMPLETA
-        // =====================================================
         if (forzarRecargaCompleta || esNuevaFecha || esNuevoPm || !chartVoltages) {
-          const labels = json.data.map(item => formatearHora(item.created_at));
+          const labels = json.data.map(item => formatearHoraDesdeMs(item.timestamp_ms));
           const rows = json.data;
   
           actualizarGraficaVoltajes(labels, rows);
@@ -1926,30 +1935,24 @@
           actualizarGraficaFp(labels, rows);
           actualizarGraficaFrecuencia(labels, rows);
   
-          ultimoTimestampHistorico = rows[rows.length - 1].created_at;
+          ultimoTimestampHistorico = rows[rows.length - 1].timestamp_ms;
           fechaHistoricaActual = day;
           pmHistoricoActual = pm_slave;
           return;
         }
   
-        // =====================================================
-        // 🔥 FILTRAR SOLO PUNTOS NUEVOS (CORREGIDO)
-        // =====================================================
-        const ultimoMs = ultimoTimestampHistorico
-          ? new Date(ultimoTimestampHistorico).getTime()
+        const ultimoMs = ultimoTimestampHistorico !== null
+          ? Number(ultimoTimestampHistorico)
           : null;
   
         const rowsNuevos = json.data.filter(item => {
-          const itemMs = new Date(item.created_at).getTime();
-          return ultimoMs === null || itemMs > ultimoMs;
+          const itemMs = Number(item.timestamp_ms);
+          return Number.isFinite(itemMs) && (ultimoMs === null || itemMs > ultimoMs);
         });
   
-        // =====================================================
-        // ➕ AGREGAR SOLO NUEVOS PUNTOS
-        // =====================================================
         if (rowsNuevos.length > 0) {
           agregarSoloPuntosNuevos(rowsNuevos);
-          ultimoTimestampHistorico = rowsNuevos[rowsNuevos.length - 1].created_at;
+          ultimoTimestampHistorico = rowsNuevos[rowsNuevos.length - 1].timestamp_ms;
         }
   
         fechaHistoricaActual = day;
@@ -1994,9 +1997,6 @@
     window.addEventListener("load", async () => {
       const hoy = hoyTexto();
   
-      // =========================
-      // SETEO INICIAL DE FECHAS
-      // =========================
       document.getElementById("dayDate").value = hoy;
       document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
   
@@ -2006,59 +2006,37 @@
       if (csvFrom) csvFrom.value = hoy;
       if (csvTo) csvTo.value = hoy;
   
-      // =========================
-      // CARGAR MEDIDORES
-      // =========================
       const okMeters = await cargarMedidores();
       if (!okMeters) return;
   
-      // =========================
-      // PRIMERA CARGA
-      // =========================
       await actualizarTiempoReal();
       await consultarTodo(true);
   
-      // =========================
-      // TIEMPO REAL (cada 2s)
-      // =========================
       setInterval(() => {
         actualizarTiempoReal();
       }, 2000);
   
-      // =========================
-      // HISTÓRICO (cada 5s)
-      // =========================
       setInterval(() => {
         const daySeleccionado = document.getElementById("dayDate").value;
         const hoyActual = hoyTexto();
   
-        // Solo auto-actualiza si estás viendo el día actual
         if (daySeleccionado === hoyActual) {
-          consultarTodo(true);
+          consultarTodo(false);
         }
-      }, 5000);
+      }, 3000);
     });
   
-    // =====================================================
-    // EVENTOS DE INTERFAZ
-    // =====================================================
     document.addEventListener("DOMContentLoaded", () => {
       const dayDate = document.getElementById("dayDate");
       const pmSelect = document.getElementById("pmSelect");
       const phasePowerModeSelect = document.getElementById("phasePowerMode");
   
-      // =========================
-      // CAMBIO DE FECHA
-      // =========================
       if (dayDate) {
         dayDate.addEventListener("change", () => {
           consultarTodo(true);
         });
       }
   
-      // =========================
-      // CAMBIO DE PM
-      // =========================
       if (pmSelect) {
         pmSelect.addEventListener("change", async () => {
           actualizarMeterSeleccionadoDesdeSelect();
@@ -2067,9 +2045,6 @@
         });
       }
   
-      // =========================
-      // CAMBIO DE TIPO DE POTENCIA POR FASE
-      // =========================
       if (phasePowerModeSelect) {
         phasePowerModeSelect.addEventListener("change", async (e) => {
           phasePowerMode = e.target.value;
