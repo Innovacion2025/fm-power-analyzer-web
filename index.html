@@ -12,7 +12,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 2: ESTILOS GENERALES                           -->
+  <!-- BLOQUE 2: VARIABLES Y ESTILOS GENERALES               -->
   <!-- ===================================================== -->
   <style>
     :root {
@@ -30,6 +30,9 @@
       --red: #D64541;
       --purple: #7B61FF;
       --teal: #16a085;
+      --amber: #f39c12;
+      --soft-bg: #fafbfb;
+      --soft-border: #e7ece9;
     }
 
     * {
@@ -45,7 +48,7 @@
     }
 
     .page {
-      max-width: 1480px;
+      max-width: 1500px;
       margin: 0 auto;
     }
 
@@ -65,7 +68,7 @@
   </style>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 2A: SPINNER DE DESCARGA                       -->
+  <!-- BLOQUE 2A: SPINNER DE DESCARGA                        -->
   <!-- ===================================================== -->
   <style>
     .spinner-overlay{
@@ -114,7 +117,7 @@
   </style>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 2.1: VENTANA DE AVISO                          -->
+  <!-- BLOQUE 2B: TOAST / AVISOS                             -->
   <!-- ===================================================== -->
   <style>
     .toast {
@@ -185,29 +188,10 @@
         transform: scale(1);
       }
     }
-
-    @media (max-width: 480px) {
-      .toast-card {
-        max-width: 92%;
-        padding: 16px 14px 14px 14px;
-      }
-
-      .toast-title {
-        font-size: 16px;
-      }
-
-      .toast-message {
-        font-size: 12px;
-      }
-
-      .toast-btn {
-        width: 100%;
-      }
-    }
   </style>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 3: ENCABEZADO COMPACTO                         -->
+  <!-- BLOQUE 3: HERO / ENCABEZADO                           -->
   <!-- ===================================================== -->
   <style>
     .hero {
@@ -288,22 +272,10 @@
       box-shadow: 0 0 0 5px rgba(46, 204, 113, 0.16);
       display: inline-block;
     }
-
-    .meter-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 12px;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 700;
-    }
   </style>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 4: ESTILOS BARRA HISTORIAL                     -->
+  <!-- BLOQUE 4: TOOLBAR / FILTROS                           -->
   <!-- ===================================================== -->
   <style>
     .toolbar-main{
@@ -391,7 +363,6 @@
       background: white;
     }
 
-    .btn-main,
     .btn-secondary{
       height:38px;
       padding:0 16px;
@@ -400,14 +371,6 @@
       font-weight:800;
       font-family:'Rubik',sans-serif;
       cursor:pointer;
-    }
-
-    .btn-main{
-      background:linear-gradient(135deg,var(--orange),#ff7b36);
-      color:white;
-    }
-
-    .btn-secondary{
       background:linear-gradient(135deg,var(--orange),#ff7b36);
       color:white;
     }
@@ -421,10 +384,95 @@
   </style>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 5: GRID DE GRAFICAS 2x2                        -->
+  <!-- BLOQUE 5: SECCION / TITULOS                           -->
   <!-- ===================================================== -->
   <style>
-    .charts-grid {
+    .section-block {
+      margin-bottom: 14px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--green);
+    }
+
+    .section-subtitle {
+      margin: 4px 0 0 0;
+      font-size: 13px;
+      color: #7c878e;
+    }
+  </style>
+
+  <!-- ===================================================== -->
+  <!-- BLOQUE 6: TARJETAS RESUMEN                            -->
+  <!-- ===================================================== -->
+  <style>
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .summary-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+      padding: 16px;
+    }
+
+    .summary-label {
+      font-size: 12px;
+      color: #7a858c;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .summary-value {
+      margin-top: 8px;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--green);
+      line-height: 1.1;
+    }
+
+    .summary-sub {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #7a858c;
+    }
+
+    @media (max-width: 1100px) {
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <!-- ===================================================== -->
+  <!-- BLOQUE 7: GRID DE GRAFICAS                            -->
+  <!-- ===================================================== -->
+  <style>
+    .charts-grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
@@ -436,7 +484,7 @@
       border-radius: 20px;
       box-shadow: var(--shadow-soft);
       padding: 14px;
-      min-height: 350px;
+      min-height: 360px;
       display: flex;
       flex-direction: column;
     }
@@ -448,11 +496,6 @@
       gap: 14px;
       margin-bottom: 10px;
       flex-wrap: wrap;
-    }
-
-    .chart-top-left {
-      flex: 1;
-      min-width: 0;
     }
 
     .chart-title {
@@ -469,16 +512,12 @@
       color: #7a858c;
     }
 
-    .chart-top-right {
-      text-align: right;
-      min-width: 120px;
-    }
-
     .chart-live-value {
       font-size: 18px;
       font-weight: 900;
       color: var(--green);
       line-height: 1.1;
+      text-align: right;
     }
 
     .chart-live-sub {
@@ -486,11 +525,12 @@
       font-size: 11px;
       color: #7a858c;
       font-weight: 500;
+      text-align: right;
     }
 
     .chart-wrap {
-      background: #fafbfb;
-      border: 1px solid #e7ece9;
+      background: var(--soft-bg);
+      border: 1px solid var(--soft-border);
       border-radius: 16px;
       padding: 10px;
       flex: 1;
@@ -499,20 +539,91 @@
 
     .chart-canvas {
       width: 100%;
-      height: 250px !important;
+      height: 255px !important;
     }
 
     @media (max-width: 1100px) {
-      .charts-grid {
+      .charts-grid-2 {
         grid-template-columns: 1fr;
       }
 
       .chart-card {
-        min-height: 320px;
+        min-height: 330px;
       }
+    }
+  </style>
 
-      .chart-canvas {
-        height: 240px !important;
+  <!-- ===================================================== -->
+  <!-- BLOQUE 8: BARRAS DE CALIDAD                           -->
+  <!-- ===================================================== -->
+  <style>
+    .quality-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .quality-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+      padding: 16px;
+    }
+
+    .quality-title {
+      margin: 0 0 12px 0;
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--green);
+    }
+
+    .quality-item {
+      margin-bottom: 12px;
+    }
+
+    .quality-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .quality-name {
+      font-weight: 700;
+      color: #5c6970;
+    }
+
+    .quality-value {
+      font-weight: 900;
+      color: var(--green);
+    }
+
+    .quality-bar {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: #e8edeb;
+      overflow: hidden;
+      border: 1px solid #dde4e0;
+    }
+
+    .quality-fill {
+      height: 100%;
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .fill-green { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+    .fill-orange { background: linear-gradient(135deg, #f39c12, #f5b041); }
+    .fill-red { background: linear-gradient(135deg, #d64541, #e74c3c); }
+
+    @media (max-width: 1100px) {
+      .quality-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -520,168 +631,301 @@
 <body>
   <div class="page">
 
-<!-- =================================================== -->
-<!-- BLOQUE 6: HERO / ENCABEZADO                         -->
-<!-- =================================================== -->
-<section class="hero">
-  <div class="hero-row">
-    <div>
-      <h1 class="hero-title">FM POWER ANALYZER</h1>
-      <div class="hero-subtitle">Monitoreo eléctrico en tiempo real.</div>
-
-      <div class="status-line">
-        <span class="status-dot"></span>
-        <span id="heroDeviceName">Gateway: --</span>
-        <span id="heroPmName">PM: --</span>
-        <span id="heroPmSlave">Slave: --</span>
-      </div>
-    </div>
-
-    <div class="hero-info">
-      <div class="hero-pill">
-        <div class="hero-pill-label">Gateway ID</div>
-        <div class="hero-pill-value" id="device">--</div>
-      </div>
-
-      <div class="hero-pill">
-        <div class="hero-pill-label">Fecha consultada</div>
-        <div class="hero-pill-value" id="selectedDateText">--</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-  <!-- =================================================== -->
-<!-- BLOQUE 7: HISTORIAL Y EXPORTACION                   -->
-<!-- =================================================== -->
-<section class="toolbar-main">
-  <div class="toolbar-main-left">
-    <h2 class="toolbar-main-title">Historial y exportación</h2>
-    <p class="toolbar-main-subtitle">
-      Seleccione el PM a visualizar, consulte curvas diarias y descargue archivos CSV por rango de fechas.
-    </p>
-  </div>
-
-  <div class="toolbar-main-right">
-    <!-- MEDIDOR -->
-    <div class="toolbar-group" style="position:relative">
-      <div class="toolbar-group-title">MEDIDOR</div>
-      <div class="control-group">
-        <label for="pmSelect">PM disponible</label>
-        <select id="pmSelect"></select>
-      </div>
-    </div>
-
-    <!-- CURVAS -->
-    <div class="toolbar-group" style="position:relative">
-      <div class="toolbar-group-title">CURVAS</div>
-      <div class="control-group">
-        <label for="dayDate">Fecha</label>
-        <input type="date" id="dayDate">
-      </div>
-    </div>
-
-    <!-- EXPORTACION CSV -->
-    <div class="toolbar-group" style="position:relative">
-      <div class="toolbar-group-title">EXPORTACIÓN CSV</div>
-      <div class="control-group">
-        <label for="csvFrom">Desde</label>
-        <input type="date" id="csvFrom">
-      </div>
-      <div class="control-group">
-        <label for="csvTo">Hasta</label>
-        <input type="date" id="csvTo">
-      </div>
-      <div class="control-group">
-        <label>&nbsp;</label>
-        <button class="btn-secondary" onclick="descargarCSV()">Descargar CSV</button>
-      </div>
-    </div>
-  </div>
-</section>
-
     <!-- =================================================== -->
-    <!-- BLOQUE 8: GRAFICAS 2x2                              -->
+    <!-- BLOQUE 9: HERO / ENCABEZADO                         -->
     <!-- =================================================== -->
-    <section class="charts-grid">
+    <section class="hero">
+      <div class="hero-row">
+        <div>
+          <h1 class="hero-title">FM POWER ANALYZER</h1>
+          <div class="hero-subtitle">Monitoreo eléctrico en tiempo real y análisis de curvas.</div>
 
-      <!-- VOLTAJE -->
-      <div class="chart-card">
-        <div class="chart-top">
-          <div class="chart-top-left">
-            <h3 class="chart-title">Voltaje A</h3>
-            <p class="chart-subtitle">Curva histórica del PM seleccionado.</p>
-          </div>
-          <div class="chart-top-right">
-            <div class="chart-live-value" id="liveVoltage">--</div>
-            <div class="chart-live-sub">Valor instantáneo</div>
+          <div class="status-line">
+            <span class="status-dot"></span>
+            <span id="heroDeviceName">Gateway: --</span>
+            <span id="heroPmName">PM: --</span>
+            <span id="heroPmSlave">Slave: --</span>
           </div>
         </div>
-        <div class="chart-wrap">
-          <canvas id="chartVoltageAN" class="chart-canvas"></canvas>
-        </div>
-      </div>
 
-      <!-- CORRIENTE -->
-      <div class="chart-card">
-        <div class="chart-top">
-          <div class="chart-top-left">
-            <h3 class="chart-title">Corriente A</h3>
-            <p class="chart-subtitle">Curva histórica del PM seleccionado.</p>
+        <div class="hero-info">
+          <div class="hero-pill">
+            <div class="hero-pill-label">Gateway ID</div>
+            <div class="hero-pill-value" id="device">--</div>
           </div>
-          <div class="chart-top-right">
-            <div class="chart-live-value" id="liveCurrent">--</div>
-            <div class="chart-live-sub">Valor instantáneo</div>
-          </div>
-        </div>
-        <div class="chart-wrap">
-          <canvas id="chartCurrentA" class="chart-canvas"></canvas>
-        </div>
-      </div>
 
-      <!-- FRECUENCIA -->
-      <div class="chart-card">
-        <div class="chart-top">
-          <div class="chart-top-left">
-            <h3 class="chart-title">Frecuencia</h3>
-            <p class="chart-subtitle">Curva histórica del PM seleccionado.</p>
+          <div class="hero-pill">
+            <div class="hero-pill-label">Fecha consultada</div>
+            <div class="hero-pill-value" id="selectedDateText">--</div>
           </div>
-          <div class="chart-top-right">
-            <div class="chart-live-value" id="liveFrequency">--</div>
-            <div class="chart-live-sub">Valor instantáneo</div>
-          </div>
-        </div>
-        <div class="chart-wrap">
-          <canvas id="chartFrequency" class="chart-canvas"></canvas>
-        </div>
-      </div>
-
-      <!-- POTENCIAS -->
-      <div class="chart-card">
-        <div class="chart-top">
-          <div class="chart-top-left">
-            <h3 class="chart-title">Potencias</h3>
-            <p class="chart-subtitle">Curvas históricas del PM seleccionado.</p>
-          </div>
-          <div class="chart-top-right">
-            <div class="chart-live-value" id="livePowers">--</div>
-            <div class="chart-live-sub">Activa | Reactiva | Aparente</div>
-          </div>
-        </div>
-        <div class="chart-wrap">
-          <canvas id="chartPowers" class="chart-canvas"></canvas>
         </div>
       </div>
     </section>
 
     <!-- =================================================== -->
-    <!-- BLOQUE 9: MENSAJE DE ERROR                          -->
+    <!-- BLOQUE 10: TOOLBAR / HISTORIAL / EXPORTACION        -->
+    <!-- =================================================== -->
+    <section class="toolbar-main">
+      <div class="toolbar-main-left">
+        <h2 class="toolbar-main-title">Historial y exportación</h2>
+        <p class="toolbar-main-subtitle">
+          Seleccione el PM a visualizar, consulte curvas diarias y descargue archivos CSV por rango de fechas.
+        </p>
+      </div>
+
+      <div class="toolbar-main-right">
+        <div class="toolbar-group" style="position:relative">
+          <div class="toolbar-group-title">MEDIDOR</div>
+          <div class="control-group">
+            <label for="pmSelect">PM disponible</label>
+            <select id="pmSelect"></select>
+          </div>
+        </div>
+
+        <div class="toolbar-group" style="position:relative">
+          <div class="toolbar-group-title">CURVAS</div>
+          <div class="control-group">
+            <label for="dayDate">Fecha</label>
+            <input type="date" id="dayDate">
+          </div>
+        </div>
+
+        <div class="toolbar-group" style="position:relative">
+          <div class="toolbar-group-title">EXPORTACIÓN CSV</div>
+          <div class="control-group">
+            <label for="csvFrom">Desde</label>
+            <input type="date" id="csvFrom">
+          </div>
+          <div class="control-group">
+            <label for="csvTo">Hasta</label>
+            <input type="date" id="csvTo">
+          </div>
+          <div class="control-group">
+            <label>&nbsp;</label>
+            <button class="btn-secondary" onclick="descargarCSV()">Descargar CSV</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================== -->
+    <!-- BLOQUE 11: RESUMEN INSTANTANEO                      -->
+    <!-- =================================================== -->
+    <section class="section-block">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">Resumen instantáneo</h2>
+          <p class="section-subtitle">Variables clave del PM seleccionado en tiempo real.</p>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-label">Potencia activa total</div>
+          <div class="summary-value" id="summaryPTot">--</div>
+          <div class="summary-sub">Valor instantáneo total</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-label">Factor de potencia total</div>
+          <div class="summary-value" id="summaryPfTot">--</div>
+          <div class="summary-sub">FP total corregido desde equipo</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-label">Frecuencia</div>
+          <div class="summary-value" id="summaryFrequency">--</div>
+          <div class="summary-sub">Estabilidad de red</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-label">Corriente de neutro</div>
+          <div class="summary-value" id="summaryCurrentN">--</div>
+          <div class="summary-sub">Corriente instantánea en neutro</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================== -->
+    <!-- BLOQUE 12: CURVAS ELECTRICAS                        -->
+    <!-- =================================================== -->
+    <section class="section-block">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">Curvas eléctricas</h2>
+          <p class="section-subtitle">Comportamiento temporal de tensiones, corrientes, potencias y factor de potencia.</p>
+        </div>
+      </div>
+
+      <div class="charts-grid-2">
+        <div class="chart-card">
+          <div class="chart-top">
+            <div>
+              <h3 class="chart-title">Voltajes por fase</h3>
+              <p class="chart-subtitle">Curvas temporales de V A, V B y V C.</p>
+            </div>
+            <div>
+              <div class="chart-live-value" id="liveVoltages">--</div>
+              <div class="chart-live-sub">A | B | C</div>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chartVoltages" class="chart-canvas"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-top">
+            <div>
+              <h3 class="chart-title">Corrientes por fase</h3>
+              <p class="chart-subtitle">Curvas temporales de I A, I B, I C y I N.</p>
+            </div>
+            <div>
+              <div class="chart-live-value" id="liveCurrents">--</div>
+              <div class="chart-live-sub">A | B | C | N</div>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chartCurrents" class="chart-canvas"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-top">
+            <div>
+              <h3 class="chart-title">Potencias totales</h3>
+              <p class="chart-subtitle">Curvas de potencia activa, reactiva y aparente total.</p>
+            </div>
+            <div>
+              <div class="chart-live-value" id="livePowers">--</div>
+              <div class="chart-live-sub">P | Q | S total</div>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chartPowers" class="chart-canvas"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-top">
+            <div>
+              <h3 class="chart-title">Factor de potencia</h3>
+              <p class="chart-subtitle">Curvas de FP por fase corregido y FP total.</p>
+            </div>
+            <div>
+              <div class="chart-live-value" id="livePf">--</div>
+              <div class="chart-live-sub">A | B | C | Total</div>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chartPf" class="chart-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================== -->
+    <!-- BLOQUE 13: CALIDAD DE ENERGIA                       -->
+    <!-- =================================================== -->
+    <section class="section-block">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">Calidad de energía</h2>
+          <p class="section-subtitle">Indicadores porcentuales de distorsión armónica y desbalance.</p>
+        </div>
+      </div>
+
+      <div class="quality-grid">
+        <div class="quality-card">
+          <h3 class="quality-title">THD de voltaje y corriente</h3>
+
+          <div class="quality-item">
+            <div class="quality-row">
+              <span class="quality-name">THD Voltaje A</span>
+              <span class="quality-value" id="q_thd_va">--</span>
+            </div>
+            <div class="quality-bar"><div id="bar_thd_va" class="quality-fill fill-green"></div></div>
+          </div>
+
+          <div class="quality-item">
+            <div class="quality-row">
+              <span class="quality-name">THD Voltaje B</span>
+              <span class="quality-value" id="q_thd_vb">--</span>
+            </div>
+            <div class="quality-bar"><div id="bar_thd_vb" class="quality-fill fill-green"></div></div>
+          </div>
+
+          <div class="quality-item">
+            <div class="quality-row">
+              <span class="quality-name">THD Voltaje C</span>
+              <span class="quality-value" id="q_thd_vc">--</span>
+            </div>
+            <div class="quality-bar"><div id="bar_thd_vc" class="quality-fill fill-green"></div></div>
+          </div>
+
+          <div class="quality-item">
+            <div class="quality-row">
+              <span class="quality-name">THD Corriente A</span>
+              <span class="quality-value" id="q_thd_ia">--</span>
+            </div>
+            <div class="quality-bar"><div id="bar_thd_ia" class="quality-fill fill-green"></div></div>
+          </div>
+
+          <div class="quality-item">
+            <div class="quality-row">
+              <span class="quality-name">THD Corriente B</span>
+              <span class="quality-value" id="q_thd_ib">--</span>
+            </div>
+            <div class="quality-bar"><div id="bar_thd_ib" class="quality-fill fill-green"></div></div>
+          </div>
+
+          <div class="quality-item">
+            <div class="quality-row">
+              <span class="quality-name">THD Corriente C</span>
+              <span class="quality-value" id="q_thd_ic">--</span>
+            </div>
+            <div class="quality-bar"><div id="bar_thd_ic" class="quality-fill fill-green"></div></div>
+          </div>
+
+          <div class="quality-item">
+            <div class="quality-row">
+              <span class="quality-name">THD Corriente N</span>
+              <span class="quality-value" id="q_thd_in">--</span>
+            </div>
+            <div class="quality-bar"><div id="bar_thd_in" class="quality-fill fill-green"></div></div>
+          </div>
+        </div>
+
+        <div class="quality-card">
+          <h3 class="quality-title">Desbalance</h3>
+
+          <div class="quality-item">
+            <div class="quality-row">
+              <span class="quality-name">Desbalance de voltaje</span>
+              <span class="quality-value" id="q_desbalance_v">--</span>
+            </div>
+            <div class="quality-bar"><div id="bar_desbalance_v" class="quality-fill fill-green"></div></div>
+          </div>
+
+          <div class="quality-item">
+            <div class="quality-row">
+              <span class="quality-name">Desbalance de corriente</span>
+              <span class="quality-value" id="q_desbalance_i">--</span>
+            </div>
+            <div class="quality-bar"><div id="bar_desbalance_i" class="quality-fill fill-green"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================== -->
+    <!-- BLOQUE 14: MENSAJE DE ERROR                         -->
     <!-- =================================================== -->
     <div class="error" id="error"></div>
   </div>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 9A: OVERLAY DE DESCARGA                       -->
+  <!-- BLOQUE 15: OVERLAY DE DESCARGA                       -->
   <!-- ===================================================== -->
   <div class="spinner-overlay" id="downloadSpinner">
     <div class="spinner-box">
@@ -690,9 +934,9 @@
     </div>
   </div>
 
-  <!-- =================================================== -->
-  <!-- BLOQUE 9.1: VENTANA DE AVISO                         -->
-  <!-- =================================================== -->
+  <!-- ===================================================== -->
+  <!-- BLOQUE 16: TOAST                                     -->
+  <!-- ===================================================== -->
   <div class="toast" id="toast">
     <div class="toast-card">
       <div class="toast-title">Aviso</div>
@@ -702,238 +946,321 @@
   </div>
 
   <!-- ===================================================== -->
-<!-- BLOQUE 10: VARIABLES GLOBALES Y UTILIDADES            -->
-<!-- ===================================================== -->
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const device = params.get("device") || "FMPAN-0001";
-  const API_BASE = "https://fm-power-analyzer-server.onrender.com";
+  <!-- BLOQUE 17: VARIABLES GLOBALES Y UTILIDADES           -->
+  <!-- ===================================================== -->
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const device = params.get("device") || "FMPAN-0001";
+    const API_BASE = "https://fm-power-analyzer-server.onrender.com";
 
-  let chartVoltageAN = null;
-  let chartCurrentA = null;
-  let chartFrequency = null;
-  let chartPowers = null;
+    let chartVoltages = null;
+    let chartCurrents = null;
+    let chartPowers = null;
+    let chartPf = null;
 
-  let meters = [];
-  let currentMeter = null;
+    let meters = [];
+    let currentMeter = null;
 
-  function hoyTexto() {
-    const ahora = new Date();
-    const y = ahora.getFullYear();
-    const m = String(ahora.getMonth() + 1).padStart(2, "0");
-    const d = String(ahora.getDate()).padStart(2, "0");
-    return `${y}-${m}-${d}`;
-  }
+    let ultimoTimestampHistorico = null;
+    let fechaHistoricaActual = null;
+    let pmHistoricoActual = null;
 
-  function formatearHora(fechaIso) {
-    const f = new Date(fechaIso);
-    return f.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit"
-    });
-  }
-
-  function formatearFechaCorta(fechaIso) {
-    const f = new Date(fechaIso + "T00:00:00");
-    return f.toLocaleDateString("es-EC");
-  }
-
-  function mostrarToast(mensaje) {
-    document.getElementById("toastMessage").innerText = mensaje;
-    document.getElementById("toast").classList.add("show");
-  }
-
-  function cerrarToast() {
-    document.getElementById("toast").classList.remove("show");
-  }
-
-  function valorSeguro(...valores) {
-    for (const v of valores) {
-      if (v !== undefined && v !== null && v !== "") return v;
+    function hoyTexto() {
+      const ahora = new Date();
+      const y = ahora.getFullYear();
+      const m = String(ahora.getMonth() + 1).padStart(2, "0");
+      const d = String(ahora.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
     }
-    return null;
-  }
 
-  function numeroSeguro(...valores) {
-    const v = valorSeguro(...valores);
-    if (v === null) return null;
-    const n = Number(v);
-    return Number.isFinite(n) ? n : null;
-  }
+    function formatearHora(fechaIso) {
+      const f = new Date(fechaIso);
+      return f.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
 
-  function textoValor(v, sufijo = "") {
-    if (v === null || v === undefined || v === "") return "--";
-    return `${v}${sufijo}`;
-  }
+    function formatearFechaCorta(fechaIso) {
+      const f = new Date(fechaIso + "T00:00:00");
+      return f.toLocaleDateString("es-EC");
+    }
 
-  function getCurrentPmSlave() {
-    if (!currentMeter) return null;
-    return Number(currentMeter.pm_slave);
-  }
+    function mostrarToast(mensaje) {
+      document.getElementById("toastMessage").innerText = mensaje;
+      document.getElementById("toast").classList.add("show");
+    }
 
-  function actualizarEncabezadoMeter() {
-    document.getElementById("device").innerText = currentMeter?.device_id || device;
-    document.getElementById("heroDeviceName").innerText =
-      "Gateway: " + (currentMeter?.device_name || currentMeter?.device_id || "--");
-    document.getElementById("heroPmName").innerText =
-      "PM: " + (currentMeter?.pm_name || "--");
-    document.getElementById("heroPmSlave").innerText =
-      "Slave: " + (currentMeter?.pm_slave ?? "--");
-  }
+    function cerrarToast() {
+      document.getElementById("toast").classList.remove("show");
+    }
 
-  async function cargarMedidores() {
-    try {
-      const url = `${API_BASE}/api/meters/${encodeURIComponent(device)}?t=${Date.now()}`;
-      const res = await fetch(url, { cache: "no-store" });
-      const json = await res.json();
+    function valorSeguro(...valores) {
+      for (const v of valores) {
+        if (v !== undefined && v !== null && v !== "") return v;
+      }
+      return null;
+    }
 
-      if (!json || json.ok !== true || !Array.isArray(json.data) || json.data.length === 0) {
-        document.getElementById("error").innerText = "No se encontraron medidores para este gateway";
+    function numeroSeguro(...valores) {
+      const v = valorSeguro(...valores);
+      if (v === null) return null;
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function textoValor(v, sufijo = "", decimales = 3) {
+      if (v === null || v === undefined || v === "") return "--";
+      const n = Number(v);
+      if (!Number.isFinite(n)) return "--";
+      return `${n.toFixed(decimales)}${sufijo}`;
+    }
+
+    function getCurrentPmSlave() {
+      if (!currentMeter) return null;
+      return Number(currentMeter.pm_slave);
+    }
+
+    function corregirPfFase(v) {
+      if (v === null || v === undefined || v === "") return null;
+      const n = Number(v);
+      if (!Number.isFinite(n)) return null;
+      return 2 - n;
+    }
+
+    function actualizarEncabezadoMeter() {
+      document.getElementById("device").innerText = currentMeter?.device_id || device;
+      document.getElementById("heroDeviceName").innerText =
+        "Gateway: " + (currentMeter?.device_name || currentMeter?.device_id || "--");
+      document.getElementById("heroPmName").innerText =
+        "PM: " + (currentMeter?.pm_name || "--");
+      document.getElementById("heroPmSlave").innerText =
+        "Slave: " + (currentMeter?.pm_slave ?? "--");
+    }
+  </script>
+
+  <!-- ===================================================== -->
+  <!-- BLOQUE 18: CARGA DE MEDIDORES                        -->
+  <!-- ===================================================== -->
+  <script>
+    async function cargarMedidores() {
+      try {
+        const url = `${API_BASE}/api/meters/${encodeURIComponent(device)}?t=${Date.now()}`;
+        const res = await fetch(url, { cache: "no-store" });
+        const json = await res.json();
+
+        if (!json || json.ok !== true || !Array.isArray(json.data) || json.data.length === 0) {
+          document.getElementById("error").innerText = "No se encontraron medidores para este gateway";
+          return false;
+        }
+
+        meters = json.data.slice().sort((a, b) => Number(a.pm_slave) - Number(b.pm_slave));
+
+        const pmSelect = document.getElementById("pmSelect");
+        pmSelect.innerHTML = "";
+
+        meters.forEach((meter, index) => {
+          const opt = document.createElement("option");
+          opt.value = String(meter.pm_slave);
+          opt.textContent = `${meter.pm_name || "PM sin nombre"} (Slave ${meter.pm_slave})`;
+          if (index === 0) opt.selected = true;
+          pmSelect.appendChild(opt);
+        });
+
+        const pmFromUrl = params.get("pm_slave");
+        const firstSlave = pmFromUrl ? Number(pmFromUrl) : Number(meters[0].pm_slave);
+
+        const meterInicial =
+          meters.find(m => Number(m.pm_slave) === Number(firstSlave)) || meters[0];
+
+        pmSelect.value = String(meterInicial.pm_slave);
+        currentMeter = meterInicial;
+        actualizarEncabezadoMeter();
+
+        document.getElementById("error").innerText = "";
+        return true;
+      } catch (e) {
+        document.getElementById("error").innerText = "Error consultando los medidores del gateway";
         return false;
       }
+    }
 
-      meters = json.data.slice().sort((a, b) => Number(a.pm_slave) - Number(b.pm_slave));
-
+    function actualizarMeterSeleccionadoDesdeSelect() {
       const pmSelect = document.getElementById("pmSelect");
-      pmSelect.innerHTML = "";
+      const slave = Number(pmSelect.value);
 
-      meters.forEach((meter, index) => {
-        const opt = document.createElement("option");
-        opt.value = String(meter.pm_slave);
-        opt.textContent = `${meter.pm_name || "PM sin nombre"} (Slave ${meter.pm_slave})`;
-        if (index === 0) opt.selected = true;
-        pmSelect.appendChild(opt);
-      });
-
-      const pmFromUrl = params.get("pm_slave");
-      const firstSlave = pmFromUrl ? Number(pmFromUrl) : Number(meters[0].pm_slave);
-
-      const meterInicial =
-        meters.find(m => Number(m.pm_slave) === Number(firstSlave)) || meters[0];
-
-      pmSelect.value = String(meterInicial.pm_slave);
-      currentMeter = meterInicial;
-      actualizarEncabezadoMeter();
-
-      document.getElementById("error").innerText = "";
-      return true;
-    } catch (e) {
-      document.getElementById("error").innerText = "Error consultando los medidores del gateway";
-      return false;
+      const found = meters.find(m => Number(m.pm_slave) === slave);
+      if (found) {
+        currentMeter = found;
+        actualizarEncabezadoMeter();
+      }
     }
-  }
-
-  function actualizarMeterSeleccionadoDesdeSelect() {
-    const pmSelect = document.getElementById("pmSelect");
-    const slave = Number(pmSelect.value);
-
-    const found = meters.find(m => Number(m.pm_slave) === slave);
-    if (found) {
-      currentMeter = found;
-      actualizarEncabezadoMeter();
-    }
-  }
-</script>
-  
-  <!-- ===================================================== -->
-<!-- BLOQUE 10A: FUNCION DESCARGAR CSV CON SPINNER         -->
-<!-- ===================================================== -->
-<script>
-  function descargarCSV() {
-    const from = document.getElementById("csvFrom").value;
-    const to = document.getElementById("csvTo").value;
-    const pm_slave = getCurrentPmSlave();
-
-    if (!pm_slave) {
-      mostrarToast("Seleccione un PM antes de descargar");
-      return;
-    }
-
-    if (!from || !to) {
-      mostrarToast("Seleccione el rango de fechas para descargar el CSV");
-      return;
-    }
-
-    const url =
-      `${API_BASE}/api/history/export` +
-      `?device_id=${encodeURIComponent(device)}` +
-      `&pm_slave=${encodeURIComponent(pm_slave)}` +
-      `&from=${encodeURIComponent(from)}` +
-      `&to=${encodeURIComponent(to)}`;
-
-    const spinner = document.getElementById("downloadSpinner");
-    spinner.style.display = "flex";
-
-    setTimeout(() => {
-      window.location.href = url;
-    }, 500);
-
-    setTimeout(() => {
-      spinner.style.display = "none";
-    }, 4000);
-  }
-</script>
+  </script>
 
   <!-- ===================================================== -->
-<!-- BLOQUE 11: TIEMPO REAL PARA VALORES INSTANTANEOS      -->
-<!-- ===================================================== -->
-<script>
-  async function actualizarTiempoReal() {
-    try {
+  <!-- BLOQUE 19: DESCARGAR CSV                             -->
+  <!-- ===================================================== -->
+  <script>
+    function descargarCSV() {
+      const from = document.getElementById("csvFrom").value;
+      const to = document.getElementById("csvTo").value;
       const pm_slave = getCurrentPmSlave();
 
-      if (!pm_slave) return;
-
-      const url =
-        `${API_BASE}/api/device/${encodeURIComponent(device)}` +
-        `?pm_slave=${encodeURIComponent(pm_slave)}` +
-        `&t=${Date.now()}`;
-
-      const res = await fetch(url, { cache: "no-store" });
-      const data = await res.json();
-
-      if (!data || data.ok !== true) {
-        document.getElementById("error").innerText = "No hay datos del PM seleccionado";
+      if (!pm_slave) {
+        mostrarToast("Seleccione un PM antes de descargar");
         return;
       }
 
-      const d = data.data || {};
+      if (!from || !to) {
+        mostrarToast("Seleccione el rango de fechas para descargar el CSV");
+        return;
+      }
 
-      document.getElementById("error").innerText = "";
+      const url =
+        `${API_BASE}/api/history/export` +
+        `?device_id=${encodeURIComponent(device)}` +
+        `&pm_slave=${encodeURIComponent(pm_slave)}` +
+        `&from=${encodeURIComponent(from)}` +
+        `&to=${encodeURIComponent(to)}`;
 
-      currentMeter = {
-        device_id: valorSeguro(d.device_id, currentMeter?.device_id, device),
-        device_name: valorSeguro(d.device_name, currentMeter?.device_name),
-        pm_name: valorSeguro(d.pm_name, currentMeter?.pm_name),
-        pm_slave: valorSeguro(d.pm_slave, currentMeter?.pm_slave, pm_slave)
-      };
+      const spinner = document.getElementById("downloadSpinner");
+      spinner.style.display = "flex";
 
-      actualizarEncabezadoMeter();
+      setTimeout(() => {
+        window.location.href = url;
+      }, 500);
 
-      const voltageA = numeroSeguro(d.voltage_a, d.voltage_an);
-      const currentA = numeroSeguro(d.current_a);
-      const frequency = numeroSeguro(d.frecuencia, d.frequency);
-      const pTot = numeroSeguro(d.p_tot, d.ptot);
-      const qTot = numeroSeguro(d.q_tot, d.qtot);
-      const sTot = numeroSeguro(d.s_tot, d.stot);
-
-      document.getElementById("liveVoltage").innerText = textoValor(voltageA, " V");
-      document.getElementById("liveCurrent").innerText = textoValor(currentA, " A");
-      document.getElementById("liveFrequency").innerText = textoValor(frequency, " Hz");
-      document.getElementById("livePowers").innerText =
-        `${textoValor(pTot)} | ${textoValor(qTot)} | ${textoValor(sTot)}`;
-    } catch (e) {
-      document.getElementById("error").innerText = "Error conectando con la API";
+      setTimeout(() => {
+        spinner.style.display = "none";
+      }, 4000);
     }
-  }
-</script>
-  
+  </script>
+
   <!-- ===================================================== -->
-  <!-- BLOQUE 12: OPCIONES COMUNES DE GRAFICAS               -->
+  <!-- BLOQUE 20: TIEMPO REAL                               -->
   <!-- ===================================================== -->
   <script>
-    function commonChartOptions(yLabel, minValue = null, maxValue = null, showLegend = false) {
+    function setQualityBar(barId, labelId, value, maxScale = 100) {
+      const label = document.getElementById(labelId);
+      const bar = document.getElementById(barId);
+
+      if (!label || !bar) return;
+
+      if (value === null || value === undefined || !Number.isFinite(Number(value))) {
+        label.innerText = "--";
+        bar.style.width = "0%";
+        bar.className = "quality-fill fill-green";
+        return;
+      }
+
+      const n = Number(value);
+      label.innerText = `${n.toFixed(3)} %`;
+
+      const width = Math.max(0, Math.min((n / maxScale) * 100, 100));
+      bar.style.width = `${width}%`;
+
+      let fillClass = "fill-green";
+      if (n >= 8) fillClass = "fill-red";
+      else if (n >= 5) fillClass = "fill-orange";
+
+      if (barId.includes("desbalance")) {
+        if (n >= 5) fillClass = "fill-red";
+        else if (n >= 2) fillClass = "fill-orange";
+        else fillClass = "fill-green";
+      }
+
+      bar.className = `quality-fill ${fillClass}`;
+    }
+
+    async function actualizarTiempoReal() {
+      try {
+        const pm_slave = getCurrentPmSlave();
+        if (!pm_slave) return;
+
+        const url =
+          `${API_BASE}/api/device/${encodeURIComponent(device)}` +
+          `?pm_slave=${encodeURIComponent(pm_slave)}` +
+          `&t=${Date.now()}`;
+
+        const res = await fetch(url, { cache: "no-store" });
+        const data = await res.json();
+
+        if (!data || data.ok !== true) {
+          document.getElementById("error").innerText = "No hay datos del PM seleccionado";
+          return;
+        }
+
+        const d = data.data || {};
+        document.getElementById("error").innerText = "";
+
+        currentMeter = {
+          device_id: valorSeguro(d.device_id, currentMeter?.device_id, device),
+          device_name: valorSeguro(d.device_name, currentMeter?.device_name),
+          pm_name: valorSeguro(d.pm_name, currentMeter?.pm_name),
+          pm_slave: valorSeguro(d.pm_slave, currentMeter?.pm_slave, pm_slave)
+        };
+
+        actualizarEncabezadoMeter();
+
+        const voltageA = numeroSeguro(d.voltage_a, d.voltage_an);
+        const voltageB = numeroSeguro(d.voltage_b);
+        const voltageC = numeroSeguro(d.voltage_c);
+
+        const currentA = numeroSeguro(d.current_a);
+        const currentB = numeroSeguro(d.current_b);
+        const currentC = numeroSeguro(d.current_c);
+        const currentN = numeroSeguro(d.current_n);
+
+        const pTot = numeroSeguro(d.p_tot, d.ptot);
+        const qTot = numeroSeguro(d.q_tot, d.qtot);
+        const sTot = numeroSeguro(d.s_tot, d.stot);
+
+        const pfA = corregirPfFase(numeroSeguro(d.pf_a));
+        const pfB = corregirPfFase(numeroSeguro(d.pf_b));
+        const pfC = corregirPfFase(numeroSeguro(d.pf_c));
+        const pfTot = numeroSeguro(d.pf_tot);
+
+        const frequency = numeroSeguro(d.frecuencia, d.frequency);
+
+        document.getElementById("summaryPTot").innerText = textoValor(pTot, "", 3);
+        document.getElementById("summaryPfTot").innerText = textoValor(pfTot, "", 3);
+        document.getElementById("summaryFrequency").innerText = textoValor(frequency, " Hz", 3);
+        document.getElementById("summaryCurrentN").innerText = textoValor(currentN, " A", 3);
+
+        document.getElementById("liveVoltages").innerText =
+          `${textoValor(voltageA)} | ${textoValor(voltageB)} | ${textoValor(voltageC)}`;
+
+        document.getElementById("liveCurrents").innerText =
+          `${textoValor(currentA)} | ${textoValor(currentB)} | ${textoValor(currentC)} | ${textoValor(currentN)}`;
+
+        document.getElementById("livePowers").innerText =
+          `${textoValor(pTot)} | ${textoValor(qTot)} | ${textoValor(sTot)}`;
+
+        document.getElementById("livePf").innerText =
+          `${textoValor(pfA)} | ${textoValor(pfB)} | ${textoValor(pfC)} | ${textoValor(pfTot)}`;
+
+        setQualityBar("bar_thd_va", "q_thd_va", numeroSeguro(d.thd_va), 100);
+        setQualityBar("bar_thd_vb", "q_thd_vb", numeroSeguro(d.thd_vb), 100);
+        setQualityBar("bar_thd_vc", "q_thd_vc", numeroSeguro(d.thd_vc), 100);
+        setQualityBar("bar_thd_ia", "q_thd_ia", numeroSeguro(d.thd_ia), 100);
+        setQualityBar("bar_thd_ib", "q_thd_ib", numeroSeguro(d.thd_ib), 100);
+        setQualityBar("bar_thd_ic", "q_thd_ic", numeroSeguro(d.thd_ic), 100);
+        setQualityBar("bar_thd_in", "q_thd_in", numeroSeguro(d.thd_in), 100);
+        setQualityBar("bar_desbalance_v", "q_desbalance_v", numeroSeguro(d.desbalance_v), 100);
+        setQualityBar("bar_desbalance_i", "q_desbalance_i", numeroSeguro(d.desbalance_i), 200);
+
+      } catch (e) {
+        document.getElementById("error").innerText = "Error conectando con la API";
+      }
+    }
+  </script>
+
+  <!-- ===================================================== -->
+  <!-- BLOQUE 21: OPCIONES COMUNES DE GRAFICAS              -->
+  <!-- ===================================================== -->
+  <script>
+    function commonChartOptions(yLabel, minValue = null, maxValue = null, showLegend = true) {
       const options = {
         responsive: true,
         maintainAspectRatio: false,
@@ -1003,168 +1330,130 @@
         }
       };
 
-      if (minValue !== null) {
-        options.scales.y.min = minValue;
-      }
-
-      if (maxValue !== null) {
-        options.scales.y.max = maxValue;
-      }
+      if (minValue !== null) options.scales.y.min = minValue;
+      if (maxValue !== null) options.scales.y.max = maxValue;
 
       return options;
     }
+
+    function lineDataset(label, data, borderColor, backgroundColor = "transparent") {
+      return {
+        label,
+        data,
+        borderColor,
+        backgroundColor,
+        borderWidth: 3,
+        pointRadius: 0,
+        pointHoverRadius: 3,
+        tension: 0.25,
+        fill: false,
+        spanGaps: true
+      };
+    }
   </script>
 
   <!-- ===================================================== -->
-<!-- BLOQUE 13: CONSULTA DEL HISTORICO                     -->
-<!-- ===================================================== -->
-<script>
-  async function obtenerHistorico() {
-    const day = document.getElementById("dayDate").value;
-    const pm_slave = getCurrentPmSlave();
-
-    if (!day) {
-      throw new Error("No hay fecha seleccionada");
-    }
-
-    if (!pm_slave) {
-      throw new Error("No hay PM seleccionado");
-    }
-
-    const url =
-      `${API_BASE}/api/history` +
-      `?device_id=${encodeURIComponent(device)}` +
-      `&pm_slave=${encodeURIComponent(pm_slave)}` +
-      `&from=${encodeURIComponent(day)}` +
-      `&to=${encodeURIComponent(day)}` +
-      `&t=${Date.now()}`;
-
-    const res = await fetch(url, { cache: "no-store" });
-
-    if (!res.ok) {
-      throw new Error("La API respondió con error");
-    }
-
-    return await res.json();
-  }
-</script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 14: GRAFICA DE VOLTAJE                         -->
+  <!-- BLOQUE 22: CONSULTA DEL HISTORICO                    -->
   <!-- ===================================================== -->
   <script>
-    function actualizarGraficaVoltaje(labels, rows) {
-      const values = rows.map(item =>
-        numeroSeguro(item.voltage_a, item.voltage_an)
-      );
+    async function obtenerHistorico() {
+      const day = document.getElementById("dayDate").value;
+      const pm_slave = getCurrentPmSlave();
 
-      const ctx = document.getElementById("chartVoltageAN").getContext("2d");
+      if (!day) throw new Error("No hay fecha seleccionada");
+      if (!pm_slave) throw new Error("No hay PM seleccionado");
 
-      if (!chartVoltageAN) {
-        chartVoltageAN = new Chart(ctx, {
+      const url =
+        `${API_BASE}/api/history` +
+        `?device_id=${encodeURIComponent(device)}` +
+        `&pm_slave=${encodeURIComponent(pm_slave)}` +
+        `&from=${encodeURIComponent(day)}` +
+        `&to=${encodeURIComponent(day)}` +
+        `&t=${Date.now()}`;
+
+      const res = await fetch(url, { cache: "no-store" });
+
+      if (!res.ok) {
+        throw new Error("La API respondió con error");
+      }
+
+      return await res.json();
+    }
+  </script>
+
+  <!-- ===================================================== -->
+  <!-- BLOQUE 23: GRAFICA DE VOLTAJES                       -->
+  <!-- ===================================================== -->
+  <script>
+    function actualizarGraficaVoltajes(labels, rows) {
+      const va = rows.map(item => numeroSeguro(item.voltage_a, item.voltage_an));
+      const vb = rows.map(item => numeroSeguro(item.voltage_b));
+      const vc = rows.map(item => numeroSeguro(item.voltage_c));
+
+      const ctx = document.getElementById("chartVoltages").getContext("2d");
+
+      if (!chartVoltages) {
+        chartVoltages = new Chart(ctx, {
           type: "line",
           data: {
             labels,
-            datasets: [{
-              data: values,
-              borderColor: "#EC631F",
-              backgroundColor: "rgba(236, 99, 31, 0.10)",
-              borderWidth: 3,
-              pointRadius: 0,
-              pointHoverRadius: 3,
-              tension: 0.28,
-              fill: true,
-              spanGaps: true
-            }]
+            datasets: [
+              lineDataset("Voltaje A", va, "#EC631F"),
+              lineDataset("Voltaje B", vb, "#2D9CDB"),
+              lineDataset("Voltaje C", vc, "#16a085")
+            ]
           },
-          options: commonChartOptions("V", 110, 130, false)
+          options: commonChartOptions("V", 0, null, true)
         });
       } else {
-        chartVoltageAN.data.labels = labels;
-        chartVoltageAN.data.datasets[0].data = values;
-        chartVoltageAN.update("none");
+        chartVoltages.data.labels = labels;
+        chartVoltages.data.datasets[0].data = va;
+        chartVoltages.data.datasets[1].data = vb;
+        chartVoltages.data.datasets[2].data = vc;
+        chartVoltages.update("none");
       }
     }
   </script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 15: GRAFICA DE CORRIENTE                       -->
+  <!-- BLOQUE 24: GRAFICA DE CORRIENTES                     -->
   <!-- ===================================================== -->
   <script>
-    function actualizarGraficaCorriente(labels, rows) {
-      const values = rows.map(item =>
-        numeroSeguro(item.current_a)
-      );
+    function actualizarGraficaCorrientes(labels, rows) {
+      const ia = rows.map(item => numeroSeguro(item.current_a));
+      const ib = rows.map(item => numeroSeguro(item.current_b));
+      const ic = rows.map(item => numeroSeguro(item.current_c));
+      const inN = rows.map(item => numeroSeguro(item.current_n));
 
-      const ctx = document.getElementById("chartCurrentA").getContext("2d");
+      const ctx = document.getElementById("chartCurrents").getContext("2d");
 
-      if (!chartCurrentA) {
-        chartCurrentA = new Chart(ctx, {
+      if (!chartCurrents) {
+        chartCurrents = new Chart(ctx, {
           type: "line",
           data: {
             labels,
-            datasets: [{
-              data: values,
-              borderColor: "#415447",
-              backgroundColor: "rgba(65, 84, 71, 0.10)",
-              borderWidth: 3,
-              pointRadius: 0,
-              pointHoverRadius: 3,
-              tension: 0.28,
-              fill: true,
-              spanGaps: true
-            }]
+            datasets: [
+              lineDataset("Corriente A", ia, "#415447"),
+              lineDataset("Corriente B", ib, "#2D9CDB"),
+              lineDataset("Corriente C", ic, "#7B61FF"),
+              lineDataset("Corriente N", inN, "#D64541")
+            ]
           },
-          options: commonChartOptions("A", 0, null, false)
+          options: commonChartOptions("A", 0, null, true)
         });
       } else {
-        chartCurrentA.data.labels = labels;
-        chartCurrentA.data.datasets[0].data = values;
-        chartCurrentA.update("none");
+        chartCurrents.data.labels = labels;
+        chartCurrents.data.datasets[0].data = ia;
+        chartCurrents.data.datasets[1].data = ib;
+        chartCurrents.data.datasets[2].data = ic;
+        chartCurrents.data.datasets[3].data = inN;
+        chartCurrents.update("none");
       }
     }
   </script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 16: GRAFICA DE FRECUENCIA                      -->
-  <!-- ===================================================== -->
-  <script>
-    function actualizarGraficaFrecuencia(labels, rows) {
-      const values = rows.map(item =>
-        numeroSeguro(item.frecuencia, item.frequency)
-      );
-
-      const ctx = document.getElementById("chartFrequency").getContext("2d");
-
-      if (!chartFrequency) {
-        chartFrequency = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels,
-            datasets: [{
-              data: values,
-              borderColor: "#2D9CDB",
-              backgroundColor: "rgba(45, 156, 219, 0.10)",
-              borderWidth: 3,
-              pointRadius: 0,
-              pointHoverRadius: 3,
-              tension: 0.28,
-              fill: true,
-              spanGaps: true
-            }]
-          },
-          options: commonChartOptions("Hz", 55, 65, false)
-        });
-      } else {
-        chartFrequency.data.labels = labels;
-        chartFrequency.data.datasets[0].data = values;
-        chartFrequency.update("none");
-      }
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 17: GRAFICA DE POTENCIAS                       -->
+  <!-- BLOQUE 25: GRAFICA DE POTENCIAS                      -->
   <!-- ===================================================== -->
   <script>
     function actualizarGraficaPotencias(labels, rows) {
@@ -1188,42 +1477,9 @@
           data: {
             labels,
             datasets: [
-              {
-                label: "Activa",
-                data: activa,
-                borderColor: "#EC631F",
-                backgroundColor: "rgba(236, 99, 31, 0.08)",
-                borderWidth: 3,
-                pointRadius: 0,
-                pointHoverRadius: 3,
-                tension: 0.25,
-                fill: false,
-                spanGaps: true
-              },
-              {
-                label: "Reactiva",
-                data: reactiva,
-                borderColor: "#2D9CDB",
-                backgroundColor: "rgba(45, 156, 219, 0.08)",
-                borderWidth: 3,
-                pointRadius: 0,
-                pointHoverRadius: 3,
-                tension: 0.25,
-                fill: false,
-                spanGaps: true
-              },
-              {
-                label: "Aparente",
-                data: aparente,
-                borderColor: "#7B61FF",
-                backgroundColor: "rgba(123, 97, 255, 0.08)",
-                borderWidth: 3,
-                pointRadius: 0,
-                pointHoverRadius: 3,
-                tension: 0.25,
-                fill: false,
-                spanGaps: true
-              }
+              lineDataset("Activa total", activa, "#EC631F"),
+              lineDataset("Reactiva total", reactiva, "#2D9CDB"),
+              lineDataset("Aparente total", aparente, "#7B61FF")
             ]
           },
           options: commonChartOptions("Potencia", 0, null, true)
@@ -1239,232 +1495,268 @@
   </script>
 
   <!-- ===================================================== -->
-<!-- BLOQUE 18: ORQUESTADOR GENERAL                        -->
-<!-- ===================================================== -->
-<script>
-  let ultimoTimestampHistorico = null;
-  let fechaHistoricaActual = null;
-  let pmHistoricoActual = null;
+  <!-- BLOQUE 26: GRAFICA DE FACTOR DE POTENCIA             -->
+  <!-- ===================================================== -->
+  <script>
+    function actualizarGraficaFp(labels, rows) {
+      const pfa = rows.map(item => corregirPfFase(numeroSeguro(item.pf_a)));
+      const pfb = rows.map(item => corregirPfFase(numeroSeguro(item.pf_b)));
+      const pfc = rows.map(item => corregirPfFase(numeroSeguro(item.pf_c)));
+      const pft = rows.map(item => numeroSeguro(item.pf_tot));
 
-  function limpiarGraficas() {
-    const labelsVacios = [];
-    const datosVacios = [];
+      const ctx = document.getElementById("chartPf").getContext("2d");
 
-    ultimoTimestampHistorico = null;
-
-    if (chartVoltageAN) {
-      chartVoltageAN.data.labels = labelsVacios;
-      chartVoltageAN.data.datasets[0].data = datosVacios;
-      chartVoltageAN.update("none");
+      if (!chartPf) {
+        chartPf = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels,
+            datasets: [
+              lineDataset("FP A", pfa, "#EC631F"),
+              lineDataset("FP B", pfb, "#2D9CDB"),
+              lineDataset("FP C", pfc, "#16a085"),
+              lineDataset("FP Total", pft, "#7B61FF")
+            ]
+          },
+          options: commonChartOptions("FP", -1, 1.2, true)
+        });
+      } else {
+        chartPf.data.labels = labels;
+        chartPf.data.datasets[0].data = pfa;
+        chartPf.data.datasets[1].data = pfb;
+        chartPf.data.datasets[2].data = pfc;
+        chartPf.data.datasets[3].data = pft;
+        chartPf.update("none");
+      }
     }
+  </script>
 
-    if (chartCurrentA) {
-      chartCurrentA.data.labels = labelsVacios;
-      chartCurrentA.data.datasets[0].data = datosVacios;
-      chartCurrentA.update("none");
-    }
+  <!-- ===================================================== -->
+  <!-- BLOQUE 27: LIMPIEZA DE GRAFICAS                      -->
+  <!-- ===================================================== -->
+  <script>
+    function limpiarGraficas() {
+      const labelsVacios = [];
+      const datosVacios = [];
+      ultimoTimestampHistorico = null;
 
-    if (chartFrequency) {
-      chartFrequency.data.labels = labelsVacios;
-      chartFrequency.data.datasets[0].data = datosVacios;
-      chartFrequency.update("none");
-    }
-
-    if (chartPowers) {
-      chartPowers.data.labels = labelsVacios;
-      chartPowers.data.datasets[0].data = datosVacios;
-      chartPowers.data.datasets[1].data = datosVacios;
-      chartPowers.data.datasets[2].data = datosVacios;
-      chartPowers.update("none");
-    }
-  }
-
-  function agregarSoloPuntosNuevos(rowsNuevos) {
-    if (!rowsNuevos || rowsNuevos.length === 0) return;
-
-    for (const item of rowsNuevos) {
-      const label = formatearHora(item.created_at);
-
-      if (chartVoltageAN) {
-        chartVoltageAN.data.labels.push(label);
-        chartVoltageAN.data.datasets[0].data.push(
-          numeroSeguro(item.voltage_a, item.voltage_an)
-        );
+      if (chartVoltages) {
+        chartVoltages.data.labels = labelsVacios;
+        chartVoltages.data.datasets.forEach(ds => ds.data = datosVacios);
+        chartVoltages.update("none");
       }
 
-      if (chartCurrentA) {
-        chartCurrentA.data.labels.push(label);
-        chartCurrentA.data.datasets[0].data.push(
-          numeroSeguro(item.current_a)
-        );
-      }
-
-      if (chartFrequency) {
-        chartFrequency.data.labels.push(label);
-        chartFrequency.data.datasets[0].data.push(
-          numeroSeguro(item.frecuencia, item.frequency)
-        );
+      if (chartCurrents) {
+        chartCurrents.data.labels = labelsVacios;
+        chartCurrents.data.datasets.forEach(ds => ds.data = datosVacios);
+        chartCurrents.update("none");
       }
 
       if (chartPowers) {
-        chartPowers.data.labels.push(label);
-        chartPowers.data.datasets[0].data.push(
-          numeroSeguro(item.p_tot, item.ptot, item.raw_payload?.p_tot, item.raw_payload?.ptot)
-        );
-        chartPowers.data.datasets[1].data.push(
-          numeroSeguro(item.q_tot, item.qtot, item.raw_payload?.q_tot, item.raw_payload?.qtot)
-        );
-        chartPowers.data.datasets[2].data.push(
-          numeroSeguro(item.s_tot, item.stot, item.raw_payload?.s_tot, item.raw_payload?.stot)
-        );
+        chartPowers.data.labels = labelsVacios;
+        chartPowers.data.datasets.forEach(ds => ds.data = datosVacios);
+        chartPowers.update("none");
+      }
+
+      if (chartPf) {
+        chartPf.data.labels = labelsVacios;
+        chartPf.data.datasets.forEach(ds => ds.data = datosVacios);
+        chartPf.update("none");
       }
     }
+  </script>
 
-    if (chartVoltageAN) chartVoltageAN.update("none");
-    if (chartCurrentA) chartCurrentA.update("none");
-    if (chartFrequency) chartFrequency.update("none");
-    if (chartPowers) chartPowers.update("none");
+  <!-- ===================================================== -->
+  <!-- BLOQUE 28: AGREGAR SOLO PUNTOS NUEVOS                -->
+  <!-- ===================================================== -->
+  <script>
+    function agregarSoloPuntosNuevos(rowsNuevos) {
+      if (!rowsNuevos || rowsNuevos.length === 0) return;
 
-    ultimoTimestampHistorico = rowsNuevos[rowsNuevos.length - 1].created_at;
-  }
+      for (const item of rowsNuevos) {
+        const label = formatearHora(item.created_at);
 
-  async function consultarTodo(forzarRecargaCompleta = false) {
-    try {
-      const errorBox = document.getElementById("error");
-      const dayInput = document.getElementById("dayDate");
-      const selectedDateText = document.getElementById("selectedDateText");
-      const pm_slave = getCurrentPmSlave();
+        if (chartVoltages) {
+          chartVoltages.data.labels.push(label);
+          chartVoltages.data.datasets[0].data.push(numeroSeguro(item.voltage_a, item.voltage_an));
+          chartVoltages.data.datasets[1].data.push(numeroSeguro(item.voltage_b));
+          chartVoltages.data.datasets[2].data.push(numeroSeguro(item.voltage_c));
+        }
 
-      if (!dayInput || !pm_slave) return;
+        if (chartCurrents) {
+          chartCurrents.data.labels.push(label);
+          chartCurrents.data.datasets[0].data.push(numeroSeguro(item.current_a));
+          chartCurrents.data.datasets[1].data.push(numeroSeguro(item.current_b));
+          chartCurrents.data.datasets[2].data.push(numeroSeguro(item.current_c));
+          chartCurrents.data.datasets[3].data.push(numeroSeguro(item.current_n));
+        }
 
-      const day = dayInput.value;
+        if (chartPowers) {
+          chartPowers.data.labels.push(label);
+          chartPowers.data.datasets[0].data.push(numeroSeguro(item.p_tot, item.ptot, item.raw_payload?.p_tot, item.raw_payload?.ptot));
+          chartPowers.data.datasets[1].data.push(numeroSeguro(item.q_tot, item.qtot, item.raw_payload?.q_tot, item.raw_payload?.qtot));
+          chartPowers.data.datasets[2].data.push(numeroSeguro(item.s_tot, item.stot, item.raw_payload?.s_tot, item.raw_payload?.stot));
+        }
 
-      if (!day) {
-        limpiarGraficas();
+        if (chartPf) {
+          chartPf.data.labels.push(label);
+          chartPf.data.datasets[0].data.push(corregirPfFase(numeroSeguro(item.pf_a)));
+          chartPf.data.datasets[1].data.push(corregirPfFase(numeroSeguro(item.pf_b)));
+          chartPf.data.datasets[2].data.push(corregirPfFase(numeroSeguro(item.pf_c)));
+          chartPf.data.datasets[3].data.push(numeroSeguro(item.pf_tot));
+        }
+      }
+
+      if (chartVoltages) chartVoltages.update("none");
+      if (chartCurrents) chartCurrents.update("none");
+      if (chartPowers) chartPowers.update("none");
+      if (chartPf) chartPf.update("none");
+
+      ultimoTimestampHistorico = rowsNuevos[rowsNuevos.length - 1].created_at;
+    }
+  </script>
+
+  <!-- ===================================================== -->
+  <!-- BLOQUE 29: ORQUESTADOR GENERAL                       -->
+  <!-- ===================================================== -->
+  <script>
+    async function consultarTodo(forzarRecargaCompleta = false) {
+      try {
+        const errorBox = document.getElementById("error");
+        const dayInput = document.getElementById("dayDate");
+        const selectedDateText = document.getElementById("selectedDateText");
+        const pm_slave = getCurrentPmSlave();
+
+        if (!dayInput || !pm_slave) return;
+
+        const day = dayInput.value;
+
+        if (!day) {
+          limpiarGraficas();
+          errorBox.innerText = "";
+          mostrarToast("Seleccione una fecha");
+          return;
+        }
+
+        if (selectedDateText) {
+          selectedDateText.innerText = formatearFechaCorta(day);
+        }
+
+        const esNuevaFecha = fechaHistoricaActual !== day;
+        const esNuevoPm = Number(pmHistoricoActual) !== Number(pm_slave);
+
+        if (forzarRecargaCompleta || esNuevaFecha || esNuevoPm) {
+          cerrarToast();
+          limpiarGraficas();
+          errorBox.innerText = "Cargando datos del día seleccionado...";
+        }
+
+        const json = await obtenerHistorico();
+
+        if (!json || json.ok !== true || !Array.isArray(json.data)) {
+          errorBox.innerText = "";
+          limpiarGraficas();
+          mostrarToast("Error consultando el histórico");
+          return;
+        }
+
+        if (json.data.length === 0) {
+          errorBox.innerText = "";
+          limpiarGraficas();
+          fechaHistoricaActual = day;
+          pmHistoricoActual = pm_slave;
+          mostrarToast("No hay datos para graficar en la fecha seleccionada");
+          return;
+        }
+
         errorBox.innerText = "";
-        mostrarToast("Seleccione una fecha");
-        return;
-      }
 
-      if (selectedDateText) {
-        selectedDateText.innerText = formatearFechaCorta(day);
-      }
+        if (forzarRecargaCompleta || esNuevaFecha || esNuevoPm || !chartVoltages) {
+          const labels = json.data.map(item => formatearHora(item.created_at));
+          const rows = json.data;
 
-      const esNuevaFecha = fechaHistoricaActual !== day;
-      const esNuevoPm = Number(pmHistoricoActual) !== Number(pm_slave);
+          actualizarGraficaVoltajes(labels, rows);
+          actualizarGraficaCorrientes(labels, rows);
+          actualizarGraficaPotencias(labels, rows);
+          actualizarGraficaFp(labels, rows);
 
-      if (forzarRecargaCompleta || esNuevaFecha || esNuevoPm) {
-        cerrarToast();
-        limpiarGraficas();
-        errorBox.innerText = "Cargando datos del día seleccionado...";
-      }
+          ultimoTimestampHistorico = rows[rows.length - 1].created_at;
+          fechaHistoricaActual = day;
+          pmHistoricoActual = pm_slave;
+          return;
+        }
 
-      const json = await obtenerHistorico();
+        const rowsNuevos = json.data.filter(item => {
+          return !ultimoTimestampHistorico || item.created_at > ultimoTimestampHistorico;
+        });
 
-      if (!json || json.ok !== true || !Array.isArray(json.data)) {
-        errorBox.innerText = "";
-        limpiarGraficas();
-        mostrarToast("Error consultando el histórico");
-        return;
-      }
-
-      if (json.data.length === 0) {
-        errorBox.innerText = "";
-        limpiarGraficas();
+        agregarSoloPuntosNuevos(rowsNuevos);
         fechaHistoricaActual = day;
         pmHistoricoActual = pm_slave;
-        mostrarToast("No hay datos para graficar en la fecha seleccionada");
-        return;
+
+      } catch (e) {
+        console.error("Error en consultarTodo:", e);
+        document.getElementById("error").innerText = "";
+        limpiarGraficas();
+        mostrarToast("Error al consultar las curvas");
+      }
+    }
+  </script>
+
+  <!-- ===================================================== -->
+  <!-- BLOQUE 30: INICIALIZACION Y EVENTOS                  -->
+  <!-- ===================================================== -->
+  <script>
+    window.addEventListener("load", async () => {
+      const hoy = hoyTexto();
+
+      document.getElementById("dayDate").value = hoy;
+      document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
+
+      const csvFrom = document.getElementById("csvFrom");
+      const csvTo = document.getElementById("csvTo");
+
+      if (csvFrom) csvFrom.value = hoy;
+      if (csvTo) csvTo.value = hoy;
+
+      const okMeters = await cargarMedidores();
+      if (!okMeters) return;
+
+      await actualizarTiempoReal();
+      await consultarTodo(true);
+
+      setInterval(() => {
+        actualizarTiempoReal();
+      }, 2000);
+
+      setInterval(() => {
+        const daySeleccionado = document.getElementById("dayDate").value;
+        const hoyActual = hoyTexto();
+
+        if (daySeleccionado === hoyActual) {
+          consultarTodo(false);
+        }
+      }, 10000);
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const dayDate = document.getElementById("dayDate");
+      const pmSelect = document.getElementById("pmSelect");
+
+      if (dayDate) {
+        dayDate.addEventListener("change", () => {
+          consultarTodo(true);
+        });
       }
 
-      errorBox.innerText = "";
-
-      if (forzarRecargaCompleta || esNuevaFecha || esNuevoPm || !chartVoltageAN) {
-        const labels = json.data.map(item => formatearHora(item.created_at));
-        const rows = json.data;
-
-        actualizarGraficaVoltaje(labels, rows);
-        actualizarGraficaCorriente(labels, rows);
-        actualizarGraficaFrecuencia(labels, rows);
-        actualizarGraficaPotencias(labels, rows);
-
-        ultimoTimestampHistorico = rows[rows.length - 1].created_at;
-        fechaHistoricaActual = day;
-        pmHistoricoActual = pm_slave;
-        return;
+      if (pmSelect) {
+        pmSelect.addEventListener("change", async () => {
+          actualizarMeterSeleccionadoDesdeSelect();
+          await actualizarTiempoReal();
+          await consultarTodo(true);
+        });
       }
-
-      const rowsNuevos = json.data.filter(item => {
-        return !ultimoTimestampHistorico || item.created_at > ultimoTimestampHistorico;
-      });
-
-      agregarSoloPuntosNuevos(rowsNuevos);
-      fechaHistoricaActual = day;
-      pmHistoricoActual = pm_slave;
-
-    } catch (e) {
-      console.error("Error en consultarTodo:", e);
-      document.getElementById("error").innerText = "";
-      limpiarGraficas();
-      mostrarToast("Error al consultar las curvas");
-    }
-  }
-</script>
-
-<!-- ===================================================== -->
-<!-- BLOQUE 19: INICIALIZACION                             -->
-<!-- ===================================================== -->
-<script>
-  window.addEventListener("load", async () => {
-    const hoy = hoyTexto();
-
-    document.getElementById("dayDate").value = hoy;
-    document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
-
-    const csvFrom = document.getElementById("csvFrom");
-    const csvTo = document.getElementById("csvTo");
-
-    if (csvFrom) csvFrom.value = hoy;
-    if (csvTo) csvTo.value = hoy;
-
-    const okMeters = await cargarMedidores();
-    if (!okMeters) return;
-
-    await actualizarTiempoReal();
-    await consultarTodo(true);
-
-    setInterval(() => {
-      actualizarTiempoReal();
-    }, 2000);
-
-    setInterval(() => {
-      const daySeleccionado = document.getElementById("dayDate").value;
-      const hoyActual = hoyTexto();
-
-      if (daySeleccionado === hoyActual) {
-        consultarTodo(false);
-      }
-    }, 10000);
-  });
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const dayDate = document.getElementById("dayDate");
-    const pmSelect = document.getElementById("pmSelect");
-
-    if (dayDate) {
-      dayDate.addEventListener("change", () => {
-        consultarTodo(true);
-      });
-    }
-
-    if (pmSelect) {
-      pmSelect.addEventListener("change", async () => {
-        actualizarMeterSeleccionadoDesdeSelect();
-        await actualizarTiempoReal();
-        await consultarTodo(true);
-      });
-    }
-  });
-</script>
+    });
+  </script>
 </body>
 </html>
