@@ -554,6 +554,31 @@
   </style>
 
   <!-- ===================================================== -->
+  <!-- BLOQUE 7A: SELECTOR INTERNO DE TARJETAS               -->
+  <!-- ===================================================== -->
+  <style>
+    .chart-inline-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+  
+    .chart-inline-select {
+      height: 34px;
+      padding: 0 10px;
+      border-radius: 10px;
+      border: 1px solid #d9dfdc;
+      font-family: 'Rubik', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green);
+      background: white;
+      outline: none;
+    }
+  </style>
+
+  <!-- ===================================================== -->
   <!-- BLOQUE 8: BARRAS DE CALIDAD                           -->
   <!-- ===================================================== -->
   <style>
@@ -809,19 +834,28 @@
         <div class="chart-card">
           <div class="chart-top">
             <div>
-              <h3 class="chart-title">Potencia activa por fase</h3>
-              <p class="chart-subtitle">Curvas temporales de P A, P B y P C.</p>
+              <h3 class="chart-title">Potencia por fase</h3>
+              <p class="chart-subtitle">Curvas temporales por fase según el tipo de potencia seleccionado.</p>
             </div>
-            <div>
-              <div class="chart-live-value" id="livePhasePowers">--</div>
-              <div class="chart-live-sub">P A | P B | P C</div>
+            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+              <div class="chart-inline-controls">
+                <select id="phasePowerMode" class="chart-inline-select">
+                  <option value="activa">Activa</option>
+                  <option value="reactiva">Reactiva</option>
+                  <option value="aparente">Aparente</option>
+                </select>
+              </div>
+              <div>
+                <div class="chart-live-value" id="livePhasePowers">--</div>
+                <div class="chart-live-sub" id="livePhasePowersSub">P A | P B | P C</div>
+              </div>
             </div>
           </div>
           <div class="chart-wrap">
             <canvas id="chartPhasePowers" class="chart-canvas"></canvas>
           </div>
         </div>
-    
+            
         <div class="chart-card">
           <div class="chart-top">
             <div>
@@ -991,6 +1025,8 @@
     let chartPhasePowers = null;
     let chartPf = null;
     let chartFrequency = null;
+
+    let phasePowerMode = "activa";
   
     let meters = [];
     let currentMeter = null;
@@ -1246,10 +1282,6 @@
         const currentC = numeroSeguro(d.current_c);
         const currentN = numeroSeguro(d.current_n);
   
-        const pA = numeroSeguro(d.p_a);
-        const pB = numeroSeguro(d.p_b);
-        const pC = numeroSeguro(d.p_c);
-  
         const pTot = numeroSeguro(d.p_tot, d.ptot);
         const qTot = numeroSeguro(d.q_tot, d.qtot);
         const sTot = numeroSeguro(d.s_tot, d.stot);
@@ -1275,8 +1307,7 @@
         document.getElementById("livePowers").innerText =
           `${textoValor(pTot)} | ${textoValor(qTot)} | ${textoValor(sTot)}`;
   
-        document.getElementById("livePhasePowers").innerText =
-          `${textoValor(pA)} | ${textoValor(pB)} | ${textoValor(pC)}`;
+        actualizarLivePhasePowersDesdePayload(d);
   
         document.getElementById("livePf").innerText =
           `${textoValor(pfA)} | ${textoValor(pfB)} | ${textoValor(pfC)} | ${textoValor(pfTot)}`;
@@ -1299,6 +1330,7 @@
       }
     }
   </script>
+  
   <!-- ===================================================== -->
   <!-- BLOQUE 21: OPCIONES COMUNES DE GRAFICAS              -->
   <!-- ===================================================== -->
@@ -1392,6 +1424,69 @@
         fill: false,
         spanGaps: true
       };
+    }
+  </script>
+
+  <!-- ===================================================== -->
+  <!-- BLOQUE 21A: UTILIDADES PARA POTENCIA POR FASE         -->
+  <!-- ===================================================== -->
+  <script>
+    function getPhasePowerConfig() {
+      if (phasePowerMode === "reactiva") {
+        return {
+          keyA: "q_a",
+          keyB: "q_b",
+          keyC: "q_c",
+          labelA: "Q A",
+          labelB: "Q B",
+          labelC: "Q C",
+          liveSub: "Q A | Q B | Q C",
+          yLabel: "Potencia reactiva"
+        };
+      }
+  
+      if (phasePowerMode === "aparente") {
+        return {
+          keyA: "s_a",
+          keyB: "s_b",
+          keyC: "s_c",
+          labelA: "S A",
+          labelB: "S B",
+          labelC: "S C",
+          liveSub: "S A | S B | S C",
+          yLabel: "Potencia aparente"
+        };
+      }
+  
+      return {
+        keyA: "p_a",
+        keyB: "p_b",
+        keyC: "p_c",
+        labelA: "P A",
+        labelB: "P B",
+        labelC: "P C",
+        liveSub: "P A | P B | P C",
+        yLabel: "Potencia activa"
+      };
+    }
+  
+    function actualizarLivePhasePowersDesdePayload(d) {
+      const cfg = getPhasePowerConfig();
+  
+      const a = numeroSeguro(d[cfg.keyA]);
+      const b = numeroSeguro(d[cfg.keyB]);
+      const c = numeroSeguro(d[cfg.keyC]);
+  
+      const live = document.getElementById("livePhasePowers");
+      const sub = document.getElementById("livePhasePowersSub");
+  
+      if (live) {
+        live.innerText = `${textoValor(a)} | ${textoValor(b)} | ${textoValor(c)}`;
+      }
+  
+      if (sub) {
+        sub.innerText = cfg.liveSub;
+      }
     }
   </script>
 
@@ -1536,14 +1631,17 @@
       }
     }
   </script>
+  
   <!-- ===================================================== -->
-  <!-- BLOQUE 25A: GRAFICA DE POTENCIA ACTIVA POR FASE      -->
+  <!-- BLOQUE 25A: GRAFICA DE POTENCIA POR FASE             -->
   <!-- ===================================================== -->
   <script>
     function actualizarGraficaPotenciaPorFase(labels, rows) {
-      const pA = rows.map(item => numeroSeguro(item.p_a));
-      const pB = rows.map(item => numeroSeguro(item.p_b));
-      const pC = rows.map(item => numeroSeguro(item.p_c));
+      const cfg = getPhasePowerConfig();
+  
+      const serieA = rows.map(item => numeroSeguro(item[cfg.keyA]));
+      const serieB = rows.map(item => numeroSeguro(item[cfg.keyB]));
+      const serieC = rows.map(item => numeroSeguro(item[cfg.keyC]));
   
       const ctx = document.getElementById("chartPhasePowers").getContext("2d");
   
@@ -1553,18 +1651,24 @@
           data: {
             labels,
             datasets: [
-              lineDataset("P A", pA, "#EC631F"),
-              lineDataset("P B", pB, "#2D9CDB"),
-              lineDataset("P C", pC, "#16a085")
+              lineDataset(cfg.labelA, serieA, "#EC631F"),
+              lineDataset(cfg.labelB, serieB, "#2D9CDB"),
+              lineDataset(cfg.labelC, serieC, "#16a085")
             ]
           },
-          options: commonChartOptions("Potencia activa", 0, null, true)
+          options: commonChartOptions(cfg.yLabel, 0, null, true)
         });
       } else {
         chartPhasePowers.data.labels = labels;
-        chartPhasePowers.data.datasets[0].data = pA;
-        chartPhasePowers.data.datasets[1].data = pB;
-        chartPhasePowers.data.datasets[2].data = pC;
+        chartPhasePowers.data.datasets[0].label = cfg.labelA;
+        chartPhasePowers.data.datasets[1].label = cfg.labelB;
+        chartPhasePowers.data.datasets[2].label = cfg.labelC;
+  
+        chartPhasePowers.data.datasets[0].data = serieA;
+        chartPhasePowers.data.datasets[1].data = serieB;
+        chartPhasePowers.data.datasets[2].data = serieC;
+  
+        chartPhasePowers.options.scales.y.title.text = cfg.yLabel;
         chartPhasePowers.update("none");
       }
     }
@@ -1689,6 +1793,8 @@
     function agregarSoloPuntosNuevos(rowsNuevos) {
       if (!rowsNuevos || rowsNuevos.length === 0) return;
   
+      const cfg = getPhasePowerConfig();
+  
       for (const item of rowsNuevos) {
         const label = formatearHora(item.created_at);
   
@@ -1716,9 +1822,9 @@
   
         if (chartPhasePowers) {
           chartPhasePowers.data.labels.push(label);
-          chartPhasePowers.data.datasets[0].data.push(numeroSeguro(item.p_a));
-          chartPhasePowers.data.datasets[1].data.push(numeroSeguro(item.p_b));
-          chartPhasePowers.data.datasets[2].data.push(numeroSeguro(item.p_c));
+          chartPhasePowers.data.datasets[0].data.push(numeroSeguro(item[cfg.keyA]));
+          chartPhasePowers.data.datasets[1].data.push(numeroSeguro(item[cfg.keyB]));
+          chartPhasePowers.data.datasets[2].data.push(numeroSeguro(item[cfg.keyC]));
         }
   
         if (chartPf) {
@@ -1834,57 +1940,89 @@
       }
     }
   </script>
+
+  <!-- ===================================================== -->
+  <!-- BLOQUE 29A: EVENTO SELECTOR POTENCIA POR FASE        -->
+  <!-- ===================================================== -->
+  <script>
+    async function refrescarPotenciaPorFaseSegunModo() {
+      try {
+        const json = await obtenerHistorico();
+  
+        if (!json || json.ok !== true || !Array.isArray(json.data) || json.data.length === 0) {
+          return;
+        }
+  
+        const labels = json.data.map(item => formatearHora(item.created_at));
+        actualizarGraficaPotenciaPorFase(labels, json.data);
+  
+        const ultimo = json.data[json.data.length - 1];
+        actualizarLivePhasePowersDesdePayload(ultimo);
+      } catch (e) {
+        console.error("Error actualizando potencia por fase:", e);
+      }
+    }
+  </script>
+  
   <!-- ===================================================== -->
   <!-- BLOQUE 30: INICIALIZACION Y EVENTOS                  -->
   <!-- ===================================================== -->
   <script>
     window.addEventListener("load", async () => {
       const hoy = hoyTexto();
-
+  
       document.getElementById("dayDate").value = hoy;
       document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
-
+  
       const csvFrom = document.getElementById("csvFrom");
       const csvTo = document.getElementById("csvTo");
-
+  
       if (csvFrom) csvFrom.value = hoy;
       if (csvTo) csvTo.value = hoy;
-
+  
       const okMeters = await cargarMedidores();
       if (!okMeters) return;
-
+  
       await actualizarTiempoReal();
       await consultarTodo(true);
-
+  
       setInterval(() => {
         actualizarTiempoReal();
       }, 2000);
-
+  
       setInterval(() => {
         const daySeleccionado = document.getElementById("dayDate").value;
         const hoyActual = hoyTexto();
-
+  
         if (daySeleccionado === hoyActual) {
           consultarTodo(false);
         }
       }, 10000);
     });
-
+  
     document.addEventListener("DOMContentLoaded", () => {
       const dayDate = document.getElementById("dayDate");
       const pmSelect = document.getElementById("pmSelect");
-
+      const phasePowerModeSelect = document.getElementById("phasePowerMode");
+  
       if (dayDate) {
         dayDate.addEventListener("change", () => {
           consultarTodo(true);
         });
       }
-
+  
       if (pmSelect) {
         pmSelect.addEventListener("change", async () => {
           actualizarMeterSeleccionadoDesdeSelect();
           await actualizarTiempoReal();
           await consultarTodo(true);
+        });
+      }
+  
+      if (phasePowerModeSelect) {
+        phasePowerModeSelect.addEventListener("change", async (e) => {
+          phasePowerMode = e.target.value;
+          await refrescarPotenciaPorFaseSegunModo();
         });
       }
     });
