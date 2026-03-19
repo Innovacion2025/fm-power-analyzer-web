@@ -1003,30 +1003,32 @@
   </div>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 17: VARIABLES GLOBALES Y UTILIDADES            -->
+  <!-- BLOQUE 17: VARIABLES GLOBALES Y UTILIDADES           -->
   <!-- ===================================================== -->
   <script>
     const params = new URLSearchParams(window.location.search);
     const device = params.get("device") || "FMPAN-0001";
     const API_BASE = "https://fm-power-analyzer-server.onrender.com";
-
+  
     let chartVoltages = null;
     let chartCurrents = null;
     let chartPowers = null;
     let chartPhasePowers = null;
     let chartPf = null;
     let chartFrequency = null;
-
+  
     let phasePowerMode = "activa";
+  
     let meters = [];
     let currentMeter = null;
+  
     let ultimoTimestampHistorico = null;
     let ultimoTimestampLive = null;
     let ultimaHoraVisible = null;
     let fechaHistoricaActual = null;
     let pmHistoricoActual = null;
     let pollingTiempoRealEnCurso = false;
-
+  
     function hoyTexto() {
       const ahora = new Date();
       const y = ahora.getFullYear();
@@ -1034,7 +1036,7 @@
       const d = String(ahora.getDate()).padStart(2, "0");
       return `${y}-${m}-${d}`;
     }
-
+  
     function formatearHoraReal(fechaIso) {
       if (!fechaIso) return "--";
       const f = new Date(fechaIso);
@@ -1045,73 +1047,105 @@
         second: "2-digit"
       });
     }
-
-    function formatearHoraDesdeMs(timestampMs) {
-      if (!timestampMs) return "--";
-      const f = new Date(Number(timestampMs));
-      if (isNaN(f.getTime())) return "--";
-      return f.toLocaleTimeString("es-EC", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit"
-      });
-    }
-
+  
     function formatearFechaCorta(fechaIso) {
       const f = new Date(fechaIso + "T00:00:00");
       return f.toLocaleDateString("es-EC");
     }
-
+  
     function mostrarToast(mensaje) {
       document.getElementById("toastMessage").innerText = mensaje;
       document.getElementById("toast").classList.add("show");
     }
-
+  
     function cerrarToast() {
       document.getElementById("toast").classList.remove("show");
     }
-
+  
     function valorSeguro(...valores) {
       for (const v of valores) {
         if (v !== undefined && v !== null && v !== "") return v;
       }
       return null;
     }
-
+  
     function numeroSeguro(...valores) {
       const v = valorSeguro(...valores);
       if (v === null) return null;
       const n = Number(v);
       return Number.isFinite(n) ? n : null;
     }
-
+  
     function textoValor(v, sufijo = "", decimales = 3) {
       if (v === null || v === undefined || v === "") return "--";
       const n = Number(v);
       if (!Number.isFinite(n)) return "--";
       return `${n.toFixed(decimales)}${sufijo}`;
     }
-
+  
     function getCurrentPmSlave() {
       if (!currentMeter) return null;
       return Number(currentMeter.pm_slave);
     }
-
+  
     function corregirPfFase(v) {
       if (v === null || v === undefined || v === "") return null;
       const n = Number(v);
       if (!Number.isFinite(n)) return null;
       return 2 - n;
     }
-
+  
     function actualizarEncabezadoMeter() {
       document.getElementById("device").innerText = currentMeter?.device_id || device;
-      document.getElementById("heroDeviceName").innerText = "Gateway: " + (currentMeter?.device_name || currentMeter?.device_id || "--");
-      document.getElementById("heroPmName").innerText = "PM: " + (currentMeter?.pm_name || "--");
-      document.getElementById("heroPmSlave").innerText = "Slave: " + (currentMeter?.pm_slave ?? "--");
+      document.getElementById("heroDeviceName").innerText =
+        "Gateway: " + (currentMeter?.device_name || currentMeter?.device_id || "--");
+      document.getElementById("heroPmName").innerText =
+        "PM: " + (currentMeter?.pm_name || "--");
+      document.getElementById("heroPmSlave").innerText =
+        "Slave: " + (currentMeter?.pm_slave ?? "--");
+    }
+  
+    function generarTimelineDia(fechaTexto) {
+      const timeline = [];
+      const inicio = new Date(fechaTexto + "T00:00:00");
+      const fin = new Date(fechaTexto + "T23:59:00");
+  
+      const cursor = new Date(inicio);
+      while (cursor <= fin) {
+        timeline.push(new Date(cursor));
+        cursor.setMinutes(cursor.getMinutes() + 1);
+      }
+  
+      return timeline;
+    }
+  
+    function claveMinutoDesdeFecha(fecha) {
+      const h = String(fecha.getHours()).padStart(2, "0");
+      const m = String(fecha.getMinutes()).padStart(2, "0");
+      return `${h}:${m}`;
+    }
+  
+    function construirMapaPorMinuto(rows) {
+      const mapa = new Map();
+  
+      for (const item of rows) {
+        const fecha = new Date(item.visible_at || item.created_at);
+        if (isNaN(fecha.getTime())) continue;
+  
+        const clave = claveMinutoDesdeFecha(fecha);
+        mapa.set(clave, item);
+      }
+  
+      return mapa;
+    }
+  
+    function construirSerieDesdeTimeline(timeline, mapa, extractor) {
+      return timeline.map((t) => {
+        const item = mapa.get(claveMinutoDesdeFecha(t));
+        return item ? extractor(item) : null;
+      });
     }
   </script>
-
   <!-- ===================================================== -->
   <!-- BLOQUE 18: CARGA DE MEDIDORES                         -->
   <!-- ===================================================== -->
@@ -1804,7 +1838,7 @@
   </script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 29: ORQUESTADOR GENERAL                        -->
+  <!-- BLOQUE 29: ORQUESTADOR GENERAL                       -->
   <!-- ===================================================== -->
   <script>
     async function consultarTodo(forzarRecargaCompleta = false) {
@@ -1813,40 +1847,40 @@
         const dayInput = document.getElementById("dayDate");
         const selectedDateText = document.getElementById("selectedDateText");
         const pm_slave = getCurrentPmSlave();
-
+  
         if (!dayInput || !pm_slave) return;
-
+  
         const day = dayInput.value;
-
+  
         if (!day) {
           limpiarGraficas();
           errorBox.innerText = "";
           mostrarToast("Seleccione una fecha");
           return;
         }
-
+  
         if (selectedDateText) {
           selectedDateText.innerText = formatearFechaCorta(day);
         }
-
+  
         const esNuevaFecha = fechaHistoricaActual !== day;
         const esNuevoPm = Number(pmHistoricoActual) !== Number(pm_slave);
-
+  
         if (forzarRecargaCompleta || esNuevaFecha || esNuevoPm) {
           cerrarToast();
           limpiarGraficas();
           errorBox.innerText = "Cargando datos del día seleccionado...";
         }
-
+  
         const json = await obtenerHistorico();
-
+  
         if (!json || json.ok !== true || !Array.isArray(json.data)) {
           errorBox.innerText = "";
           limpiarGraficas();
           mostrarToast("Error consultando el histórico");
           return;
         }
-
+  
         if (json.data.length === 0) {
           errorBox.innerText = "";
           limpiarGraficas();
@@ -1855,38 +1889,48 @@
           mostrarToast("No hay datos para graficar en la fecha seleccionada");
           return;
         }
-
-        json.data.sort((a, b) => {
-          const aMs = Number(a.timestamp_ms || 0);
-          const bMs = Number(b.timestamp_ms || 0);
-          return aMs - bMs;
+  
+        const rowsOrdenadas = json.data.slice().sort((a, b) => {
+          const aTime = new Date(a.visible_at || a.created_at || 0).getTime();
+          const bTime = new Date(b.visible_at || b.created_at || 0).getTime();
+          return aTime - bTime;
         });
-
-        const labels = json.data.map(item => {
-          if (item.visible_at) return formatearHoraReal(item.visible_at);
-          return formatearHoraDesdeMs(item.timestamp_ms);
+  
+        const timeline = generarTimelineDia(day);
+        const mapa = construirMapaPorMinuto(rowsOrdenadas);
+        const labels = timeline.map(t =>
+          t.toLocaleTimeString("es-EC", {
+            hour: "2-digit",
+            minute: "2-digit"
+          })
+        );
+  
+        const rowsTimeline = timeline.map(t => {
+          const item = mapa.get(claveMinutoDesdeFecha(t));
+          return item || {};
         });
-
-        const rows = json.data;
-
-        actualizarGraficaVoltajes(labels, rows);
-        actualizarGraficaCorrientes(labels, rows);
-        actualizarGraficaPotencias(labels, rows);
-        actualizarGraficaPotenciaPorFase(labels, rows);
-        actualizarGraficaFp(labels, rows);
-        actualizarGraficaFrecuencia(labels, rows);
-
-        ultimoTimestampHistorico = rows[rows.length - 1].timestamp_ms;
+  
+        actualizarGraficaVoltajes(labels, rowsTimeline);
+        actualizarGraficaCorrientes(labels, rowsTimeline);
+        actualizarGraficaPotencias(labels, rowsTimeline);
+        actualizarGraficaPotenciaPorFase(labels, rowsTimeline);
+        actualizarGraficaFp(labels, rowsTimeline);
+        actualizarGraficaFrecuencia(labels, rowsTimeline);
+  
+        const ultimoReal = rowsOrdenadas[rowsOrdenadas.length - 1];
+  
+        ultimoTimestampHistorico = ultimoReal?.timestamp_ms ?? null;
         ultimoTimestampLive = ultimoTimestampHistorico;
-        ultimaHoraVisible = rows[rows.length - 1].visible_at || null;
+        ultimaHoraVisible = ultimoReal?.visible_at || ultimoReal?.created_at || null;
         fechaHistoricaActual = day;
         pmHistoricoActual = pm_slave;
         errorBox.innerText = "";
-
+  
         console.log("====================================");
         console.log("[HISTORICO] Curva reconstruida");
-        console.log("[HISTORICO] total puntos:", rows.length);
-        console.log("[HISTORICO] ultimo timestamp cargado:", rows[rows.length - 1]?.timestamp_ms);
+        console.log("[HISTORICO] total puntos reales:", rowsOrdenadas.length);
+        console.log("[HISTORICO] total puntos timeline:", rowsTimeline.length);
+        console.log("[HISTORICO] ultimo visible_at:", ultimaHoraVisible);
       } catch (e) {
         console.error("[HISTORICO] Error en consultarTodo:", e);
         document.getElementById("error").innerText = "";
@@ -1895,7 +1939,7 @@
       }
     }
   </script>
-
+  
   <!-- ===================================================== -->
   <!-- BLOQUE 30: INICIALIZACION Y EVENTOS                   -->
   <!-- ===================================================== -->
