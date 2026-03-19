@@ -712,7 +712,7 @@
       <div class="toolbar-main-left">
         <h2 class="toolbar-main-title">Historial y exportación</h2>
         <p class="toolbar-main-subtitle">
-          Seleccione el PM a visualizar, consulte curvas diarias y descargue archivos CSV por rango de fechas.
+          Seleccione el PM a visualizar.
         </p>
       </div>
 
@@ -757,10 +757,7 @@
     <section class="section-block">
       <div class="section-head">
         <div>
-          <h2 class="section-title">Resumen instantáneo y calidad de energía</h2>
-          <p class="section-subtitle">
-            Estado actual del PM seleccionado y métricas de calidad en tiempo real.
-          </p>
+          <h2 class="section-title">CALIDAD DE ENERGIA</h2>
         </div>
       </div>
     
@@ -773,25 +770,25 @@
             <div class="summary-card">
               <div class="summary-label">Potencia activa total</div>
               <div class="summary-value" id="summaryPTot">--</div>
-              <div class="summary-sub">Valor instantáneo total</div>
+              <div class="summary-sub">Valor instantáneo</div>
             </div>
     
             <div class="summary-card">
               <div class="summary-label">Factor de potencia total</div>
               <div class="summary-value" id="summaryPfTot">--</div>
-              <div class="summary-sub">FP total corregido desde equipo</div>
+              <div class="summary-sub">FP total</div>
             </div>
     
             <div class="summary-card">
               <div class="summary-label">Frecuencia</div>
               <div class="summary-value" id="summaryFrequency">--</div>
-              <div class="summary-sub">Estabilidad de red</div>
+              <div class="summary-sub">Red</div>
             </div>
     
             <div class="summary-card">
               <div class="summary-label">Corriente de neutro</div>
               <div class="summary-value" id="summaryCurrentN">--</div>
-              <div class="summary-sub">Corriente instantánea en neutro</div>
+              <div class="summary-sub">Corriente instantánea en neutro calculada</div>
             </div>
           </div>
     
@@ -906,8 +903,8 @@
     <section class="section-block">
       <div class="section-head">
         <div>
-          <h2 class="section-title">Curvas eléctricas</h2>
-          <p class="section-subtitle">Comportamiento temporal de tensiones, corrientes, potencias, frecuencia y factor de potencia.</p>
+          <h2 class="section-title">CURVAS HISTORICAS</h2>
+          <p class="section-subtitle">Comportamiento temporal.</p>
         </div>
       </div>
 
@@ -952,7 +949,7 @@
             </div>
             <div>
               <div class="chart-live-value" id="livePowers">--</div>
-              <div class="chart-live-sub">P | Q | S total</div>
+              <div class="chart-live-sub">P | Q | S</div>
             </div>
           </div>
           <div class="chart-wrap">
@@ -964,7 +961,7 @@
           <div class="chart-top">
             <div>
               <h3 class="chart-title">Potencia por fase</h3>
-              <p class="chart-subtitle">Curvas temporales por fase según el tipo de potencia seleccionado.</p>
+              <p class="chart-subtitle">Curvas de potencia activa, reactiva y aparente por fase.</p>
             </div>
             <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
               <div class="chart-inline-controls">
@@ -976,7 +973,7 @@
               </div>
               <div>
                 <div class="chart-live-value" id="livePhasePowers">--</div>
-                <div class="chart-live-sub" id="livePhasePowersSub">P A | P B | P C</div>
+                <div class="chart-live-sub" id="livePhasePowersSub">PA | PB | PC</div>
               </div>
             </div>
           </div>
@@ -989,11 +986,11 @@
           <div class="chart-top">
             <div>
               <h3 class="chart-title">Factor de potencia</h3>
-              <p class="chart-subtitle">Curvas de FP por fase corregido y FP total.</p>
+              <p class="chart-subtitle">Curvas de FP.</p>
             </div>
             <div>
               <div class="chart-live-value" id="livePf">--</div>
-              <div class="chart-live-sub">A | B | C | Total</div>
+              <div class="chart-live-sub">FPA | FPB | FPC | FPTotal</div>
             </div>
           </div>
           <div class="chart-wrap">
@@ -1005,7 +1002,7 @@
           <div class="chart-top">
             <div>
               <h3 class="chart-title">Frecuencia</h3>
-              <p class="chart-subtitle">Curva temporal de frecuencia del PM seleccionado.</p>
+              <p class="chart-subtitle">Curva de frecuencia de la red.</p>
             </div>
             <div>
               <div class="chart-live-value" id="liveFrequency">--</div>
@@ -1374,7 +1371,7 @@
 
         const frequency = numeroSeguro(d.frecuencia, d.frequency);
 
-        document.getElementById("summaryPTot").innerText = textoValor(pTot, "kW", 3);
+        document.getElementById("summaryPTot").innerText = textoValor(pTot, " kW", 3);
         document.getElementById("summaryPfTot").innerText = textoValor(pfTot, "", 3);
         document.getElementById("summaryFrequency").innerText = textoValor(frequency, " Hz", 3);
         document.getElementById("summaryCurrentN").innerText = textoValor(currentN, " A", 3);
