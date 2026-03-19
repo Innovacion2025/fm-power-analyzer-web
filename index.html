@@ -1036,6 +1036,7 @@
     let ultimaHoraVisible = null;
     let fechaHistoricaActual = null;
     let pmHistoricoActual = null;
+    let pollingTiempoRealEnCurso = false;
   
     function hoyTexto() {
       const ahora = new Date();
@@ -1973,9 +1974,9 @@
     }
   
     const ts = numeroSeguro(d.timestamp_ms);
-    const ultimoGraficado = ultimoTimestampHistorico !== null
-      ? Number(ultimoTimestampHistorico)
-      : null;
+    const ultimoGraficado = ultimoTimestampLive !== null
+      ? Number(ultimoTimestampLive)
+      : (ultimoTimestampHistorico !== null ? Number(ultimoTimestampHistorico) : null);
   
     console.log("[CURVA] ts nuevo:", ts);
     console.log("[CURVA] ultimoTimestampHistorico:", ultimoGraficado);
@@ -2082,22 +2083,35 @@
       }
   
       setInterval(async () => {
-        const daySeleccionado = document.getElementById("dayDate").value;
-        const hoyActual = hoyTexto();
-  
-        console.log("====================================");
-        console.log("[INTERVALO] Ejecutando ciclo vivo");
-        console.log("[INTERVALO] daySeleccionado:", daySeleccionado, "hoyActual:", hoyActual);
-  
-        const datoVivo = await actualizarTiempoReal();
-  
-        console.log("[INTERVALO] datoVivo recibido:", datoVivo);
-  
-        if (daySeleccionado === hoyActual) {
-          console.log("[INTERVALO] Agregando punto a curva...");
-          agregarPuntoDesdeTiempoReal(datoVivo);
-        } else {
-          console.log("[INTERVALO] No agrega punto porque no estás viendo el día actual");
+        if (pollingTiempoRealEnCurso) {
+          console.log("[INTERVALO] Ciclo omitido: aún hay una consulta en curso");
+          return;
+        }
+      
+        pollingTiempoRealEnCurso = true;
+      
+        try {
+          const daySeleccionado = document.getElementById("dayDate").value;
+          const hoyActual = hoyTexto();
+      
+          console.log("====================================");
+          console.log("[INTERVALO] Ejecutando ciclo vivo");
+          console.log("[INTERVALO] daySeleccionado:", daySeleccionado, "hoyActual:", hoyActual);
+      
+          const datoVivo = await actualizarTiempoReal();
+      
+          console.log("[INTERVALO] datoVivo recibido:", datoVivo);
+      
+          if (daySeleccionado === hoyActual) {
+            console.log("[INTERVALO] Agregando punto a curva...");
+            agregarPuntoDesdeTiempoReal(datoVivo);
+          } else {
+            console.log("[INTERVALO] No agrega punto porque no estás viendo el día actual");
+          }
+        } catch (e) {
+          console.error("[INTERVALO] Error en ciclo vivo:", e);
+        } finally {
+          pollingTiempoRealEnCurso = false;
         }
       }, 2000);
     });
