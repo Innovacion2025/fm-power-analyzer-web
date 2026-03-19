@@ -656,49 +656,6 @@
       .fill-orange { background: linear-gradient(135deg, #f39c12, #f5b041); }
       .fill-red { background: linear-gradient(135deg, #d64541, #ef5a47); }
     </style>
-
-    <style>
-    .instant-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      align-items: start;
-    }
-  
-    .instant-left,
-    .instant-right {
-      min-width: 0;
-    }
-  
-    .instant-left {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-  
-    .summary-grid-compact {
-      margin-bottom: 0;
-      grid-template-columns: 1fr 1fr;
-    }
-  
-    @media (max-width: 1100px) {
-      .instant-layout {
-        grid-template-columns: 1fr;
-      }
-  
-      .summary-grid-compact {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-  
-    @media (max-width: 640px) {
-      .summary-grid-compact {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-
-  
     <!-- =================================================== -->
     <!-- BLOQUE 9: HERO / ENCABEZADO                         -->
     <!-- =================================================== -->
@@ -789,10 +746,13 @@
         </div>
       </div>
     
-      <div class="instant-layout">
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; align-items:start;">
+        
         <!-- COLUMNA IZQUIERDA -->
-        <div class="instant-left">
-          <div class="summary-grid summary-grid-compact">
+        <div style="display:flex; flex-direction:column; gap:14px; min-width:0;">
+          
+          <!-- RESUMEN -->
+          <div class="summary-grid" style="margin-bottom:0;">
             <div class="summary-card">
               <div class="summary-label">Potencia activa total</div>
               <div class="summary-value" id="summaryPTot">--</div>
@@ -818,6 +778,7 @@
             </div>
           </div>
     
+          <!-- DESBALANCE -->
           <div class="quality-card">
             <h3 class="quality-title">Desbalance</h3>
     
@@ -826,9 +787,7 @@
                 <span class="quality-name">Desbalance de voltaje</span>
                 <span class="quality-value" id="q_desbalance_v">--</span>
               </div>
-              <div class="quality-bar">
-                <div id="bar_desbalance_v" class="quality-fill fill-green"></div>
-              </div>
+              <div class="quality-bar"><div id="bar_desbalance_v" class="quality-fill fill-green"></div></div>
             </div>
     
             <div class="quality-item">
@@ -836,15 +795,13 @@
                 <span class="quality-name">Desbalance de corriente</span>
                 <span class="quality-value" id="q_desbalance_i">--</span>
               </div>
-              <div class="quality-bar">
-                <div id="bar_desbalance_i" class="quality-fill fill-green"></div>
-              </div>
+              <div class="quality-bar"><div id="bar_desbalance_i" class="quality-fill fill-green"></div></div>
             </div>
           </div>
         </div>
     
         <!-- COLUMNA DERECHA -->
-        <div class="instant-right">
+        <div style="min-width:0;">
           <div class="quality-card">
             <h3 class="quality-title">THD de voltaje y corriente</h3>
     
@@ -853,9 +810,7 @@
                 <span class="quality-name">THD Voltaje A</span>
                 <span class="quality-value" id="q_thd_va">--</span>
               </div>
-              <div class="quality-bar">
-                <div id="bar_thd_va" class="quality-fill fill-green"></div>
-              </div>
+              <div class="quality-bar"><div id="bar_thd_va" class="quality-fill fill-green"></div></div>
             </div>
     
             <div class="quality-item">
@@ -863,9 +818,7 @@
                 <span class="quality-name">THD Voltaje B</span>
                 <span class="quality-value" id="q_thd_vb">--</span>
               </div>
-              <div class="quality-bar">
-                <div id="bar_thd_vb" class="quality-fill fill-green"></div>
-              </div>
+              <div class="quality-bar"><div id="bar_thd_vb" class="quality-fill fill-green"></div></div>
             </div>
     
             <div class="quality-item">
@@ -873,9 +826,7 @@
                 <span class="quality-name">THD Voltaje C</span>
                 <span class="quality-value" id="q_thd_vc">--</span>
               </div>
-              <div class="quality-bar">
-                <div id="bar_thd_vc" class="quality-fill fill-green"></div>
-              </div>
+              <div class="quality-bar"><div id="bar_thd_vc" class="quality-fill fill-green"></div></div>
             </div>
     
             <div class="quality-item">
@@ -883,9 +834,7 @@
                 <span class="quality-name">THD Corriente A</span>
                 <span class="quality-value" id="q_thd_ia">--</span>
               </div>
-              <div class="quality-bar">
-                <div id="bar_thd_ia" class="quality-fill fill-green"></div>
-              </div>
+              <div class="quality-bar"><div id="bar_thd_ia" class="quality-fill fill-green"></div></div>
             </div>
     
             <div class="quality-item">
@@ -893,9 +842,7 @@
                 <span class="quality-name">THD Corriente B</span>
                 <span class="quality-value" id="q_thd_ib">--</span>
               </div>
-              <div class="quality-bar">
-                <div id="bar_thd_ib" class="quality-fill fill-green"></div>
-              </div>
+              <div class="quality-bar"><div id="bar_thd_ib" class="quality-fill fill-green"></div></div>
             </div>
     
             <div class="quality-item">
@@ -903,9 +850,7 @@
                 <span class="quality-name">THD Corriente C</span>
                 <span class="quality-value" id="q_thd_ic">--</span>
               </div>
-              <div class="quality-bar">
-                <div id="bar_thd_ic" class="quality-fill fill-green"></div>
-              </div>
+              <div class="quality-bar"><div id="bar_thd_ic" class="quality-fill fill-green"></div></div>
             </div>
     
             <div class="quality-item">
@@ -913,12 +858,11 @@
                 <span class="quality-name">THD Corriente N</span>
                 <span class="quality-value" id="q_thd_in">--</span>
               </div>
-              <div class="quality-bar">
-                <div id="bar_thd_in" class="quality-fill fill-green"></div>
-              </div>
+              <div class="quality-bar"><div id="bar_thd_in" class="quality-fill fill-green"></div></div>
             </div>
           </div>
         </div>
+    
       </div>
     </section>
    
