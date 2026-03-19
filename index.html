@@ -755,6 +755,15 @@
     <!-- BLOQUE 11: RESUMEN + CALIDAD DE ENERGIA             -->
     <!-- =================================================== -->
     <section class="section-block">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">Resumen instantáneo y calidad de energía</h2>
+          <p class="section-subtitle">
+            Estado actual del PM seleccionado y métricas de calidad en tiempo real.
+          </p>
+        </div>
+      </div>
+    
       <div class="summary-panel-layout">
     
         <!-- COLUMNA IZQUIERDA -->
@@ -890,6 +899,7 @@
     
       </div>
     </section>
+  
     <!-- =================================================== -->
     <!-- BLOQUE 12: CURVAS ELECTRICAS                        -->
     <!-- =================================================== -->
@@ -1004,100 +1014,6 @@
           </div>
           <div class="chart-wrap">
             <canvas id="chartFrequency" class="chart-canvas"></canvas>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================== -->
-    <!-- BLOQUE 13: CALIDAD DE ENERGIA                       -->
-    <!-- =================================================== -->
-    <section class="section-block">
-      <div class="section-head">
-        <div>
-          <h2 class="section-title">Calidad de energía</h2>
-          <p class="section-subtitle">Indicadores porcentuales de distorsión armónica y desbalance.</p>
-        </div>
-      </div>
-
-      <div class="quality-grid">
-        <div class="quality-card">
-          <h3 class="quality-title">THD de voltaje y corriente</h3>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">THD Voltaje A</span>
-              <span class="quality-value" id="q_thd_va">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_thd_va" class="quality-fill fill-green"></div></div>
-          </div>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">THD Voltaje B</span>
-              <span class="quality-value" id="q_thd_vb">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_thd_vb" class="quality-fill fill-green"></div></div>
-          </div>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">THD Voltaje C</span>
-              <span class="quality-value" id="q_thd_vc">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_thd_vc" class="quality-fill fill-green"></div></div>
-          </div>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">THD Corriente A</span>
-              <span class="quality-value" id="q_thd_ia">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_thd_ia" class="quality-fill fill-green"></div></div>
-          </div>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">THD Corriente B</span>
-              <span class="quality-value" id="q_thd_ib">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_thd_ib" class="quality-fill fill-green"></div></div>
-          </div>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">THD Corriente C</span>
-              <span class="quality-value" id="q_thd_ic">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_thd_ic" class="quality-fill fill-green"></div></div>
-          </div>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">THD Corriente N</span>
-              <span class="quality-value" id="q_thd_in">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_thd_in" class="quality-fill fill-green"></div></div>
-          </div>
-        </div>
-
-        <div class="quality-card">
-          <h3 class="quality-title">Desbalance</h3>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">Desbalance de voltaje</span>
-              <span class="quality-value" id="q_desbalance_v">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_desbalance_v" class="quality-fill fill-green"></div></div>
-          </div>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">Desbalance de corriente</span>
-              <span class="quality-value" id="q_desbalance_i">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_desbalance_i" class="quality-fill fill-green"></div></div>
           </div>
         </div>
       </div>
