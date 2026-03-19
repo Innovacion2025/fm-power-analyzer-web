@@ -1105,45 +1105,53 @@
         "Slave: " + (currentMeter?.pm_slave ?? "--");
     }
   
-    function generarTimelineDia(fechaTexto) {
-      const timeline = [];
-      const inicio = new Date(fechaTexto + "T00:00:00");
-      const fin = new Date(fechaTexto + "T23:59:00");
-  
-      const cursor = new Date(inicio);
-      while (cursor <= fin) {
-        timeline.push(new Date(cursor));
-        cursor.setMinutes(cursor.getMinutes() + 1);
-      }
-  
-      return timeline;
-    }
-  
-    function claveMinutoDesdeFecha(fecha) {
+    function claveSegundoDesdeFecha(fecha) {
       const h = String(fecha.getHours()).padStart(2, "0");
       const m = String(fecha.getMinutes()).padStart(2, "0");
-      return `${h}:${m}`;
+      const s = String(fecha.getSeconds()).padStart(2, "0");
+      return `${h}:${m}:${s}`;
     }
   
-    function construirMapaPorMinuto(rows) {
+    function construirMapaPorSegundo(rows) {
       const mapa = new Map();
   
       for (const item of rows) {
         const fecha = new Date(item.visible_at || item.created_at);
         if (isNaN(fecha.getTime())) continue;
   
-        const clave = claveMinutoDesdeFecha(fecha);
+        const clave = claveSegundoDesdeFecha(fecha);
         mapa.set(clave, item);
       }
   
       return mapa;
     }
   
-    function construirSerieDesdeTimeline(timeline, mapa, extractor) {
-      return timeline.map((t) => {
-        const item = mapa.get(claveMinutoDesdeFecha(t));
-        return item ? extractor(item) : null;
-      });
+    function generarTimelineHastaUltimoDato(fechaTexto, ultimoDatoIso) {
+      const timeline = [];
+      const inicio = new Date(fechaTexto + "T00:00:00");
+  
+      let fin = new Date(fechaTexto + "T00:00:00");
+  
+      if (ultimoDatoIso) {
+        const ultimo = new Date(ultimoDatoIso);
+        if (!isNaN(ultimo.getTime())) {
+          fin = new Date(ultimo);
+          fin.setMilliseconds(0);
+        }
+      }
+  
+      if (fin < inicio) {
+        fin = new Date(inicio);
+      }
+  
+      const cursor = new Date(inicio);
+  
+      while (cursor <= fin) {
+        timeline.push(new Date(cursor));
+        cursor.setSeconds(cursor.getSeconds() + 1);
+      }
+  
+      return timeline;
     }
   </script>
   <!-- ===================================================== -->
@@ -1896,17 +1904,22 @@
           return aTime - bTime;
         });
   
-        const timeline = generarTimelineDia(day);
-        const mapa = construirMapaPorMinuto(rowsOrdenadas);
+        const ultimoReal = rowsOrdenadas[rowsOrdenadas.length - 1];
+        const ultimoVisible = ultimoReal?.visible_at || ultimoReal?.created_at || null;
+  
+        const timeline = generarTimelineHastaUltimoDato(day, ultimoVisible);
+        const mapa = construirMapaPorSegundo(rowsOrdenadas);
+  
         const labels = timeline.map(t =>
           t.toLocaleTimeString("es-EC", {
             hour: "2-digit",
-            minute: "2-digit"
+            minute: "2-digit",
+            second: "2-digit"
           })
         );
   
         const rowsTimeline = timeline.map(t => {
-          const item = mapa.get(claveMinutoDesdeFecha(t));
+          const item = mapa.get(claveSegundoDesdeFecha(t));
           return item || {};
         });
   
@@ -1917,11 +1930,9 @@
         actualizarGraficaFp(labels, rowsTimeline);
         actualizarGraficaFrecuencia(labels, rowsTimeline);
   
-        const ultimoReal = rowsOrdenadas[rowsOrdenadas.length - 1];
-  
         ultimoTimestampHistorico = ultimoReal?.timestamp_ms ?? null;
         ultimoTimestampLive = ultimoTimestampHistorico;
-        ultimaHoraVisible = ultimoReal?.visible_at || ultimoReal?.created_at || null;
+        ultimaHoraVisible = ultimoVisible;
         fechaHistoricaActual = day;
         pmHistoricoActual = pm_slave;
         errorBox.innerText = "";
