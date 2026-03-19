@@ -1105,55 +1105,62 @@
         "Slave: " + (currentMeter?.pm_slave ?? "--");
     }
   
-    function claveSegundoDesdeFecha(fecha) {
-      const h = String(fecha.getHours()).padStart(2, "0");
-      const m = String(fecha.getMinutes()).padStart(2, "0");
-      const s = String(fecha.getSeconds()).padStart(2, "0");
-      return `${h}:${m}:${s}`;
-    }
+    function crearFilaInicioDia(fechaTexto) {
+      const inicioIso = `${fechaTexto}T00:00:00`;
   
-    function construirMapaPorSegundo(rows) {
-      const mapa = new Map();
+      return {
+        visible_at: inicioIso,
+        created_at: inicioIso,
+        timestamp_ms: null,
   
-      for (const item of rows) {
-        const fecha = new Date(item.visible_at || item.created_at);
-        if (isNaN(fecha.getTime())) continue;
+        voltage_a: null,
+        voltage_b: null,
+        voltage_c: null,
   
-        const clave = claveSegundoDesdeFecha(fecha);
-        mapa.set(clave, item);
-      }
+        current_a: null,
+        current_b: null,
+        current_c: null,
+        current_n: null,
   
-      return mapa;
-    }
+        p_a: null,
+        p_b: null,
+        p_c: null,
+        p_tot: null,
   
-    function generarTimelineHastaUltimoDato(fechaTexto, ultimoDatoIso) {
-      const timeline = [];
-      const inicio = new Date(fechaTexto + "T00:00:00");
+        q_a: null,
+        q_b: null,
+        q_c: null,
+        q_tot: null,
   
-      let fin = new Date(fechaTexto + "T00:00:00");
+        s_a: null,
+        s_b: null,
+        s_c: null,
+        s_tot: null,
   
-      if (ultimoDatoIso) {
-        const ultimo = new Date(ultimoDatoIso);
-        if (!isNaN(ultimo.getTime())) {
-          fin = new Date(ultimo);
-          fin.setMilliseconds(0);
-        }
-      }
+        pf_a: null,
+        pf_b: null,
+        pf_c: null,
+        pf_tot: null,
   
-      if (fin < inicio) {
-        fin = new Date(inicio);
-      }
+        frecuencia: null,
   
-      const cursor = new Date(inicio);
+        thd_va: null,
+        thd_vb: null,
+        thd_vc: null,
   
-      while (cursor <= fin) {
-        timeline.push(new Date(cursor));
-        cursor.setSeconds(cursor.getSeconds() + 1);
-      }
+        thd_ia: null,
+        thd_ib: null,
+        thd_ic: null,
+        thd_in: null,
   
-      return timeline;
+        desbalance_v: null,
+        desbalance_i: null,
+  
+        raw_payload: null
+      };
     }
   </script>
+    
   <!-- ===================================================== -->
   <!-- BLOQUE 18: CARGA DE MEDIDORES                         -->
   <!-- ===================================================== -->
@@ -1904,35 +1911,33 @@
           return aTime - bTime;
         });
   
-        const ultimoReal = rowsOrdenadas[rowsOrdenadas.length - 1];
-        const ultimoVisible = ultimoReal?.visible_at || ultimoReal?.created_at || null;
+        const filaInicio = crearFilaInicioDia(day);
+        const primerReal = rowsOrdenadas[0];
+        const horaPrimerReal = new Date(primerReal.visible_at || primerReal.created_at || 0).getTime();
+        const horaInicio = new Date(filaInicio.visible_at).getTime();
   
-        const timeline = generarTimelineHastaUltimoDato(day, ultimoVisible);
-        const mapa = construirMapaPorSegundo(rowsOrdenadas);
+        let rowsFinales = rowsOrdenadas;
   
-        const labels = timeline.map(t =>
-          t.toLocaleTimeString("es-EC", {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit"
-          })
+        if (Number.isFinite(horaPrimerReal) && horaPrimerReal > horaInicio) {
+          rowsFinales = [filaInicio, ...rowsOrdenadas];
+        }
+  
+        const labels = rowsFinales.map(item =>
+          formatearHoraReal(item.visible_at || item.created_at)
         );
   
-        const rowsTimeline = timeline.map(t => {
-          const item = mapa.get(claveSegundoDesdeFecha(t));
-          return item || {};
-        });
+        actualizarGraficaVoltajes(labels, rowsFinales);
+        actualizarGraficaCorrientes(labels, rowsFinales);
+        actualizarGraficaPotencias(labels, rowsFinales);
+        actualizarGraficaPotenciaPorFase(labels, rowsFinales);
+        actualizarGraficaFp(labels, rowsFinales);
+        actualizarGraficaFrecuencia(labels, rowsFinales);
   
-        actualizarGraficaVoltajes(labels, rowsTimeline);
-        actualizarGraficaCorrientes(labels, rowsTimeline);
-        actualizarGraficaPotencias(labels, rowsTimeline);
-        actualizarGraficaPotenciaPorFase(labels, rowsTimeline);
-        actualizarGraficaFp(labels, rowsTimeline);
-        actualizarGraficaFrecuencia(labels, rowsTimeline);
+        const ultimoReal = rowsOrdenadas[rowsOrdenadas.length - 1];
   
         ultimoTimestampHistorico = ultimoReal?.timestamp_ms ?? null;
         ultimoTimestampLive = ultimoTimestampHistorico;
-        ultimaHoraVisible = ultimoVisible;
+        ultimaHoraVisible = ultimoReal?.visible_at || ultimoReal?.created_at || null;
         fechaHistoricaActual = day;
         pmHistoricoActual = pm_slave;
         errorBox.innerText = "";
@@ -1940,7 +1945,7 @@
         console.log("====================================");
         console.log("[HISTORICO] Curva reconstruida");
         console.log("[HISTORICO] total puntos reales:", rowsOrdenadas.length);
-        console.log("[HISTORICO] total puntos timeline:", rowsTimeline.length);
+        console.log("[HISTORICO] total puntos graficados:", rowsFinales.length);
         console.log("[HISTORICO] ultimo visible_at:", ultimaHoraVisible);
       } catch (e) {
         console.error("[HISTORICO] Error en consultarTodo:", e);
