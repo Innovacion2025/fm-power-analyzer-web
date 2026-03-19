@@ -414,48 +414,49 @@
   <style>
     .summary-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 14px;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 0;
     }
-
+  
     .summary-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      box-shadow: var(--shadow-soft);
-      padding: 16px;
+      background: #ffffff;
+      border: 1px solid #dfe5e1;
+      border-radius: 14px;
+      box-shadow: none;
+      padding: 10px 14px;
+      min-height: 68px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
-
+  
     .summary-label {
-      font-size: 12px;
-      color: #7a858c;
-      font-weight: 700;
+      font-size: 10px;
+      color: #7e8a91;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
-    }
-
-    .summary-value {
-      margin-top: 8px;
-      font-size: 28px;
-      font-weight: 900;
-      color: var(--green);
+      letter-spacing: 1px;
+      margin-bottom: 4px;
       line-height: 1.1;
     }
-
+  
+    .summary-value {
+      margin-top: 0;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--green);
+      line-height: 1.05;
+    }
+  
     .summary-sub {
-      margin-top: 6px;
-      font-size: 12px;
-      color: #7a858c;
+      margin-top: 4px;
+      font-size: 10px;
+      color: #8a949a;
+      line-height: 1.15;
     }
-
-    @media (max-width: 1100px) {
-      .summary-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 640px) {
+  
+    @media (max-width: 900px) {
       .summary-grid {
         grid-template-columns: 1fr;
       }
@@ -575,81 +576,107 @@
   <!-- ===================================================== -->
   <!-- BLOQUE 8: BARRAS DE CALIDAD                           -->
   <!-- ===================================================== -->
-  <style>
-    .quality-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .quality-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      box-shadow: var(--shadow-soft);
-      padding: 16px;
-    }
-
-    .quality-title {
-      margin: 0 0 12px 0;
-      font-size: 18px;
-      font-weight: 900;
-      color: var(--green);
-    }
-
-    .quality-item {
-      margin-bottom: 12px;
-    }
-
-    .quality-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 6px;
-      font-size: 13px;
-    }
-
-    .quality-name {
-      font-weight: 700;
-      color: #5c6970;
-    }
-
-    .quality-value {
-      font-weight: 900;
-      color: var(--green);
-    }
-
-    .quality-bar {
-      width: 100%;
-      height: 12px;
-      border-radius: 999px;
-      background: #e8edeb;
-      overflow: hidden;
-      border: 1px solid #dde4e0;
-    }
-
-    .quality-fill {
-      height: 100%;
-      border-radius: 999px;
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-
-    .fill-green { background: linear-gradient(135deg, #27ae60, #2ecc71); }
-    .fill-orange { background: linear-gradient(135deg, #f39c12, #f5b041); }
-    .fill-red { background: linear-gradient(135deg, #d64541, #e74c3c); }
-
-    @media (max-width: 1100px) {
+    <style>
       .quality-grid {
+        display: grid;
         grid-template-columns: 1fr;
+        gap: 10px;
       }
-    }
-  </style>
-</head>
-<body>
-  <div class="page">
-
+    
+      .quality-card {
+        background: #ffffff;
+        border: 1px solid #dfe5e1;
+        border-radius: 14px;
+        box-shadow: none;
+        padding: 10px 14px;
+      }
+    
+      .quality-title {
+        margin: 0 0 10px 0;
+        font-size: 14px;
+        font-weight: 900;
+        color: var(--green);
+        line-height: 1.1;
+      }
+    
+      .quality-item {
+        margin-bottom: 10px;
+      }
+    
+      .quality-item:last-child {
+        margin-bottom: 0;
+      }
+    
+      .quality-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 4px;
+        font-size: 11px;
+      }
+    
+      .quality-name {
+        font-weight: 700;
+        color: #4f5f67;
+        line-height: 1.1;
+      }
+    
+      .quality-value {
+        font-weight: 900;
+        color: var(--green);
+        white-space: nowrap;
+        line-height: 1.1;
+      }
+    
+      .quality-bar {
+        width: 100%;
+        height: 8px;
+        border-radius: 999px;
+        background: #e3e8e5;
+        overflow: hidden;
+        border: none;
+      }
+    
+      .quality-fill {
+        height: 100%;
+        border-radius: 999px;
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+    
+      .fill-green { background: linear-gradient(135deg, #2bbd6e, #36c06d); }
+      .fill-orange { background: linear-gradient(135deg, #f39c12, #f5b041); }
+      .fill-red { background: linear-gradient(135deg, #d64541, #ef5a47); }
+    
+      .summary-panel-layout {
+        display: grid;
+        grid-template-columns: 1.05fr 1fr;
+        gap: 12px;
+        align-items: start;
+      }
+    
+      .summary-panel-left {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-width: 0;
+      }
+    
+      .summary-panel-right {
+        min-width: 0;
+      }
+    
+      .summary-panel-left .quality-card {
+        min-height: auto;
+      }
+    
+      @media (max-width: 1000px) {
+        .summary-panel-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
     <!-- =================================================== -->
     <!-- BLOQUE 9: HERO / ENCABEZADO                         -->
     <!-- =================================================== -->
@@ -725,43 +752,144 @@
     </section>
 
     <!-- =================================================== -->
-    <!-- BLOQUE 11: RESUMEN INSTANTANEO                      -->
+    <!-- BLOQUE 11: RESUMEN + CALIDAD DE ENERGIA             -->
     <!-- =================================================== -->
     <section class="section-block">
-      <div class="section-head">
-        <div>
-          <h2 class="section-title">Resumen instantáneo</h2>
-          <p class="section-subtitle">Variables clave del PM seleccionado en tiempo real.</p>
+      <div class="summary-panel-layout">
+    
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="summary-panel-left">
+    
+          <div class="summary-grid">
+            <div class="summary-card">
+              <div class="summary-label">Potencia activa total</div>
+              <div class="summary-value" id="summaryPTot">--</div>
+              <div class="summary-sub">Valor instantáneo total</div>
+            </div>
+    
+            <div class="summary-card">
+              <div class="summary-label">Factor de potencia total</div>
+              <div class="summary-value" id="summaryPfTot">--</div>
+              <div class="summary-sub">FP total corregido desde equipo</div>
+            </div>
+    
+            <div class="summary-card">
+              <div class="summary-label">Frecuencia</div>
+              <div class="summary-value" id="summaryFrequency">--</div>
+              <div class="summary-sub">Estabilidad de red</div>
+            </div>
+    
+            <div class="summary-card">
+              <div class="summary-label">Corriente de neutro</div>
+              <div class="summary-value" id="summaryCurrentN">--</div>
+              <div class="summary-sub">Corriente instantánea en neutro</div>
+            </div>
+          </div>
+    
+          <div class="quality-card">
+            <h3 class="quality-title">Desbalance</h3>
+    
+            <div class="quality-item">
+              <div class="quality-row">
+                <span class="quality-name">Desbalance de voltaje</span>
+                <span class="quality-value" id="q_desbalance_v">--</span>
+              </div>
+              <div class="quality-bar">
+                <div id="bar_desbalance_v" class="quality-fill fill-green"></div>
+              </div>
+            </div>
+    
+            <div class="quality-item">
+              <div class="quality-row">
+                <span class="quality-name">Desbalance de corriente</span>
+                <span class="quality-value" id="q_desbalance_i">--</span>
+              </div>
+              <div class="quality-bar">
+                <div id="bar_desbalance_i" class="quality-fill fill-green"></div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div class="summary-grid">
-        <div class="summary-card">
-          <div class="summary-label">Potencia activa total</div>
-          <div class="summary-value" id="summaryPTot">--</div>
-          <div class="summary-sub">Valor instantáneo total</div>
+    
+        <!-- COLUMNA DERECHA -->
+        <div class="summary-panel-right">
+          <div class="quality-card">
+            <h3 class="quality-title">THD de voltaje y corriente</h3>
+    
+            <div class="quality-item">
+              <div class="quality-row">
+                <span class="quality-name">THD Voltaje A</span>
+                <span class="quality-value" id="q_thd_va">--</span>
+              </div>
+              <div class="quality-bar">
+                <div id="bar_thd_va" class="quality-fill fill-green"></div>
+              </div>
+            </div>
+    
+            <div class="quality-item">
+              <div class="quality-row">
+                <span class="quality-name">THD Voltaje B</span>
+                <span class="quality-value" id="q_thd_vb">--</span>
+              </div>
+              <div class="quality-bar">
+                <div id="bar_thd_vb" class="quality-fill fill-green"></div>
+              </div>
+            </div>
+    
+            <div class="quality-item">
+              <div class="quality-row">
+                <span class="quality-name">THD Voltaje C</span>
+                <span class="quality-value" id="q_thd_vc">--</span>
+              </div>
+              <div class="quality-bar">
+                <div id="bar_thd_vc" class="quality-fill fill-green"></div>
+              </div>
+            </div>
+    
+            <div class="quality-item">
+              <div class="quality-row">
+                <span class="quality-name">THD Corriente A</span>
+                <span class="quality-value" id="q_thd_ia">--</span>
+              </div>
+              <div class="quality-bar">
+                <div id="bar_thd_ia" class="quality-fill fill-green"></div>
+              </div>
+            </div>
+    
+            <div class="quality-item">
+              <div class="quality-row">
+                <span class="quality-name">THD Corriente B</span>
+                <span class="quality-value" id="q_thd_ib">--</span>
+              </div>
+              <div class="quality-bar">
+                <div id="bar_thd_ib" class="quality-fill fill-green"></div>
+              </div>
+            </div>
+    
+            <div class="quality-item">
+              <div class="quality-row">
+                <span class="quality-name">THD Corriente C</span>
+                <span class="quality-value" id="q_thd_ic">--</span>
+              </div>
+              <div class="quality-bar">
+                <div id="bar_thd_ic" class="quality-fill fill-green"></div>
+              </div>
+            </div>
+    
+            <div class="quality-item">
+              <div class="quality-row">
+                <span class="quality-name">THD Corriente N</span>
+                <span class="quality-value" id="q_thd_in">--</span>
+              </div>
+              <div class="quality-bar">
+                <div id="bar_thd_in" class="quality-fill fill-green"></div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div class="summary-card">
-          <div class="summary-label">Factor de potencia total</div>
-          <div class="summary-value" id="summaryPfTot">--</div>
-          <div class="summary-sub">FP total corregido desde equipo</div>
-        </div>
-
-        <div class="summary-card">
-          <div class="summary-label">Frecuencia</div>
-          <div class="summary-value" id="summaryFrequency">--</div>
-          <div class="summary-sub">Estabilidad de red</div>
-        </div>
-
-        <div class="summary-card">
-          <div class="summary-label">Corriente de neutro</div>
-          <div class="summary-value" id="summaryCurrentN">--</div>
-          <div class="summary-sub">Corriente instantánea en neutro</div>
-        </div>
+    
       </div>
     </section>
-
     <!-- =================================================== -->
     <!-- BLOQUE 12: CURVAS ELECTRICAS                        -->
     <!-- =================================================== -->
