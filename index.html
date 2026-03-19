@@ -2053,6 +2053,89 @@
     console.log("[CURVA] nuevo ultimoTimestampHistorico:", ts);
   }
   </script>
+
+  <!-- ===================================================== -->
+  <!-- BLOQUE 30: INICIALIZACION Y EVENTOS                  -->
+  <!-- ===================================================== -->
+  <script>
+    window.addEventListener("load", async () => {
+      const hoy = hoyTexto();
+  
+      document.getElementById("dayDate").value = hoy;
+      document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
+  
+      const csvFrom = document.getElementById("csvFrom");
+      const csvTo = document.getElementById("csvTo");
+  
+      if (csvFrom) csvFrom.value = hoy;
+      if (csvTo) csvTo.value = hoy;
+  
+      const okMeters = await cargarMedidores();
+      if (!okMeters) return;
+  
+      const primerDato = await actualizarTiempoReal();
+      await consultarTodo(true);
+  
+      if (document.getElementById("dayDate").value === hoyTexto()) {
+        console.log("[LOAD] Intentando agregar primer punto vivo");
+        agregarPuntoDesdeTiempoReal(primerDato);
+      }
+  
+      setInterval(async () => {
+        const daySeleccionado = document.getElementById("dayDate").value;
+        const hoyActual = hoyTexto();
+  
+        console.log("====================================");
+        console.log("[INTERVALO] Ejecutando ciclo vivo");
+        console.log("[INTERVALO] daySeleccionado:", daySeleccionado, "hoyActual:", hoyActual);
+  
+        const datoVivo = await actualizarTiempoReal();
+  
+        console.log("[INTERVALO] datoVivo recibido:", datoVivo);
+  
+        if (daySeleccionado === hoyActual) {
+          console.log("[INTERVALO] Agregando punto a curva...");
+          agregarPuntoDesdeTiempoReal(datoVivo);
+        } else {
+          console.log("[INTERVALO] No agrega punto porque no estás viendo el día actual");
+        }
+      }, 2000);
+    });
+  
+    document.addEventListener("DOMContentLoaded", () => {
+      const dayDate = document.getElementById("dayDate");
+      const pmSelect = document.getElementById("pmSelect");
+      const phasePowerModeSelect = document.getElementById("phasePowerMode");
+  
+      if (dayDate) {
+        dayDate.addEventListener("change", () => {
+          console.log("[EVENTO] Cambio de fecha");
+          consultarTodo(true);
+        });
+      }
+  
+      if (pmSelect) {
+        pmSelect.addEventListener("change", async () => {
+          console.log("[EVENTO] Cambio de PM");
+          actualizarMeterSeleccionadoDesdeSelect();
+          const datoVivo = await actualizarTiempoReal();
+          await consultarTodo(true);
+  
+          if (document.getElementById("dayDate").value === hoyTexto()) {
+            agregarPuntoDesdeTiempoReal(datoVivo);
+          }
+        });
+      }
+  
+      if (phasePowerModeSelect) {
+        phasePowerModeSelect.addEventListener("change", async (e) => {
+          console.log("[EVENTO] Cambio de modo potencia por fase:", e.target.value);
+          phasePowerMode = e.target.value;
+          await consultarTodo(true);
+        });
+      }
+    });
+  </script>
     
 </body>
 </html>
