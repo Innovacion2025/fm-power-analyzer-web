@@ -734,43 +734,133 @@
     </section>
 
     <!-- =================================================== -->
-    <!-- BLOQUE 11: RESUMEN INSTANTANEO                      -->
-    <!-- =================================================== -->
-    <section class="section-block">
-      <div class="section-head">
-        <div>
-          <h2 class="section-title">Resumen instantáneo</h2>
-          <p class="section-subtitle">Variables clave del PM seleccionado en tiempo real.</p>
+<!-- BLOQUE 11: RESUMEN + CALIDAD DE ENERGIA             -->
+<!-- =================================================== -->
+<section class="section-block">
+  <div class="section-head">
+    <div>
+      <h2 class="section-title">Resumen instantáneo y calidad de energía</h2>
+      <p class="section-subtitle">
+        Estado actual del PM seleccionado y métricas de calidad en tiempo real.
+      </p>
+    </div>
+  </div>
+
+  <!-- ================================ -->
+  <!-- CALIDAD DE ENERGIA              -->
+  <!-- ================================ -->
+  <div class="quality-grid">
+    <div class="quality-card">
+      <h3 class="quality-title">THD de voltaje y corriente</h3>
+
+      <div class="quality-item">
+        <div class="quality-row">
+          <span class="quality-name">THD Voltaje A</span>
+          <span class="quality-value" id="q_thd_va">--</span>
         </div>
+        <div class="quality-bar"><div id="bar_thd_va" class="quality-fill fill-green"></div></div>
       </div>
 
-      <div class="summary-grid">
-        <div class="summary-card">
-          <div class="summary-label">Potencia activa total</div>
-          <div class="summary-value" id="summaryPTot">--</div>
-          <div class="summary-sub">Valor instantáneo total</div>
+      <div class="quality-item">
+        <div class="quality-row">
+          <span class="quality-name">THD Voltaje B</span>
+          <span class="quality-value" id="q_thd_vb">--</span>
         </div>
-
-        <div class="summary-card">
-          <div class="summary-label">Factor de potencia total</div>
-          <div class="summary-value" id="summaryPfTot">--</div>
-          <div class="summary-sub">FP total corregido desde equipo</div>
-        </div>
-
-        <div class="summary-card">
-          <div class="summary-label">Frecuencia</div>
-          <div class="summary-value" id="summaryFrequency">--</div>
-          <div class="summary-sub">Estabilidad de red</div>
-        </div>
-
-        <div class="summary-card">
-          <div class="summary-label">Corriente de neutro</div>
-          <div class="summary-value" id="summaryCurrentN">--</div>
-          <div class="summary-sub">Corriente instantánea en neutro</div>
-        </div>
+        <div class="quality-bar"><div id="bar_thd_vb" class="quality-fill fill-green"></div></div>
       </div>
-    </section>
 
+      <div class="quality-item">
+        <div class="quality-row">
+          <span class="quality-name">THD Voltaje C</span>
+          <span class="quality-value" id="q_thd_vc">--</span>
+        </div>
+        <div class="quality-bar"><div id="bar_thd_vc" class="quality-fill fill-green"></div></div>
+      </div>
+
+      <div class="quality-item">
+        <div class="quality-row">
+          <span class="quality-name">THD Corriente A</span>
+          <span class="quality-value" id="q_thd_ia">--</span>
+        </div>
+        <div class="quality-bar"><div id="bar_thd_ia" class="quality-fill fill-green"></div></div>
+      </div>
+
+      <div class="quality-item">
+        <div class="quality-row">
+          <span class="quality-name">THD Corriente B</span>
+          <span class="quality-value" id="q_thd_ib">--</span>
+        </div>
+        <div class="quality-bar"><div id="bar_thd_ib" class="quality-fill fill-green"></div></div>
+      </div>
+
+      <div class="quality-item">
+        <div class="quality-row">
+          <span class="quality-name">THD Corriente C</span>
+          <span class="quality-value" id="q_thd_ic">--</span>
+        </div>
+        <div class="quality-bar"><div id="bar_thd_ic" class="quality-fill fill-green"></div></div>
+      </div>
+
+      <div class="quality-item">
+        <div class="quality-row">
+          <span class="quality-name">THD Corriente N</span>
+          <span class="quality-value" id="q_thd_in">--</span>
+        </div>
+        <div class="quality-bar"><div id="bar_thd_in" class="quality-fill fill-green"></div></div>
+      </div>
+    </div>
+
+    <div class="quality-card">
+      <h3 class="quality-title">Desbalance</h3>
+
+      <div class="quality-item">
+        <div class="quality-row">
+          <span class="quality-name">Desbalance de voltaje</span>
+          <span class="quality-value" id="q_desbalance_v">--</span>
+        </div>
+        <div class="quality-bar"><div id="bar_desbalance_v" class="quality-fill fill-green"></div></div>
+      </div>
+
+      <div class="quality-item">
+        <div class="quality-row">
+          <span class="quality-name">Desbalance de corriente</span>
+          <span class="quality-value" id="q_desbalance_i">--</span>
+        </div>
+        <div class="quality-bar"><div id="bar_desbalance_i" class="quality-fill fill-green"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================ -->
+  <!-- RESUMEN INSTANTANEO             -->
+  <!-- ================================ -->
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-label">Potencia activa total</div>
+      <div class="summary-value" id="summaryPTot">--</div>
+      <div class="summary-sub">Valor instantáneo total</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">Factor de potencia total</div>
+      <div class="summary-value" id="summaryPfTot">--</div>
+      <div class="summary-sub">FP total corregido desde equipo</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">Frecuencia</div>
+      <div class="summary-value" id="summaryFrequency">--</div>
+      <div class="summary-sub">Estabilidad de red</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">Corriente de neutro</div>
+      <div class="summary-value" id="summaryCurrentN">--</div>
+      <div class="summary-sub">Corriente instantánea en neutro</div>
+    </div>
+  </div>
+</section>
+   
     <!-- =================================================== -->
     <!-- BLOQUE 12: CURVAS ELECTRICAS                        -->
     <!-- =================================================== -->
@@ -885,100 +975,6 @@
           </div>
           <div class="chart-wrap">
             <canvas id="chartFrequency" class="chart-canvas"></canvas>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================== -->
-    <!-- BLOQUE 13: CALIDAD DE ENERGIA                       -->
-    <!-- =================================================== -->
-    <section class="section-block">
-      <div class="section-head">
-        <div>
-          <h2 class="section-title">Calidad de energía</h2>
-          <p class="section-subtitle">Indicadores porcentuales de distorsión armónica y desbalance.</p>
-        </div>
-      </div>
-
-      <div class="quality-grid">
-        <div class="quality-card">
-          <h3 class="quality-title">THD de voltaje y corriente</h3>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">THD Voltaje A</span>
-              <span class="quality-value" id="q_thd_va">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_thd_va" class="quality-fill fill-green"></div></div>
-          </div>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">THD Voltaje B</span>
-              <span class="quality-value" id="q_thd_vb">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_thd_vb" class="quality-fill fill-green"></div></div>
-          </div>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">THD Voltaje C</span>
-              <span class="quality-value" id="q_thd_vc">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_thd_vc" class="quality-fill fill-green"></div></div>
-          </div>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">THD Corriente A</span>
-              <span class="quality-value" id="q_thd_ia">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_thd_ia" class="quality-fill fill-green"></div></div>
-          </div>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">THD Corriente B</span>
-              <span class="quality-value" id="q_thd_ib">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_thd_ib" class="quality-fill fill-green"></div></div>
-          </div>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">THD Corriente C</span>
-              <span class="quality-value" id="q_thd_ic">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_thd_ic" class="quality-fill fill-green"></div></div>
-          </div>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">THD Corriente N</span>
-              <span class="quality-value" id="q_thd_in">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_thd_in" class="quality-fill fill-green"></div></div>
-          </div>
-        </div>
-
-        <div class="quality-card">
-          <h3 class="quality-title">Desbalance</h3>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">Desbalance de voltaje</span>
-              <span class="quality-value" id="q_desbalance_v">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_desbalance_v" class="quality-fill fill-green"></div></div>
-          </div>
-
-          <div class="quality-item">
-            <div class="quality-row">
-              <span class="quality-name">Desbalance de corriente</span>
-              <span class="quality-value" id="q_desbalance_i">--</span>
-            </div>
-            <div class="quality-bar"><div id="bar_desbalance_i" class="quality-fill fill-green"></div></div>
           </div>
         </div>
       </div>
@@ -1958,103 +1954,7 @@
       }
     }
   </script>
-    
-  <!-- ===================================================== -->
-  <!-- BLOQUE 29A: AGREGAR ULTIMO PUNTO DESDE TIEMPO REAL   -->
-  <!-- ===================================================== -->
- <!--  <script>
-    function agregarPuntoDesdeTiempoReal(d) {
-    console.log("====================================");
-    console.log("[CURVA] Intentando agregar punto vivo");
-    console.log("[CURVA] d:", d);
   
-    if (!d) {
-      console.log("[CURVA] No hay payload vivo");
-      return;
-    }
-  
-    const ts = numeroSeguro(d.timestamp_ms);
-    const ultimoGraficado = ultimoTimestampLive !== null
-      ? Number(ultimoTimestampLive)
-      : (ultimoTimestampHistorico !== null ? Number(ultimoTimestampHistorico) : null);
-  
-    console.log("[CURVA] ts nuevo:", ts);
-    console.log("[CURVA] ultimoTimestampHistorico:", ultimoGraficado);
-  
-    if (!Number.isFinite(ts)) {
-      console.log("[CURVA] timestamp_ms no es valido");
-      return;
-    }
-  
-    if (ultimoGraficado !== null && ts <= ultimoGraficado) {
-      console.log("[CURVA] Punto rechazado: timestamp repetido o menor");
-      return;
-    }
-  
-    const visibleAt = d.visible_at || d.updated_at || d.created_at || null;
-    const label = formatearHoraReal(visibleAt);
-    const cfg = getPhasePowerConfig();
-  
-    if (chartVoltages) {
-      chartVoltages.data.labels.push(label);
-      chartVoltages.data.datasets[0].data.push(numeroSeguro(d.voltage_a, d.voltage_an));
-      chartVoltages.data.datasets[1].data.push(numeroSeguro(d.voltage_b));
-      chartVoltages.data.datasets[2].data.push(numeroSeguro(d.voltage_c));
-    }
-  
-    if (chartCurrents) {
-      chartCurrents.data.labels.push(label);
-      chartCurrents.data.datasets[0].data.push(numeroSeguro(d.current_a));
-      chartCurrents.data.datasets[1].data.push(numeroSeguro(d.current_b));
-      chartCurrents.data.datasets[2].data.push(numeroSeguro(d.current_c));
-      chartCurrents.data.datasets[3].data.push(numeroSeguro(d.current_n));
-    }
-  
-    if (chartPowers) {
-      chartPowers.data.labels.push(label);
-      chartPowers.data.datasets[0].data.push(numeroSeguro(d.p_tot, d.ptot));
-      chartPowers.data.datasets[1].data.push(numeroSeguro(d.q_tot, d.qtot));
-      chartPowers.data.datasets[2].data.push(numeroSeguro(d.s_tot, d.stot));
-    }
-  
-    if (chartPhasePowers) {
-      chartPhasePowers.data.labels.push(label);
-      chartPhasePowers.data.datasets[0].data.push(numeroSeguro(d[cfg.keyA]));
-      chartPhasePowers.data.datasets[1].data.push(numeroSeguro(d[cfg.keyB]));
-      chartPhasePowers.data.datasets[2].data.push(numeroSeguro(d[cfg.keyC]));
-    }
-  
-    if (chartPf) {
-      chartPf.data.labels.push(label);
-      chartPf.data.datasets[0].data.push(corregirPfFase(numeroSeguro(d.pf_a)));
-      chartPf.data.datasets[1].data.push(corregirPfFase(numeroSeguro(d.pf_b)));
-      chartPf.data.datasets[2].data.push(corregirPfFase(numeroSeguro(d.pf_c)));
-      chartPf.data.datasets[3].data.push(numeroSeguro(d.pf_tot));
-    }
-  
-    if (chartFrequency) {
-      chartFrequency.data.labels.push(label);
-      chartFrequency.data.datasets[0].data.push(numeroSeguro(d.frecuencia, d.frequency));
-    }
-  
-    if (chartVoltages) chartVoltages.update("none");
-    if (chartCurrents) chartCurrents.update("none");
-    if (chartPowers) chartPowers.update("none");
-    if (chartPhasePowers) chartPhasePowers.update("none");
-    if (chartPf) chartPf.update("none");
-    if (chartFrequency) chartFrequency.update("none");
-  
-    ultimoTimestampHistorico = ts;
-    ultimoTimestampLive = ts;
-    ultimaHoraVisible = visibleAt;
-  
-    console.log("[CURVA] visible_at usado:", visibleAt);
-    console.log("[CURVA] label usado:", label);
-    console.log("[CURVA] Punto agregado correctamente a las gráficas");
-    console.log("[CURVA] nuevo ultimoTimestampHistorico:", ts);
-  }
-  </script>
-
   <!-- ===================================================== -->
   <!-- BLOQUE 30: INICIALIZACION Y EVENTOS                  -->
   <!-- ===================================================== -->
