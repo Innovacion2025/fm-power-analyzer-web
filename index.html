@@ -179,14 +179,8 @@
     }
 
     @keyframes toastPop {
-      from {
-        opacity: 0;
-        transform: scale(0.96);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
     }
   </style>
 
@@ -563,7 +557,7 @@
       gap: 8px;
       flex-wrap: wrap;
     }
-  
+
     .chart-inline-select {
       height: 34px;
       padding: 0 10px;
@@ -664,7 +658,6 @@
         <div>
           <h1 class="hero-title">FM POWER ANALYZER</h1>
           <div class="hero-subtitle">Monitoreo eléctrico en tiempo real y análisis de curvas.</div>
-
           <div class="status-line">
             <span class="status-dot"></span>
             <span id="heroDeviceName">Gateway: --</span>
@@ -672,13 +665,11 @@
             <span id="heroPmSlave">Slave: --</span>
           </div>
         </div>
-
         <div class="hero-info">
           <div class="hero-pill">
             <div class="hero-pill-label">Gateway ID</div>
             <div class="hero-pill-value" id="device">--</div>
           </div>
-
           <div class="hero-pill">
             <div class="hero-pill-label">Fecha consultada</div>
             <div class="hero-pill-value" id="selectedDateText">--</div>
@@ -781,7 +772,7 @@
           <p class="section-subtitle">Comportamiento temporal de tensiones, corrientes, potencias, frecuencia y factor de potencia.</p>
         </div>
       </div>
-    
+
       <div class="charts-grid-2">
         <div class="chart-card">
           <div class="chart-top">
@@ -798,7 +789,7 @@
             <canvas id="chartVoltages" class="chart-canvas"></canvas>
           </div>
         </div>
-    
+
         <div class="chart-card">
           <div class="chart-top">
             <div>
@@ -814,7 +805,7 @@
             <canvas id="chartCurrents" class="chart-canvas"></canvas>
           </div>
         </div>
-    
+
         <div class="chart-card">
           <div class="chart-top">
             <div>
@@ -830,7 +821,7 @@
             <canvas id="chartPowers" class="chart-canvas"></canvas>
           </div>
         </div>
-    
+
         <div class="chart-card">
           <div class="chart-top">
             <div>
@@ -855,7 +846,7 @@
             <canvas id="chartPhasePowers" class="chart-canvas"></canvas>
           </div>
         </div>
-            
+
         <div class="chart-card">
           <div class="chart-top">
             <div>
@@ -871,7 +862,7 @@
             <canvas id="chartPf" class="chart-canvas"></canvas>
           </div>
         </div>
-    
+
         <div class="chart-card">
           <div class="chart-top">
             <div>
@@ -991,7 +982,7 @@
   </div>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 15: OVERLAY DE DESCARGA                       -->
+  <!-- BLOQUE 15: OVERLAY DE DESCARGA                        -->
   <!-- ===================================================== -->
   <div class="spinner-overlay" id="downloadSpinner">
     <div class="spinner-box">
@@ -1001,7 +992,7 @@
   </div>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 16: TOAST                                     -->
+  <!-- BLOQUE 16: TOAST                                      -->
   <!-- ===================================================== -->
   <div class="toast" id="toast">
     <div class="toast-card">
@@ -1012,32 +1003,30 @@
   </div>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 17: VARIABLES GLOBALES Y UTILIDADES           -->
+  <!-- BLOQUE 17: VARIABLES GLOBALES Y UTILIDADES            -->
   <!-- ===================================================== -->
   <script>
     const params = new URLSearchParams(window.location.search);
     const device = params.get("device") || "FMPAN-0001";
     const API_BASE = "https://fm-power-analyzer-server.onrender.com";
-  
+
     let chartVoltages = null;
     let chartCurrents = null;
     let chartPowers = null;
     let chartPhasePowers = null;
     let chartPf = null;
     let chartFrequency = null;
-  
+
     let phasePowerMode = "activa";
-  
     let meters = [];
     let currentMeter = null;
-  
     let ultimoTimestampHistorico = null;
     let ultimoTimestampLive = null;
     let ultimaHoraVisible = null;
     let fechaHistoricaActual = null;
     let pmHistoricoActual = null;
     let pollingTiempoRealEnCurso = false;
-  
+
     function hoyTexto() {
       const ahora = new Date();
       const y = ahora.getFullYear();
@@ -1045,7 +1034,7 @@
       const d = String(ahora.getDate()).padStart(2, "0");
       return `${y}-${m}-${d}`;
     }
-  
+
     function formatearHoraReal(fechaIso) {
       if (!fechaIso) return "--";
       const f = new Date(fechaIso);
@@ -1056,67 +1045,75 @@
         second: "2-digit"
       });
     }
-  
+
+    function formatearHoraDesdeMs(timestampMs) {
+      if (!timestampMs) return "--";
+      const f = new Date(Number(timestampMs));
+      if (isNaN(f.getTime())) return "--";
+      return f.toLocaleTimeString("es-EC", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+
     function formatearFechaCorta(fechaIso) {
       const f = new Date(fechaIso + "T00:00:00");
       return f.toLocaleDateString("es-EC");
     }
-  
+
     function mostrarToast(mensaje) {
       document.getElementById("toastMessage").innerText = mensaje;
       document.getElementById("toast").classList.add("show");
     }
-  
+
     function cerrarToast() {
       document.getElementById("toast").classList.remove("show");
     }
-  
+
     function valorSeguro(...valores) {
       for (const v of valores) {
         if (v !== undefined && v !== null && v !== "") return v;
       }
       return null;
     }
-  
+
     function numeroSeguro(...valores) {
       const v = valorSeguro(...valores);
       if (v === null) return null;
       const n = Number(v);
       return Number.isFinite(n) ? n : null;
     }
-  
+
     function textoValor(v, sufijo = "", decimales = 3) {
       if (v === null || v === undefined || v === "") return "--";
       const n = Number(v);
       if (!Number.isFinite(n)) return "--";
       return `${n.toFixed(decimales)}${sufijo}`;
     }
-  
+
     function getCurrentPmSlave() {
       if (!currentMeter) return null;
       return Number(currentMeter.pm_slave);
     }
-  
+
     function corregirPfFase(v) {
       if (v === null || v === undefined || v === "") return null;
       const n = Number(v);
       if (!Number.isFinite(n)) return null;
       return 2 - n;
     }
-  
+
     function actualizarEncabezadoMeter() {
       document.getElementById("device").innerText = currentMeter?.device_id || device;
-      document.getElementById("heroDeviceName").innerText =
-        "Gateway: " + (currentMeter?.device_name || currentMeter?.device_id || "--");
-      document.getElementById("heroPmName").innerText =
-        "PM: " + (currentMeter?.pm_name || "--");
-      document.getElementById("heroPmSlave").innerText =
-        "Slave: " + (currentMeter?.pm_slave ?? "--");
+      document.getElementById("heroDeviceName").innerText = "Gateway: " + (currentMeter?.device_name || currentMeter?.device_id || "--");
+      document.getElementById("heroPmName").innerText = "PM: " + (currentMeter?.pm_name || "--");
+      document.getElementById("heroPmSlave").innerText = "Slave: " + (currentMeter?.pm_slave ?? "--");
     }
   </script>
-  
+
   <!-- ===================================================== -->
-  <!-- BLOQUE 18: CARGA DE MEDIDORES                        -->
+  <!-- BLOQUE 18: CARGA DE MEDIDORES                         -->
   <!-- ===================================================== -->
   <script>
     async function cargarMedidores() {
@@ -1145,14 +1142,11 @@
 
         const pmFromUrl = params.get("pm_slave");
         const firstSlave = pmFromUrl ? Number(pmFromUrl) : Number(meters[0].pm_slave);
-
-        const meterInicial =
-          meters.find(m => Number(m.pm_slave) === Number(firstSlave)) || meters[0];
+        const meterInicial = meters.find(m => Number(m.pm_slave) === Number(firstSlave)) || meters[0];
 
         pmSelect.value = String(meterInicial.pm_slave);
         currentMeter = meterInicial;
         actualizarEncabezadoMeter();
-
         document.getElementById("error").innerText = "";
         return true;
       } catch (e) {
@@ -1164,7 +1158,6 @@
     function actualizarMeterSeleccionadoDesdeSelect() {
       const pmSelect = document.getElementById("pmSelect");
       const slave = Number(pmSelect.value);
-
       const found = meters.find(m => Number(m.pm_slave) === slave);
       if (found) {
         currentMeter = found;
@@ -1174,7 +1167,7 @@
   </script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 19: DESCARGAR CSV                             -->
+  <!-- BLOQUE 19: DESCARGAR CSV                              -->
   <!-- ===================================================== -->
   <script>
     function descargarCSV() {
@@ -1192,12 +1185,7 @@
         return;
       }
 
-      const url =
-        `${API_BASE}/api/history/export` +
-        `?device_id=${encodeURIComponent(device)}` +
-        `&pm_slave=${encodeURIComponent(pm_slave)}` +
-        `&from=${encodeURIComponent(from)}` +
-        `&to=${encodeURIComponent(to)}`;
+      const url = `${API_BASE}/api/history/export?device_id=${encodeURIComponent(device)}&pm_slave=${encodeURIComponent(pm_slave)}&from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
 
       const spinner = document.getElementById("downloadSpinner");
       spinner.style.display = "flex";
@@ -1213,113 +1201,100 @@
   </script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 20: TIEMPO REAL                               -->
+  <!-- BLOQUE 20: TIEMPO REAL                                -->
   <!-- ===================================================== -->
   <script>
     function setQualityBar(barId, labelId, value, maxScale = 100) {
       const label = document.getElementById(labelId);
       const bar = document.getElementById(barId);
-  
       if (!label || !bar) return;
-  
+
       if (value === null || value === undefined || !Number.isFinite(Number(value))) {
         label.innerText = "--";
         bar.style.width = "0%";
         bar.className = "quality-fill fill-green";
         return;
       }
-  
+
       const n = Number(value);
       label.innerText = `${n.toFixed(3)} %`;
-  
+
       const width = Math.max(0, Math.min((n / maxScale) * 100, 100));
       bar.style.width = `${width}%`;
-  
+
       let fillClass = "fill-green";
       if (n >= 8) fillClass = "fill-red";
       else if (n >= 5) fillClass = "fill-orange";
-  
+
       if (barId.includes("desbalance")) {
         if (n >= 5) fillClass = "fill-red";
         else if (n >= 2) fillClass = "fill-orange";
         else fillClass = "fill-green";
       }
-  
+
       bar.className = `quality-fill ${fillClass}`;
     }
-  
+
     async function actualizarTiempoReal() {
       try {
         const pm_slave = getCurrentPmSlave();
         if (!pm_slave) return null;
-  
-        const url =
-          `${API_BASE}/api/device/${encodeURIComponent(device)}` +
-          `?pm_slave=${encodeURIComponent(pm_slave)}` +
-          `&t=${Date.now()}`;
-  
+
+        const url = `${API_BASE}/api/device/${encodeURIComponent(device)}?pm_slave=${encodeURIComponent(pm_slave)}&t=${Date.now()}`;
         const res = await fetch(url, { cache: "no-store" });
         const data = await res.json();
-  
+
         if (!data || data.ok !== true) {
           document.getElementById("error").innerText = "No hay datos del PM seleccionado";
           return null;
         }
-  
+
         const d = data.data || {};
         document.getElementById("error").innerText = "";
-  
+
         currentMeter = {
           device_id: valorSeguro(d.device_id, currentMeter?.device_id, device),
           device_name: valorSeguro(d.device_name, currentMeter?.device_name),
           pm_name: valorSeguro(d.pm_name, currentMeter?.pm_name),
           pm_slave: valorSeguro(d.pm_slave, currentMeter?.pm_slave, pm_slave)
         };
-  
+
         actualizarEncabezadoMeter();
-  
+
         const voltageA = numeroSeguro(d.voltage_a, d.voltage_an);
         const voltageB = numeroSeguro(d.voltage_b);
         const voltageC = numeroSeguro(d.voltage_c);
-  
+
         const currentA = numeroSeguro(d.current_a);
         const currentB = numeroSeguro(d.current_b);
         const currentC = numeroSeguro(d.current_c);
         const currentN = numeroSeguro(d.current_n);
-  
+
         const pTot = numeroSeguro(d.p_tot, d.ptot);
         const qTot = numeroSeguro(d.q_tot, d.qtot);
         const sTot = numeroSeguro(d.s_tot, d.stot);
-  
+
         const pfA = corregirPfFase(numeroSeguro(d.pf_a));
         const pfB = corregirPfFase(numeroSeguro(d.pf_b));
         const pfC = corregirPfFase(numeroSeguro(d.pf_c));
         const pfTot = numeroSeguro(d.pf_tot);
-  
+
         const frequency = numeroSeguro(d.frecuencia, d.frequency);
-  
+
         document.getElementById("summaryPTot").innerText = textoValor(pTot, "", 3);
         document.getElementById("summaryPfTot").innerText = textoValor(pfTot, "", 3);
         document.getElementById("summaryFrequency").innerText = textoValor(frequency, " Hz", 3);
         document.getElementById("summaryCurrentN").innerText = textoValor(currentN, " A", 3);
-  
-        document.getElementById("liveVoltages").innerText =
-          `${textoValor(voltageA)} | ${textoValor(voltageB)} | ${textoValor(voltageC)}`;
-  
-        document.getElementById("liveCurrents").innerText =
-          `${textoValor(currentA)} | ${textoValor(currentB)} | ${textoValor(currentC)} | ${textoValor(currentN)}`;
-  
-        document.getElementById("livePowers").innerText =
-          `${textoValor(pTot)} | ${textoValor(qTot)} | ${textoValor(sTot)}`;
-  
+
+        document.getElementById("liveVoltages").innerText = `${textoValor(voltageA)} | ${textoValor(voltageB)} | ${textoValor(voltageC)}`;
+        document.getElementById("liveCurrents").innerText = `${textoValor(currentA)} | ${textoValor(currentB)} | ${textoValor(currentC)} | ${textoValor(currentN)}`;
+        document.getElementById("livePowers").innerText = `${textoValor(pTot)} | ${textoValor(qTot)} | ${textoValor(sTot)}`;
+
         actualizarLivePhasePowersDesdePayload(d);
-  
-        document.getElementById("livePf").innerText =
-          `${textoValor(pfA)} | ${textoValor(pfB)} | ${textoValor(pfC)} | ${textoValor(pfTot)}`;
-  
-        document.getElementById("liveFrequency").innerText =
-          textoValor(frequency, " Hz", 3);
-  
+
+        document.getElementById("livePf").innerText = `${textoValor(pfA)} | ${textoValor(pfB)} | ${textoValor(pfC)} | ${textoValor(pfTot)}`;
+        document.getElementById("liveFrequency").innerText = textoValor(frequency, " Hz", 3);
+
         setQualityBar("bar_thd_va", "q_thd_va", numeroSeguro(d.thd_va), 100);
         setQualityBar("bar_thd_vb", "q_thd_vb", numeroSeguro(d.thd_vb), 100);
         setQualityBar("bar_thd_vc", "q_thd_vc", numeroSeguro(d.thd_vc), 100);
@@ -1329,13 +1304,13 @@
         setQualityBar("bar_thd_in", "q_thd_in", numeroSeguro(d.thd_in), 100);
         setQualityBar("bar_desbalance_v", "q_desbalance_v", numeroSeguro(d.desbalance_v), 100);
         setQualityBar("bar_desbalance_i", "q_desbalance_i", numeroSeguro(d.desbalance_i), 200);
-  
+
         console.log("====================================");
         console.log("[TIEMPO REAL] pm_slave:", pm_slave);
         console.log("[TIEMPO REAL] timestamp_ms:", d.timestamp_ms);
         console.log("[TIEMPO REAL] visible_at:", d.visible_at);
         console.log("[TIEMPO REAL] payload:", d);
-  
+
         return d;
       } catch (e) {
         document.getElementById("error").innerText = "Error conectando con la API";
@@ -1344,9 +1319,9 @@
       }
     }
   </script>
-    
+
   <!-- ===================================================== -->
-  <!-- BLOQUE 21: OPCIONES COMUNES DE GRAFICAS              -->
+  <!-- BLOQUE 21: OPCIONES COMUNES DE GRAFICAS               -->
   <!-- ===================================================== -->
   <script>
     function commonChartOptions(yLabel, minValue = null, maxValue = null, showLegend = true) {
@@ -1354,20 +1329,13 @@
         responsive: true,
         maintainAspectRatio: false,
         animation: false,
-        interaction: {
-          mode: "index",
-          intersect: false
-        },
+        interaction: { mode: "index", intersect: false },
         plugins: {
           legend: {
             display: showLegend,
             labels: {
               color: "#4d5a63",
-              font: {
-                family: "Rubik",
-                size: 12,
-                weight: "600"
-              },
+              font: { family: "Rubik", size: 12, weight: "600" },
               usePointStyle: true
             }
           },
@@ -1382,38 +1350,24 @@
         },
         scales: {
           x: {
-            grid: {
-              color: "rgba(140, 152, 160, 0.10)"
-            },
+            grid: { color: "rgba(140, 152, 160, 0.10)" },
             ticks: {
               color: "#6d7f90",
               maxTicksLimit: 6,
-              font: {
-                family: "Rubik",
-                size: 11
-              }
+              font: { family: "Rubik", size: 11 }
             }
           },
           y: {
-            grid: {
-              color: "rgba(140, 152, 160, 0.12)"
-            },
+            grid: { color: "rgba(140, 152, 160, 0.12)" },
             ticks: {
               color: "#6d7f90",
-              font: {
-                family: "Rubik",
-                size: 11
-              }
+              font: { family: "Rubik", size: 11 }
             },
             title: {
               display: true,
               text: yLabel,
               color: "#5e6b73",
-              font: {
-                family: "Rubik",
-                size: 12,
-                weight: "700"
-              }
+              font: { family: "Rubik", size: 12, weight: "700" }
             }
           }
         }
@@ -1421,7 +1375,6 @@
 
       if (minValue !== null) options.scales.y.min = minValue;
       if (maxValue !== null) options.scales.y.max = maxValue;
-
       return options;
     }
 
@@ -1458,7 +1411,7 @@
           yLabel: "Potencia reactiva"
         };
       }
-  
+
       if (phasePowerMode === "aparente") {
         return {
           keyA: "s_a",
@@ -1471,7 +1424,7 @@
           yLabel: "Potencia aparente"
         };
       }
-  
+
       return {
         keyA: "p_a",
         keyB: "p_b",
@@ -1483,21 +1436,20 @@
         yLabel: "Potencia activa"
       };
     }
-  
+
     function actualizarLivePhasePowersDesdePayload(d) {
       const cfg = getPhasePowerConfig();
-  
       const a = numeroSeguro(d[cfg.keyA]);
       const b = numeroSeguro(d[cfg.keyB]);
       const c = numeroSeguro(d[cfg.keyC]);
-  
+
       const live = document.getElementById("livePhasePowers");
       const sub = document.getElementById("livePhasePowersSub");
-  
+
       if (live) {
         live.innerText = `${textoValor(a)} | ${textoValor(b)} | ${textoValor(c)}`;
       }
-  
+
       if (sub) {
         sub.innerText = cfg.liveSub;
       }
@@ -1505,7 +1457,7 @@
   </script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 22: CONSULTA DEL HISTORICO                    -->
+  <!-- BLOQUE 22: CONSULTA DEL HISTORICO                     -->
   <!-- ===================================================== -->
   <script>
     async function obtenerHistorico() {
@@ -1515,14 +1467,7 @@
       if (!day) throw new Error("No hay fecha seleccionada");
       if (!pm_slave) throw new Error("No hay PM seleccionado");
 
-      const url =
-        `${API_BASE}/api/history` +
-        `?device_id=${encodeURIComponent(device)}` +
-        `&pm_slave=${encodeURIComponent(pm_slave)}` +
-        `&from=${encodeURIComponent(day)}` +
-        `&to=${encodeURIComponent(day)}` +
-        `&t=${Date.now()}`;
-
+      const url = `${API_BASE}/api/history?device_id=${encodeURIComponent(device)}&pm_slave=${encodeURIComponent(pm_slave)}&from=${encodeURIComponent(day)}&to=${encodeURIComponent(day)}&t=${Date.now()}`;
       const res = await fetch(url, { cache: "no-store" });
 
       if (!res.ok) {
@@ -1534,16 +1479,16 @@
   </script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 23: GRAFICA DE VOLTAJES                       -->
+  <!-- BLOQUE 23: GRAFICA DE VOLTAJES                        -->
   <!-- ===================================================== -->
   <script>
     function actualizarGraficaVoltajes(labels, rows) {
       const va = rows.map(item => numeroSeguro(item.voltage_a, item.voltage_an));
       const vb = rows.map(item => numeroSeguro(item.voltage_b));
       const vc = rows.map(item => numeroSeguro(item.voltage_c));
-  
+
       const ctx = document.getElementById("chartVoltages").getContext("2d");
-  
+
       if (!chartVoltages) {
         chartVoltages = new Chart(ctx, {
           type: "line",
@@ -1568,7 +1513,7 @@
   </script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 24: GRAFICA DE CORRIENTES                     -->
+  <!-- BLOQUE 24: GRAFICA DE CORRIENTES                      -->
   <!-- ===================================================== -->
   <script>
     function actualizarGraficaCorrientes(labels, rows) {
@@ -1576,9 +1521,9 @@
       const ib = rows.map(item => numeroSeguro(item.current_b));
       const ic = rows.map(item => numeroSeguro(item.current_c));
       const inN = rows.map(item => numeroSeguro(item.current_n));
-  
+
       const ctx = document.getElementById("chartCurrents").getContext("2d");
-  
+
       if (!chartCurrents) {
         chartCurrents = new Chart(ctx, {
           type: "line",
@@ -1603,26 +1548,18 @@
       }
     }
   </script>
-  
+
   <!-- ===================================================== -->
-  <!-- BLOQUE 25: GRAFICA DE POTENCIAS                      -->
+  <!-- BLOQUE 25: GRAFICA DE POTENCIAS                       -->
   <!-- ===================================================== -->
   <script>
     function actualizarGraficaPotencias(labels, rows) {
-      const activa = rows.map(item =>
-        numeroSeguro(item.p_tot, item.ptot, item.raw_payload?.p_tot, item.raw_payload?.ptot)
-      );
-  
-      const reactiva = rows.map(item =>
-        numeroSeguro(item.q_tot, item.qtot, item.raw_payload?.q_tot, item.raw_payload?.qtot)
-      );
-  
-      const aparente = rows.map(item =>
-        numeroSeguro(item.s_tot, item.stot, item.raw_payload?.s_tot, item.raw_payload?.stot)
-      );
-  
+      const activa = rows.map(item => numeroSeguro(item.p_tot, item.ptot, item.raw_payload?.p_tot, item.raw_payload?.ptot));
+      const reactiva = rows.map(item => numeroSeguro(item.q_tot, item.qtot, item.raw_payload?.q_tot, item.raw_payload?.qtot));
+      const aparente = rows.map(item => numeroSeguro(item.s_tot, item.stot, item.raw_payload?.s_tot, item.raw_payload?.stot));
+
       const ctx = document.getElementById("chartPowers").getContext("2d");
-  
+
       if (!chartPowers) {
         chartPowers = new Chart(ctx, {
           type: "line",
@@ -1645,20 +1582,19 @@
       }
     }
   </script>
-  
+
   <!-- ===================================================== -->
-  <!-- BLOQUE 25A: GRAFICA DE POTENCIA POR FASE             -->
+  <!-- BLOQUE 25A: GRAFICA DE POTENCIA POR FASE              -->
   <!-- ===================================================== -->
   <script>
     function actualizarGraficaPotenciaPorFase(labels, rows) {
       const cfg = getPhasePowerConfig();
-  
       const serieA = rows.map(item => numeroSeguro(item[cfg.keyA]));
       const serieB = rows.map(item => numeroSeguro(item[cfg.keyB]));
       const serieC = rows.map(item => numeroSeguro(item[cfg.keyC]));
-  
+
       const ctx = document.getElementById("chartPhasePowers").getContext("2d");
-  
+
       if (!chartPhasePowers) {
         chartPhasePowers = new Chart(ctx, {
           type: "line",
@@ -1677,19 +1613,17 @@
         chartPhasePowers.data.datasets[0].label = cfg.labelA;
         chartPhasePowers.data.datasets[1].label = cfg.labelB;
         chartPhasePowers.data.datasets[2].label = cfg.labelC;
-  
         chartPhasePowers.data.datasets[0].data = serieA;
         chartPhasePowers.data.datasets[1].data = serieB;
         chartPhasePowers.data.datasets[2].data = serieC;
-  
         chartPhasePowers.options.scales.y.title.text = cfg.yLabel;
         chartPhasePowers.update("none");
       }
     }
   </script>
-    
+
   <!-- ===================================================== -->
-  <!-- BLOQUE 26: GRAFICA DE FACTOR DE POTENCIA             -->
+  <!-- BLOQUE 26: GRAFICA DE FACTOR DE POTENCIA              -->
   <!-- ===================================================== -->
   <script>
     function actualizarGraficaFp(labels, rows) {
@@ -1697,9 +1631,9 @@
       const pfb = rows.map(item => corregirPfFase(numeroSeguro(item.pf_b)));
       const pfc = rows.map(item => corregirPfFase(numeroSeguro(item.pf_c)));
       const pft = rows.map(item => numeroSeguro(item.pf_tot));
-  
+
       const ctx = document.getElementById("chartPf").getContext("2d");
-  
+
       if (!chartPf) {
         chartPf = new Chart(ctx, {
           type: "line",
@@ -1726,14 +1660,14 @@
   </script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 26A: GRAFICA DE FRECUENCIA                    -->
+  <!-- BLOQUE 26A: GRAFICA DE FRECUENCIA                     -->
   <!-- ===================================================== -->
   <script>
     function actualizarGraficaFrecuencia(labels, rows) {
       const frecuencia = rows.map(item => numeroSeguro(item.frecuencia, item.frequency));
-  
+
       const ctx = document.getElementById("chartFrequency").getContext("2d");
-  
+
       if (!chartFrequency) {
         chartFrequency = new Chart(ctx, {
           type: "line",
@@ -1754,74 +1688,74 @@
   </script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 27: LIMPIEZA DE GRAFICAS                      -->
+  <!-- BLOQUE 27: LIMPIEZA DE GRAFICAS                       -->
   <!-- ===================================================== -->
   <script>
     function limpiarGraficas() {
-    const labelsVacios = [];
-    const datosVacios = [];
-  
-    ultimoTimestampHistorico = null;
-    ultimoTimestampLive = null;
-    ultimaHoraVisible = null;
-  
-    if (chartVoltages) {
-      chartVoltages.data.labels = labelsVacios;
-      chartVoltages.data.datasets.forEach(ds => ds.data = datosVacios);
-      chartVoltages.update("none");
+      const labelsVacios = [];
+      ultimoTimestampHistorico = null;
+      ultimoTimestampLive = null;
+      ultimaHoraVisible = null;
+
+      if (chartVoltages) {
+        chartVoltages.data.labels = labelsVacios;
+        chartVoltages.data.datasets.forEach(ds => ds.data = []);
+        chartVoltages.update("none");
+      }
+
+      if (chartCurrents) {
+        chartCurrents.data.labels = labelsVacios;
+        chartCurrents.data.datasets.forEach(ds => ds.data = []);
+        chartCurrents.update("none");
+      }
+
+      if (chartPowers) {
+        chartPowers.data.labels = labelsVacios;
+        chartPowers.data.datasets.forEach(ds => ds.data = []);
+        chartPowers.update("none");
+      }
+
+      if (chartPhasePowers) {
+        chartPhasePowers.data.labels = labelsVacios;
+        chartPhasePowers.data.datasets.forEach(ds => ds.data = []);
+        chartPhasePowers.update("none");
+      }
+
+      if (chartPf) {
+        chartPf.data.labels = labelsVacios;
+        chartPf.data.datasets.forEach(ds => ds.data = []);
+        chartPf.update("none");
+      }
+
+      if (chartFrequency) {
+        chartFrequency.data.labels = labelsVacios;
+        chartFrequency.data.datasets.forEach(ds => ds.data = []);
+        chartFrequency.update("none");
+      }
     }
-  
-    if (chartCurrents) {
-      chartCurrents.data.labels = labelsVacios;
-      chartCurrents.data.datasets.forEach(ds => ds.data = datosVacios);
-      chartCurrents.update("none");
-    }
-  
-    if (chartPowers) {
-      chartPowers.data.labels = labelsVacios;
-      chartPowers.data.datasets.forEach(ds => ds.data = datosVacios);
-      chartPowers.update("none");
-    }
-  
-    if (chartPhasePowers) {
-      chartPhasePowers.data.labels = labelsVacios;
-      chartPhasePowers.data.datasets.forEach(ds => ds.data = datosVacios);
-      chartPhasePowers.update("none");
-    }
-  
-    if (chartPf) {
-      chartPf.data.labels = labelsVacios;
-      chartPf.data.datasets.forEach(ds => ds.data = datosVacios);
-      chartPf.update("none");
-    }
-  
-    if (chartFrequency) {
-      chartFrequency.data.labels = labelsVacios;
-      chartFrequency.data.datasets.forEach(ds => ds.data = datosVacios);
-      chartFrequency.update("none");
-    }
-  }
   </script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 28: AGREGAR SOLO PUNTOS NUEVOS                -->
+  <!-- BLOQUE 28: AGREGAR SOLO PUNTOS NUEVOS                 -->
   <!-- ===================================================== -->
   <script>
     function agregarSoloPuntosNuevos(rowsNuevos) {
       if (!rowsNuevos || rowsNuevos.length === 0) return;
-  
+
       const cfg = getPhasePowerConfig();
-  
+
       for (const item of rowsNuevos) {
-        const label = formatearHoraDesdeMs(item.timestamp_ms);
-  
+        const label = item.visible_at
+          ? formatearHoraReal(item.visible_at)
+          : formatearHoraDesdeMs(item.timestamp_ms);
+
         if (chartVoltages) {
           chartVoltages.data.labels.push(label);
           chartVoltages.data.datasets[0].data.push(numeroSeguro(item.voltage_a, item.voltage_an));
           chartVoltages.data.datasets[1].data.push(numeroSeguro(item.voltage_b));
           chartVoltages.data.datasets[2].data.push(numeroSeguro(item.voltage_c));
         }
-  
+
         if (chartCurrents) {
           chartCurrents.data.labels.push(label);
           chartCurrents.data.datasets[0].data.push(numeroSeguro(item.current_a));
@@ -1829,21 +1763,21 @@
           chartCurrents.data.datasets[2].data.push(numeroSeguro(item.current_c));
           chartCurrents.data.datasets[3].data.push(numeroSeguro(item.current_n));
         }
-  
+
         if (chartPowers) {
           chartPowers.data.labels.push(label);
           chartPowers.data.datasets[0].data.push(numeroSeguro(item.p_tot, item.ptot, item.raw_payload?.p_tot, item.raw_payload?.ptot));
           chartPowers.data.datasets[1].data.push(numeroSeguro(item.q_tot, item.qtot, item.raw_payload?.q_tot, item.raw_payload?.qtot));
           chartPowers.data.datasets[2].data.push(numeroSeguro(item.s_tot, item.stot, item.raw_payload?.s_tot, item.raw_payload?.stot));
         }
-  
+
         if (chartPhasePowers) {
           chartPhasePowers.data.labels.push(label);
           chartPhasePowers.data.datasets[0].data.push(numeroSeguro(item[cfg.keyA]));
           chartPhasePowers.data.datasets[1].data.push(numeroSeguro(item[cfg.keyB]));
           chartPhasePowers.data.datasets[2].data.push(numeroSeguro(item[cfg.keyC]));
         }
-  
+
         if (chartPf) {
           chartPf.data.labels.push(label);
           chartPf.data.datasets[0].data.push(corregirPfFase(numeroSeguro(item.pf_a)));
@@ -1851,26 +1785,26 @@
           chartPf.data.datasets[2].data.push(corregirPfFase(numeroSeguro(item.pf_c)));
           chartPf.data.datasets[3].data.push(numeroSeguro(item.pf_tot));
         }
-  
+
         if (chartFrequency) {
           chartFrequency.data.labels.push(label);
           chartFrequency.data.datasets[0].data.push(numeroSeguro(item.frecuencia, item.frequency));
         }
       }
-  
+
       if (chartVoltages) chartVoltages.update("none");
       if (chartCurrents) chartCurrents.update("none");
       if (chartPowers) chartPowers.update("none");
       if (chartPhasePowers) chartPhasePowers.update("none");
       if (chartPf) chartPf.update("none");
       if (chartFrequency) chartFrequency.update("none");
-  
+
       ultimoTimestampHistorico = rowsNuevos[rowsNuevos.length - 1].timestamp_ms;
     }
   </script>
-    
+
   <!-- ===================================================== -->
-  <!-- BLOQUE 29: ORQUESTADOR GENERAL                       -->
+  <!-- BLOQUE 29: ORQUESTADOR GENERAL                        -->
   <!-- ===================================================== -->
   <script>
     async function consultarTodo(forzarRecargaCompleta = false) {
@@ -1879,40 +1813,40 @@
         const dayInput = document.getElementById("dayDate");
         const selectedDateText = document.getElementById("selectedDateText");
         const pm_slave = getCurrentPmSlave();
-  
+
         if (!dayInput || !pm_slave) return;
-  
+
         const day = dayInput.value;
-  
+
         if (!day) {
           limpiarGraficas();
           errorBox.innerText = "";
           mostrarToast("Seleccione una fecha");
           return;
         }
-  
+
         if (selectedDateText) {
           selectedDateText.innerText = formatearFechaCorta(day);
         }
-  
+
         const esNuevaFecha = fechaHistoricaActual !== day;
         const esNuevoPm = Number(pmHistoricoActual) !== Number(pm_slave);
-  
+
         if (forzarRecargaCompleta || esNuevaFecha || esNuevoPm) {
           cerrarToast();
           limpiarGraficas();
           errorBox.innerText = "Cargando datos del día seleccionado...";
         }
-  
+
         const json = await obtenerHistorico();
-  
+
         if (!json || json.ok !== true || !Array.isArray(json.data)) {
           errorBox.innerText = "";
           limpiarGraficas();
           mostrarToast("Error consultando el histórico");
           return;
         }
-  
+
         if (json.data.length === 0) {
           errorBox.innerText = "";
           limpiarGraficas();
@@ -1921,35 +1855,38 @@
           mostrarToast("No hay datos para graficar en la fecha seleccionada");
           return;
         }
-  
+
         json.data.sort((a, b) => {
           const aMs = Number(a.timestamp_ms || 0);
           const bMs = Number(b.timestamp_ms || 0);
           return aMs - bMs;
         });
-  
-        const labels = json.data.map(item => formatearHoraReal(item.visible_at));
+
+        const labels = json.data.map(item => {
+          if (item.visible_at) return formatearHoraReal(item.visible_at);
+          return formatearHoraDesdeMs(item.timestamp_ms);
+        });
+
         const rows = json.data;
-  
+
         actualizarGraficaVoltajes(labels, rows);
         actualizarGraficaCorrientes(labels, rows);
         actualizarGraficaPotencias(labels, rows);
         actualizarGraficaPotenciaPorFase(labels, rows);
         actualizarGraficaFp(labels, rows);
         actualizarGraficaFrecuencia(labels, rows);
-  
+
         ultimoTimestampHistorico = rows[rows.length - 1].timestamp_ms;
         ultimoTimestampLive = ultimoTimestampHistorico;
         ultimaHoraVisible = rows[rows.length - 1].visible_at || null;
         fechaHistoricaActual = day;
         pmHistoricoActual = pm_slave;
         errorBox.innerText = "";
-  
+
         console.log("====================================");
         console.log("[HISTORICO] Curva reconstruida");
         console.log("[HISTORICO] total puntos:", rows.length);
         console.log("[HISTORICO] ultimo timestamp cargado:", rows[rows.length - 1]?.timestamp_ms);
-  
       } catch (e) {
         console.error("[HISTORICO] Error en consultarTodo:", e);
         document.getElementById("error").innerText = "";
@@ -1958,166 +1895,66 @@
       }
     }
   </script>
-    
-  <!-- ===================================================== -->
-  <!-- BLOQUE 29A: AGREGAR ULTIMO PUNTO DESDE TIEMPO REAL   -->
-  <!-- ===================================================== -->
- <!--  <script>
-    function agregarPuntoDesdeTiempoReal(d) {
-    console.log("====================================");
-    console.log("[CURVA] Intentando agregar punto vivo");
-    console.log("[CURVA] d:", d);
-  
-    if (!d) {
-      console.log("[CURVA] No hay payload vivo");
-      return;
-    }
-  
-    const ts = numeroSeguro(d.timestamp_ms);
-    const ultimoGraficado = ultimoTimestampLive !== null
-      ? Number(ultimoTimestampLive)
-      : (ultimoTimestampHistorico !== null ? Number(ultimoTimestampHistorico) : null);
-  
-    console.log("[CURVA] ts nuevo:", ts);
-    console.log("[CURVA] ultimoTimestampHistorico:", ultimoGraficado);
-  
-    if (!Number.isFinite(ts)) {
-      console.log("[CURVA] timestamp_ms no es valido");
-      return;
-    }
-  
-    if (ultimoGraficado !== null && ts <= ultimoGraficado) {
-      console.log("[CURVA] Punto rechazado: timestamp repetido o menor");
-      return;
-    }
-  
-    const visibleAt = d.visible_at || d.updated_at || d.created_at || null;
-    const label = formatearHoraReal(visibleAt);
-    const cfg = getPhasePowerConfig();
-  
-    if (chartVoltages) {
-      chartVoltages.data.labels.push(label);
-      chartVoltages.data.datasets[0].data.push(numeroSeguro(d.voltage_a, d.voltage_an));
-      chartVoltages.data.datasets[1].data.push(numeroSeguro(d.voltage_b));
-      chartVoltages.data.datasets[2].data.push(numeroSeguro(d.voltage_c));
-    }
-  
-    if (chartCurrents) {
-      chartCurrents.data.labels.push(label);
-      chartCurrents.data.datasets[0].data.push(numeroSeguro(d.current_a));
-      chartCurrents.data.datasets[1].data.push(numeroSeguro(d.current_b));
-      chartCurrents.data.datasets[2].data.push(numeroSeguro(d.current_c));
-      chartCurrents.data.datasets[3].data.push(numeroSeguro(d.current_n));
-    }
-  
-    if (chartPowers) {
-      chartPowers.data.labels.push(label);
-      chartPowers.data.datasets[0].data.push(numeroSeguro(d.p_tot, d.ptot));
-      chartPowers.data.datasets[1].data.push(numeroSeguro(d.q_tot, d.qtot));
-      chartPowers.data.datasets[2].data.push(numeroSeguro(d.s_tot, d.stot));
-    }
-  
-    if (chartPhasePowers) {
-      chartPhasePowers.data.labels.push(label);
-      chartPhasePowers.data.datasets[0].data.push(numeroSeguro(d[cfg.keyA]));
-      chartPhasePowers.data.datasets[1].data.push(numeroSeguro(d[cfg.keyB]));
-      chartPhasePowers.data.datasets[2].data.push(numeroSeguro(d[cfg.keyC]));
-    }
-  
-    if (chartPf) {
-      chartPf.data.labels.push(label);
-      chartPf.data.datasets[0].data.push(corregirPfFase(numeroSeguro(d.pf_a)));
-      chartPf.data.datasets[1].data.push(corregirPfFase(numeroSeguro(d.pf_b)));
-      chartPf.data.datasets[2].data.push(corregirPfFase(numeroSeguro(d.pf_c)));
-      chartPf.data.datasets[3].data.push(numeroSeguro(d.pf_tot));
-    }
-  
-    if (chartFrequency) {
-      chartFrequency.data.labels.push(label);
-      chartFrequency.data.datasets[0].data.push(numeroSeguro(d.frecuencia, d.frequency));
-    }
-  
-    if (chartVoltages) chartVoltages.update("none");
-    if (chartCurrents) chartCurrents.update("none");
-    if (chartPowers) chartPowers.update("none");
-    if (chartPhasePowers) chartPhasePowers.update("none");
-    if (chartPf) chartPf.update("none");
-    if (chartFrequency) chartFrequency.update("none");
-  
-    ultimoTimestampHistorico = ts;
-    ultimoTimestampLive = ts;
-    ultimaHoraVisible = visibleAt;
-  
-    console.log("[CURVA] visible_at usado:", visibleAt);
-    console.log("[CURVA] label usado:", label);
-    console.log("[CURVA] Punto agregado correctamente a las gráficas");
-    console.log("[CURVA] nuevo ultimoTimestampHistorico:", ts);
-  }
-  </script>
 
   <!-- ===================================================== -->
-  <!-- BLOQUE 30: INICIALIZACION Y EVENTOS                  -->
+  <!-- BLOQUE 30: INICIALIZACION Y EVENTOS                   -->
   <!-- ===================================================== -->
   <script>
     window.addEventListener("load", async () => {
       const hoy = hoyTexto();
-  
+
       document.getElementById("dayDate").value = hoy;
       document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
-  
+
       const csvFrom = document.getElementById("csvFrom");
       const csvTo = document.getElementById("csvTo");
-  
+
       if (csvFrom) csvFrom.value = hoy;
       if (csvTo) csvTo.value = hoy;
-  
+
       const okMeters = await cargarMedidores();
       if (!okMeters) return;
-  
+
       await actualizarTiempoReal();
       await consultarTodo(true);
-  
+
       setInterval(async () => {
         if (pollingTiempoRealEnCurso) return;
         pollingTiempoRealEnCurso = true;
-      
+
         try {
           const daySeleccionado = document.getElementById("dayDate").value;
           const hoyActual = hoyTexto();
-      
+
           console.log("====================================");
           console.log("[INTERVALO] Ciclo unificado");
-      
-          // 🔹 1. SIEMPRE actualizar tarjetas (tiempo real)
+
           await actualizarTiempoReal();
-      
-          // 🔹 2. SOLO si estás viendo hoy → recargar curvas completas
+
           if (daySeleccionado === hoyActual) {
             console.log("[INTERVALO] Refrescando curva completa...");
-            await consultarTodo(false); // 👈 clave
+            await consultarTodo(false);
           }
-      
         } catch (e) {
           console.error("[INTERVALO] Error:", e);
         } finally {
           pollingTiempoRealEnCurso = false;
         }
-      
-      }, 2000); // 👈 puedes usar 3000 si quieres más fluido
+      }, 2000);
     });
-  
+
     document.addEventListener("DOMContentLoaded", () => {
       const dayDate = document.getElementById("dayDate");
       const pmSelect = document.getElementById("pmSelect");
       const phasePowerModeSelect = document.getElementById("phasePowerMode");
-  
+
       if (dayDate) {
         dayDate.addEventListener("change", () => {
           console.log("[EVENTO] Cambio de fecha");
           consultarTodo(true);
         });
       }
-  
+
       if (pmSelect) {
         pmSelect.addEventListener("change", async () => {
           console.log("[EVENTO] Cambio de PM");
@@ -2126,7 +1963,7 @@
           await consultarTodo(true);
         });
       }
-  
+
       if (phasePowerModeSelect) {
         phasePowerModeSelect.addEventListener("change", async (e) => {
           console.log("[EVENTO] Cambio de modo potencia por fase:", e.target.value);
@@ -2136,6 +1973,5 @@
       }
     });
   </script>
-    
 </body>
 </html>
