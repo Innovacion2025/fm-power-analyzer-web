@@ -48,6 +48,23 @@
     ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
 
     /* TAG LIVE */
+    .tag-live.online {
+      background: rgba(22,160,133,0.12);
+      color: var(--teal);
+      border: 1px solid rgba(22,160,133,0.25);
+    }
+    
+    .tag-live.offline {
+      background: rgba(214,69,65,0.12);
+      color: var(--red);
+      border: 1px solid rgba(214,69,65,0.25);
+    }
+    
+    .tag-live.offline::before {
+      background: var(--red);
+      box-shadow: 0 0 6px var(--red);
+      animation: none; /* sin parpadeo */
+    }
     .tag-live {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 4px 10px; border-radius: 99px;
@@ -272,7 +289,7 @@
         <h1 class="hero-title">FM <span>POWER</span> ANALYZER</h1>
         <p class="hero-subtitle">Análisis de curvas y calidad de energía en tiempo real</p>
         <div class="hero-status">
-          <span class="tag-live">En vivo</span>
+          <span class="tag-live" id="tagStatus">--</span>
           <span class="hero-status-item">Gateway: <strong id="heroDeviceName">--</strong></span>
           <span class="hero-status-item">PM: <strong id="heroPmName">--</strong></span>
           <span class="hero-status-item">Slave: <strong id="heroPmSlave">--</strong></span>
@@ -690,6 +707,26 @@
   let pollingTiempoRealEnCurso=false;
 
   /* Utilidades */
+  function actualizarEstadoConexion(status) {
+    const el = document.getElementById("tagStatus");
+    if (!el) return;
+  
+    if (status === "online") {
+      el.textContent = "En vivo";
+      el.classList.remove("offline");
+      el.classList.add("online");
+    } 
+    else if (status === "meter_offline") {
+      el.textContent = "Sin comunicación";
+      el.classList.remove("online");
+      el.classList.add("offline");
+    } 
+    else {
+      el.textContent = "--";
+      el.classList.remove("online", "offline");
+    }
+  }
+    
   function hoyTexto() {
     const a=new Date();
     return `${a.getFullYear()}-${String(a.getMonth()+1).padStart(2,'0')}-${String(a.getDate()).padStart(2,'0')}`;
@@ -856,6 +893,7 @@
       const data=await res.json();
       if(!data||data.ok!==true){document.getElementById("error").innerText="No hay datos del PM seleccionado";return null;}
       const d=data.data||{};
+      actualizarEstadoConexion(d.status);
       document.getElementById("error").innerText="";
       currentMeter={
         device_id:valorSeguro(d.device_id,currentMeter?.device_id,device),
