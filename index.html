@@ -351,28 +351,6 @@
     .metric-sub { font-size:10px; color:var(--text-faint); margin-top:5px; }
 
     /* GAUGES */
-    .gauge-status {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      text-align: center;
-      min-height: 14px;
-      margin-top: 2px;
-    }
-    
-    .mini-gauge-status {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      text-align: center;
-      min-height: 12px;
-      margin-top: 1px;
-    }
-    
     .gauges-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
     .gauge-card {
       background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md);
@@ -712,8 +690,7 @@
               </svg>
             </div>
             <div class="gauge-val" id="gaugeValV">--<span> %</span></div>
-            <div class="gauge-status" id="gaugeStatusV">--</div>
-            <div class="gauge-range"> ≤ 2 %  IEC 61000-2-4</div>
+            <div class="gauge-range">Límite recomendado ≤ 2 %</div>
           </div>
 
           <!-- Corriente -->
@@ -743,15 +720,14 @@
               </svg>
             </div>
             <div class="gauge-val" id="gaugeValI">--<span> %</span></div>
-            <div class="gauge-status" id="gaugeStatusI">--</div>
-            <div class="gauge-range">≤ 5 % IEC 61000-2-4</div>
+            <div class="gauge-range">Límite recomendado ≤ 5 %</div>
           </div>
         </div>
       </div>
 
       <!-- THD — mini-gauges -->
       <div class="quality-card">
-        <div class="quality-card-title">THD — Voltaje y corriente · IEEE 519-2022 / IEC 61000-2-4</div>
+        <div class="quality-card-title">THD — Voltaje y corriente</div>
         <div class="thd-gauges-grid">
 
           <!-- THD V A -->
@@ -768,7 +744,6 @@
               <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
             </svg>
             <div class="mini-gauge-val" id="q_thd_va">--<span> %</span></div>
-            <div class="mini-gauge-status" id="qs_thd_va">--</div>
           </div>
 
           <!-- THD V B -->
@@ -785,7 +760,6 @@
               <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
             </svg>
             <div class="mini-gauge-val" id="q_thd_vb">--<span> %</span></div>
-            <div class="mini-gauge-status" id="qs_thd_vb">--</div>
           </div>
 
           <!-- THD V C -->
@@ -802,7 +776,6 @@
               <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
             </svg>
             <div class="mini-gauge-val" id="q_thd_vc">--<span> %</span></div>
-            <div class="mini-gauge-status" id="qs_thd_vc">--</div>
           </div>
 
           <!-- THD I A -->
@@ -819,7 +792,6 @@
               <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
             </svg>
             <div class="mini-gauge-val" id="q_thd_ia">--<span> %</span></div>
-            <div class="mini-gauge-status" id="qs_thd_ia">--</div>
           </div>
 
           <!-- THD I B -->
@@ -836,7 +808,6 @@
               <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
             </svg>
             <div class="mini-gauge-val" id="q_thd_ib">--<span> %</span></div>
-            <div class="mini-gauge-status" id="qs_thd_ib">--</div>
           </div>
 
           <!-- THD I C -->
@@ -853,7 +824,6 @@
               <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
             </svg>
             <div class="mini-gauge-val" id="q_thd_ic">--<span> %</span></div>
-            <div class="mini-gauge-status" id="qs_thd_ic">--</div>
           </div>
 
         </div>
@@ -1058,67 +1028,14 @@
 
   /* Gauges SVG — arco total ≈ 166px para r=53 */
   function actualizarGauge(fillId, needleId, valId, value, maxVal) {
-    const fill = document.getElementById(fillId);
-    const needle = document.getElementById(needleId);
-    const valEl = document.getElementById(valId);
-  
-    const statusId =
-      valId === "gaugeValV" ? "gaugeStatusV" :
-      valId === "gaugeValI" ? "gaugeStatusI" : null;
-  
-    const stEl = statusId ? document.getElementById(statusId) : null;
-  
-    if (!fill || !needle || !valEl) return;
-  
-    if (value === null || !Number.isFinite(Number(value))) {
-      fill.style.strokeDashoffset = "166";
-      needle.style.transform = "rotate(-90deg)";
-      valEl.childNodes[0].textContent = "--";
-      fill.style.stroke = "#16a085";
-      if (stEl) {
-        stEl.textContent = "--";
-        stEl.style.color = "var(--text-dim)";
-      }
-      return;
+    const fill=document.getElementById(fillId);
+    const needle=document.getElementById(needleId);
+    const valEl=document.getElementById(valId);
+    if (!fill||!needle||!valEl) return;
+    if (value===null||!Number.isFinite(Number(value))) {
+      fill.style.strokeDashoffset="166"; needle.style.transform="rotate(-90deg)";
+      valEl.childNodes[0].textContent="--"; fill.style.stroke="#16a085"; return;
     }
-  
-    const n = Number(value);
-    const pct = Math.max(0, Math.min(n / maxVal, 1));
-  
-    fill.style.strokeDashoffset = (166 - pct * 166).toFixed(1);
-    needle.style.transform = `rotate(${(-90 + pct * 180).toFixed(1)}deg)`;
-    valEl.childNodes[0].textContent = n.toFixed(2);
-  
-    const esV = fillId.includes("FillV");
-  
-    let color = "#16a085";
-    let estado = "NORMAL";
-  
-    if (esV) {
-      if (n > 5) {
-        color = "#D64541";
-        estado = "CRÍTICO";
-      } else if (n > 2) {
-        color = "#f39c12";
-        estado = "ALERTA";
-      }
-    } else {
-      if (n > 10) {
-        color = "#D64541";
-        estado = "CRÍTICO";
-      } else if (n > 5) {
-        color = "#f39c12";
-        estado = "ALERTA";
-      }
-    }
-  
-    fill.style.stroke = color;
-  
-    if (stEl) {
-      stEl.textContent = estado;
-      stEl.style.color = color;
-    }
-  }
     const n=Number(value);
     const pct=Math.max(0,Math.min(n/maxVal,1));
     fill.style.strokeDashoffset=(166-pct*166).toFixed(1);
@@ -1135,8 +1052,6 @@
     const fill   = document.getElementById("mgFill_" + key);
     const needle = document.getElementById("mgNeedle_" + key);
     const valEl  = document.getElementById("q_" + key);
-    const stEl   = document.getElementById("qs_" + key);
-  
     if (!fill || !needle || !valEl) return;
   
     if (value === null || !Number.isFinite(Number(value))) {
@@ -1144,50 +1059,8 @@
       needle.style.transform = "rotate(-90deg)";
       valEl.childNodes[0].textContent = "--";
       fill.style.stroke = "#16a085";
-      if (stEl) {
-        stEl.textContent = "--";
-        stEl.style.color = "var(--text-dim)";
-      }
       return;
     }
-  
-    const n = Number(value);
-    const pct = Math.max(0, Math.min(n / 100, 1));
-  
-    fill.style.strokeDashoffset = (166 - pct * 166).toFixed(1);
-    needle.style.transform = `rotate(${(-90 + pct * 180).toFixed(1)}deg)`;
-    valEl.childNodes[0].textContent = n.toFixed(1);
-  
-    const esVoltaje = key.startsWith("thd_v");
-  
-    let color = "#16a085";
-    let estado = "NORMAL";
-  
-    if (esVoltaje) {
-      if (n > 8) {
-        color = "#D64541";
-        estado = "CRÍTICO";
-      } else if (n > 5) {
-        color = "#f39c12";
-        estado = "ALERTA";
-      }
-    } else {
-      if (n > 50) {
-        color = "#D64541";
-        estado = "CRÍTICO";
-      } else if (n > 20) {
-        color = "#f39c12";
-        estado = "ALERTA";
-      }
-    }
-  
-    fill.style.stroke = color;
-  
-    if (stEl) {
-      stEl.textContent = estado;
-      stEl.style.color = color;
-    }
-  }
   
     const n = Number(value);
     const pct = Math.max(0, Math.min(n / 100, 1));
