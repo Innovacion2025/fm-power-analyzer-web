@@ -1044,8 +1044,8 @@
     }
     const n=Number(value);
     const pct=Math.max(0,Math.min(n/maxVal,1));
-    fill.style.strokeDashoffset=(166-pct*166).toFixed(1);
-    needle.style.transform=`rotate(${(-90+pct*180).toFixed(1)}deg)`;
+    fill.style.strokeDashoffset=(166-pct*166).toFixed(2);
+    needle.style.transform=`rotate(${(-90+pct*180).toFixed(2)}deg)`;
     valEl.childNodes[0].textContent=n.toFixed(2);
     const isV=fillId.includes("FillV");
     fill.style.stroke = isV
@@ -1071,9 +1071,9 @@
     const n = Number(value);
     const pct = Math.max(0, Math.min(n / 100, 1));
   
-    fill.style.strokeDashoffset = (166 - pct * 166).toFixed(1);
-    needle.style.transform = `rotate(${(-90 + pct * 180).toFixed(1)}deg)`;
-    valEl.childNodes[0].textContent = n.toFixed(1);
+    fill.style.strokeDashoffset = (166 - pct * 166).toFixed(2);
+    needle.style.transform = `rotate(${(-90 + pct * 180).toFixed(2)}deg)`;
+    valEl.childNodes[0].textContent = n.toFixed(2);
   
     const esVoltaje = key.startsWith("thd_v");
   
