@@ -369,16 +369,15 @@
     /* MINI-GAUGES THD — grid 3 col centrado en la tarjeta */
     .thd-gauges-grid {
       display: grid;
-      grid-template-columns: repeat(3, 110px);
-      gap: 14px 10px;
-      width: fit-content;
-      margin: 0 auto;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      justify-items: center;
     }
     .mini-gauge {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
     }
     .mini-gauge-label {
       font-size: 9px;
@@ -391,7 +390,7 @@
     }
     .mini-gauge-svg { display:block; overflow:visible; }
     .mini-gauge-val {
-      font-size: 13px;
+      font-size: 18px;
       font-weight: 800;
       color: var(--text);
       text-align: center;
@@ -717,11 +716,11 @@
           <!-- THD V A -->
           <div class="mini-gauge">
             <div class="mini-gauge-label">THD Voltaje A</div>
-            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="100" height="58">
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="130" height="74">
               <defs><linearGradient id="gTHD1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD1)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
-              <path id="mgFill_thd_va" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="129" stroke-dashoffset="129" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
+              <path id="mgFill_thd_va" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="166" stroke-dashoffset="166" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
               <line id="mgNeedle_thd_va" x1="50" y1="54" x2="50" y2="18" stroke="#EC631F" stroke-width="2.5" stroke-linecap="round" style="transform-origin:50px 54px;transform:rotate(-90deg);transition:transform 0.6s ease;"/>
               <circle cx="50" cy="54" r="4.5" fill="#EC631F"/><circle cx="50" cy="54" r="2.2" fill="#0b0e10"/>
               <text x="6"  y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">0</text>
@@ -733,11 +732,11 @@
           <!-- THD V B -->
           <div class="mini-gauge">
             <div class="mini-gauge-label">THD Voltaje B</div>
-            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="100" height="58">
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="130" height="74">
               <defs><linearGradient id="gTHD2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD2)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
-              <path id="mgFill_thd_vb" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="129" stroke-dashoffset="129" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
+              <path id="mgFill_thd_vb" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="166" stroke-dashoffset="166" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
               <line id="mgNeedle_thd_vb" x1="50" y1="54" x2="50" y2="18" stroke="#EC631F" stroke-width="2.5" stroke-linecap="round" style="transform-origin:50px 54px;transform:rotate(-90deg);transition:transform 0.6s ease;"/>
               <circle cx="50" cy="54" r="4.5" fill="#EC631F"/><circle cx="50" cy="54" r="2.2" fill="#0b0e10"/>
               <text x="6"  y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">0</text>
@@ -749,11 +748,11 @@
           <!-- THD V C -->
           <div class="mini-gauge">
             <div class="mini-gauge-label">THD Voltaje C</div>
-            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="100" height="58">
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="130" height="74">
               <defs><linearGradient id="gTHD3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD3)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
-              <path id="mgFill_thd_vc" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="129" stroke-dashoffset="129" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
+              <path id="mgFill_thd_vc" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="166" stroke-dashoffset="166" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
               <line id="mgNeedle_thd_vc" x1="50" y1="54" x2="50" y2="18" stroke="#EC631F" stroke-width="2.5" stroke-linecap="round" style="transform-origin:50px 54px;transform:rotate(-90deg);transition:transform 0.6s ease;"/>
               <circle cx="50" cy="54" r="4.5" fill="#EC631F"/><circle cx="50" cy="54" r="2.2" fill="#0b0e10"/>
               <text x="6"  y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">0</text>
@@ -765,11 +764,11 @@
           <!-- THD I A -->
           <div class="mini-gauge">
             <div class="mini-gauge-label">THD Corriente A</div>
-            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="100" height="58">
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="130" height="74">
               <defs><linearGradient id="gTHD4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD4)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
-              <path id="mgFill_thd_ia" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="129" stroke-dashoffset="129" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
+              <path id="mgFill_thd_ia" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="166" stroke-dashoffset="166" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
               <line id="mgNeedle_thd_ia" x1="50" y1="54" x2="50" y2="18" stroke="#EC631F" stroke-width="2.5" stroke-linecap="round" style="transform-origin:50px 54px;transform:rotate(-90deg);transition:transform 0.6s ease;"/>
               <circle cx="50" cy="54" r="4.5" fill="#EC631F"/><circle cx="50" cy="54" r="2.2" fill="#0b0e10"/>
               <text x="6"  y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">0</text>
@@ -781,11 +780,11 @@
           <!-- THD I B -->
           <div class="mini-gauge">
             <div class="mini-gauge-label">THD Corriente B</div>
-            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="100" height="58">
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="130" height="74">
               <defs><linearGradient id="gTHD5" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD5)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
-              <path id="mgFill_thd_ib" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="129" stroke-dashoffset="129" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
+              <path id="mgFill_thd_ib" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="166" stroke-dashoffset="166" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
               <line id="mgNeedle_thd_ib" x1="50" y1="54" x2="50" y2="18" stroke="#EC631F" stroke-width="2.5" stroke-linecap="round" style="transform-origin:50px 54px;transform:rotate(-90deg);transition:transform 0.6s ease;"/>
               <circle cx="50" cy="54" r="4.5" fill="#EC631F"/><circle cx="50" cy="54" r="2.2" fill="#0b0e10"/>
               <text x="6"  y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">0</text>
@@ -797,11 +796,11 @@
           <!-- THD I C -->
           <div class="mini-gauge">
             <div class="mini-gauge-label">THD Corriente C</div>
-            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="100" height="58">
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="130" height="74">
               <defs><linearGradient id="gTHD6" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD6)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
-              <path id="mgFill_thd_ic" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="129" stroke-dashoffset="129" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
+              <path id="mgFill_thd_ic" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="166" stroke-dashoffset="166" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
               <line id="mgNeedle_thd_ic" x1="50" y1="54" x2="50" y2="18" stroke="#EC631F" stroke-width="2.5" stroke-linecap="round" style="transform-origin:50px 54px;transform:rotate(-90deg);transition:transform 0.6s ease;"/>
               <circle cx="50" cy="54" r="4.5" fill="#EC631F"/><circle cx="50" cy="54" r="2.2" fill="#0b0e10"/>
               <text x="6"  y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">0</text>
@@ -1043,7 +1042,7 @@
     }
     const n=Number(value);
     const pct=Math.max(0,Math.min(n/100,1));
-    fill.style.strokeDashoffset=(129-pct*129).toFixed(1);
+    fill.style.strokeDashoffset=(166-pct*166).toFixed(1);
     needle.style.transform=`rotate(${(-90+pct*180).toFixed(1)}deg)`;
     valEl.childNodes[0].textContent=n.toFixed(1);
     fill.style.stroke = n>=8?"#D64541":n>=5?"#f39c12":"#16a085";
