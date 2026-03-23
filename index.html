@@ -268,12 +268,23 @@
 
     /* TOOLBAR */
     .toolbar {
-      background:var(--surface); border:1px solid var(--border2); border-radius:var(--r-lg);
-      padding:18px 24px; display:flex; align-items:center; gap:0; flex-wrap:wrap; box-shadow:var(--shadow-s);
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      justify-content: center;
+      gap: 40px;
     }
-    .toolbar-section { display:flex; flex-direction:column; padding:0 24px; }
+    .toolbar-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;   /* 🔥 centra contenido interno */
+      padding: 0 20px;
+      min-width: 220px;      /* 🔥 evita que se deformen */
+    }
     .toolbar-section:first-child { padding-left:0; }
-    .toolbar-section + .toolbar-section { border-left:1px solid var(--border); }
+    .toolbar-section + .toolbar-section {
+      border-left: 1px solid var(--border);
+      padding-left: 30px;
+    }
     .toolbar-section-title {
       font-size:10px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase;
       color:var(--orange); margin-bottom:10px; display:flex; align-items:center; gap:6px;
