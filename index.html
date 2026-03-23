@@ -1171,8 +1171,8 @@
       document.getElementById("summaryPfTot").innerText     = textoValor(numeroSeguro(d.pf_tot),"",3);
       document.getElementById("summaryFrequency").innerText = textoValor(numeroSeguro(d.frecuencia,d.frequency)," Hz",3);
       document.getElementById("summaryCurrentN").innerText  = textoValor(numeroSeguro(d.current_n)," A",3);
-      actualizarGauge("gaugeFillV","gaugeNeedleV","gaugeValV",numeroSeguro(d.desbalance_v),10);
-      actualizarGauge("gaugeFillI","gaugeNeedleI","gaugeValI",numeroSeguro(d.desbalance_i),20);
+      actualizarGauge("gaugeFillV","gaugeNeedleV","gaugeValV",numeroSeguro(d.desbalance_v,2),10);
+      actualizarGauge("gaugeFillI","gaugeNeedleI","gaugeValI",numeroSeguro(d.desbalance_i,2),20);
       setMiniGauge("thd_va",numeroSeguro(d.thd_va));
       setMiniGauge("thd_vb",numeroSeguro(d.thd_vb));
       setMiniGauge("thd_vc",numeroSeguro(d.thd_vc));
