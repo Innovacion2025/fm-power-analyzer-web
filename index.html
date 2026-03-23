@@ -210,36 +210,7 @@
       font-weight: 800;
       color: var(--orange);
     }
-    
-    <div class="hero-inner">
-      <!-- LOGO -->
-      <div class="hero-logo-block">
-        <img src="https://www.fmelectrodo.com/wp-content/uploads/2026/03/FMPowerAnalyzerBlanco.svg" alt="FM Power Analyzer">
-      </div>
-      <!-- CENTRO -->
-      <div class="hero-center">
-        <div class="hero-eyebrow">Monitoreo eléctrico industrial</div>
-        <div class="hero-subtitle">Análisis de curvas y calidad de energía en tiempo real</div>
-        <div class="hero-status">
-          <span class="tag-live" id="tagStatus">--</span>
-          <span class="hero-status-item">Gateway: <strong id="heroDeviceName">--</strong></span>
-          <span class="hero-status-item">PM: <strong id="heroPmName">--</strong></span>
-          <span class="hero-status-item">Slave: <strong id="heroPmSlave">--</strong></span>
-        </div>
-      </div>
-      <!-- DERECHA -->
-      <div class="hero-pills">
-        <div class="hero-pill">
-          <div class="hero-pill-label">Gateway ID</div>
-          <div class="hero-pill-value" id="device">--</div>
-        </div>
-        <div class="hero-pill">
-          <div class="hero-pill-label">Fecha consultada</div>
-          <div class="hero-pill-value" id="selectedDateText">--</div>
-        </div>
-      </div>
-    </div>
-    
+  
     .hero-brand {
       padding: 22px 28px;
       border-right: 1px solid var(--border);
@@ -528,10 +499,208 @@
       font-size: 14px;
     }
   }
+
+  /* LOGIN DASHBOARD */
+  .auth-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(ellipse 80% 45% at 50% 0%, rgba(236,99,31,0.10) 0%, transparent 70%),
+      rgba(6, 8, 10, 0.96);
+    backdrop-filter: blur(6px);
+  }
+  
+  .auth-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  
+  .auth-topbar {
+    height: 3px;
+    background: linear-gradient(90deg, var(--orange) 0%, #ff7b36 50%, transparent 100%);
+  }
+  
+  .auth-body {
+    padding: 28px 26px 24px;
+  }
+  
+  .auth-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+  
+  .auth-logo img {
+    width: 100%;
+    max-width: 210px;
+    height: auto;
+    object-fit: contain;
+  }
+  
+  .auth-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  
+  .auth-subtitle {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 22px;
+  }
+  
+  .auth-device {
+    font-size: 11px;
+    color: var(--orange);
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  
+  .auth-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  
+  .auth-field label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  
+  .auth-field input {
+    height: 42px;
+    padding: 0 14px;
+    background: var(--surface3);
+    border: 1px solid var(--border2);
+    border-radius: var(--r-sm);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  
+  .auth-field input:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(236,99,31,0.15);
+  }
+  
+  .auth-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  
+  .auth-btn {
+    flex: 1;
+    height: 42px;
+    border: none;
+    border-radius: var(--r-sm);
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.1s, background 0.15s, opacity 0.15s;
+  }
+  
+  .auth-btn:active {
+    transform: translateY(1px);
+  }
+  
+  .auth-btn-primary {
+    background: var(--orange);
+    color: #fff;
+  }
+  
+  .auth-btn-primary:hover {
+    background: #ff7b36;
+  }
+  
+  .auth-btn-secondary {
+    background: var(--surface3);
+    color: var(--text);
+    border: 1px solid var(--border2);
+  }
+  
+  .auth-error {
+    min-height: 18px;
+    margin-top: 14px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--red);
+  }
+  
+  .dashboard-hidden {
+    display: none;
+  }
   </style>
 </head>
 <body>
-<div class="page">
+  <!-- LOGIN / ACCESO DASHBOARD -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-card">
+    <div class="auth-topbar"></div>
+    <div class="auth-body">
+      <div class="auth-logo">
+        <img
+          src="https://www.fmelectrodo.com/wp-content/uploads/2026/03/FMPowerAnalyzerBlanco.svg"
+          alt="FM Power Analyzer"
+        >
+      </div>
+
+      <div class="auth-title">Acceso al dashboard</div>
+      <div class="auth-subtitle">
+        Ingrese el token del dispositivo para visualizar la información del medidor.
+      </div>
+
+      <div class="auth-device" id="authDeviceText">Gateway: --</div>
+
+      <div class="auth-field">
+        <label for="tokenInput">Token de acceso</label>
+        <input
+          type="password"
+          id="tokenInput"
+          placeholder="Ingrese el token del dispositivo"
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="auth-actions">
+        <button class="auth-btn auth-btn-secondary" type="button" onclick="limpiarToken()">
+          Limpiar
+        </button>
+        <button class="auth-btn auth-btn-primary" type="button" onclick="validarAccesoDashboard()">
+          Ingresar
+        </button>
+      </div>
+
+      <div class="auth-error" id="authError"></div>
+    </div>
+  </div>
+</div>
+<div class="page dashboard-hidden" id="dashboardPage">
 
   <!-- HERO -->
    <header class="hero">
@@ -970,7 +1139,10 @@
   const params   = new URLSearchParams(window.location.search);
   const device   = params.get("device") || "FMPAN-0001";
   const API_BASE = "https://fm-power-analyzer-server.onrender.com";
-
+  
+  let dashboardAutorizado = false;
+  let tokenValidado = null;
+  
   let chartVoltages=null, chartCurrents=null, chartPowers=null;
   let chartPhasePowers=null, chartPf=null, chartFrequency=null;
   let phasePowerMode="activa", totalPowerMode="activa", meters=[], currentMeter=null;
@@ -1030,6 +1202,136 @@
       s_a:null,s_b:null,s_c:null,s_tot:null,pf_a:null,pf_b:null,pf_c:null,pf_tot:null,
       frecuencia:null,thd_va:null,thd_vb:null,thd_vc:null,thd_ia:null,thd_ib:null,thd_ic:null,thd_in:null,
       desbalance_v:null,desbalance_i:null,raw_payload:null};
+  }
+
+  function mostrarPantallaAuth() {
+    const overlay = document.getElementById("authOverlay");
+    const page = document.getElementById("dashboardPage");
+    const authDeviceText = document.getElementById("authDeviceText");
+  
+    if (authDeviceText) {
+      authDeviceText.innerText = `Gateway: ${device}`;
+    }
+  
+    if (overlay) overlay.style.display = "flex";
+    if (page) page.classList.add("dashboard-hidden");
+  }
+  
+  function ocultarPantallaAuth() {
+    const overlay = document.getElementById("authOverlay");
+    const page = document.getElementById("dashboardPage");
+  
+    if (overlay) overlay.style.display = "none";
+    if (page) page.classList.remove("dashboard-hidden");
+  }
+  
+  function limpiarToken() {
+    const input = document.getElementById("tokenInput");
+    const err = document.getElementById("authError");
+    if (input) input.value = "";
+    if (err) err.innerText = "";
+  }
+  
+  async function validarAccesoDashboard() {
+    const input = document.getElementById("tokenInput");
+    const err = document.getElementById("authError");
+  
+    if (!input) return;
+  
+    const token = String(input.value || "").trim();
+  
+    if (err) err.innerText = "";
+  
+    if (!token) {
+      if (err) err.innerText = "Ingrese el token para continuar";
+      return;
+    }
+  
+    try {
+      const url = `${API_BASE}/api/dashboard-auth?device_id=${encodeURIComponent(device)}&token=${encodeURIComponent(token)}&t=${Date.now()}`;
+      const res = await fetch(url, { cache: "no-store" });
+      const json = await res.json();
+  
+      if (!json || json.ok !== true) {
+        dashboardAutorizado = false;
+        tokenValidado = null;
+        if (err) err.innerText = json?.message || "Token incorrecto";
+        return;
+      }
+  
+      dashboardAutorizado = true;
+      tokenValidado = token;
+  
+      sessionStorage.setItem(`fm_token_ok_${device}`, token);
+  
+      ocultarPantallaAuth();
+      await iniciarDashboard();
+  
+    } catch (e) {
+      dashboardAutorizado = false;
+      tokenValidado = null;
+      if (err) err.innerText = "Error validando el acceso";
+    }
+  }
+  
+  async function validarSesionGuardada() {
+    const tokenGuardado = sessionStorage.getItem(`fm_token_ok_${device}`);
+    if (!tokenGuardado) return false;
+  
+    try {
+      const url = `${API_BASE}/api/dashboard-auth?device_id=${encodeURIComponent(device)}&token=${encodeURIComponent(tokenGuardado)}&t=${Date.now()}`;
+      const res = await fetch(url, { cache: "no-store" });
+      const json = await res.json();
+  
+      if (!json || json.ok !== true) {
+        sessionStorage.removeItem(`fm_token_ok_${device}`);
+        return false;
+      }
+  
+      dashboardAutorizado = true;
+      tokenValidado = tokenGuardado;
+      ocultarPantallaAuth();
+      return true;
+  
+    } catch (e) {
+      sessionStorage.removeItem(`fm_token_ok_${device}`);
+      return false;
+    }
+  }
+  
+  async function iniciarDashboard() {
+    const hoy = hoyTexto();
+    document.getElementById("dayDate").value = hoy;
+    document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
+  
+    const cf = document.getElementById("csvFrom");
+    const ct = document.getElementById("csvTo");
+    if (cf) cf.value = hoy;
+    if (ct) ct.value = hoy;
+  
+    const ok = await cargarMedidores();
+    if (!ok) return;
+  
+    await actualizarTiempoReal();
+    await consultarTodo(true);
+  
+    if (!window.fmDashboardInterval) {
+      window.fmDashboardInterval = setInterval(async () => {
+        if (!dashboardAutorizado) return;
+        if (pollingTiempoRealEnCurso) return;
+  
+        pollingTiempoRealEnCurso = true;
+        try {
+          await actualizarTiempoReal();
+          if (document.getElementById("dayDate").value === hoyTexto()) {
+            await consultarTodo(false);
+          }
+        } catch (e) {
+        } finally {
+          pollingTiempoRealEnCurso = false;
+        }
+      }, 2000);
+    }
   }
 
   /* Gauges SVG — arco total ≈ 166px para r=53 */
@@ -1362,26 +1664,38 @@
   }
 
   /* Init */
-  window.addEventListener("load",async()=>{
-    const hoy=hoyTexto();
-    document.getElementById("dayDate").value=hoy;
-    document.getElementById("selectedDateText").innerText=formatearFechaCorta(hoy);
-    const cf=document.getElementById("csvFrom"),ct=document.getElementById("csvTo");
-    if(cf)cf.value=hoy; if(ct)ct.value=hoy;
-    const ok=await cargarMedidores(); if(!ok) return;
-    await actualizarTiempoReal(); await consultarTodo(true);
-    setInterval(async()=>{
-      if(pollingTiempoRealEnCurso) return;
-      pollingTiempoRealEnCurso=true;
-      try{await actualizarTiempoReal();if(document.getElementById("dayDate").value===hoyTexto())await consultarTodo(false);}
-      catch(e){}finally{pollingTiempoRealEnCurso=false;}
-    },2000);
+  window.addEventListener("load", async () => {
+    mostrarPantallaAuth();
+  
+    const sesionValida = await validarSesionGuardada();
+    if (sesionValida) {
+      await iniciarDashboard();
+    }
   });
-  document.addEventListener("DOMContentLoaded",()=>{
-    document.getElementById("dayDate")?.addEventListener("change",()=>consultarTodo(true));
-    document.getElementById("pmSelect")?.addEventListener("change",async()=>{actualizarMeterSeleccionadoDesdeSelect();await actualizarTiempoReal();await consultarTodo(true);});
-    document.getElementById("phasePowerMode")?.addEventListener("change",async(e)=>{phasePowerMode=e.target.value;await consultarTodo(true);});
-    document.getElementById("totalPowerMode")?.addEventListener("change",async(e)=>{totalPowerMode=e.target.value;await consultarTodo(true);});
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("dayDate")?.addEventListener("change", () => consultarTodo(true));
+  
+    document.getElementById("pmSelect")?.addEventListener("change", async () => {
+      actualizarMeterSeleccionadoDesdeSelect();
+      await actualizarTiempoReal();
+      await consultarTodo(true);
+    });
+  
+    document.getElementById("phasePowerMode")?.addEventListener("change", async (e) => {
+      phasePowerMode = e.target.value;
+      await consultarTodo(true);
+    });
+  
+    document.getElementById("totalPowerMode")?.addEventListener("change", async (e) => {
+      totalPowerMode = e.target.value;
+      await consultarTodo(true);
+    });
+  
+    document.getElementById("tokenInput")?.addEventListener("keydown", async (e) => {
+      if (e.key === "Enter") {
+        await validarAccesoDashboard();
+      }
+    });
   });
 </script>
 </body>
