@@ -78,6 +78,16 @@
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
     /* HERO */
+    .hero-logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .hero-logo img {
+      height: 48px;
+      filter: drop-shadow(0 2px 6px rgba(236,99,31,0.2));
+    }
+        
     .hero {
       background: var(--surface); border: 1px solid var(--border2);
       border-radius: var(--r-lg); overflow: hidden; position: relative; box-shadow: var(--shadow);
@@ -88,8 +98,14 @@
     }
     .hero-inner { display:flex; align-items:stretch; flex-wrap:wrap; }
     .hero-brand {
-      padding: 22px 28px; border-right: 1px solid var(--border);
-      flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 6px; justify-content: center;
+      padding: 22px 28px;
+      border-right: 1px solid var(--border);
+      flex: 1;
+      min-width: 320px; /* ⬅️ aumenta un poco */
+      display: flex;
+      flex-direction: column;
+      gap: 8px; /* ⬅️ separa mejor */
+      justify-content: center;
     }
     .hero-eyebrow { font-size:10px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:var(--orange); }
     .hero-title { font-size:30px; font-weight:900; line-height:1; color:var(--text); }
@@ -286,7 +302,9 @@
     <div class="hero-inner">
       <div class="hero-brand">
         <div class="hero-eyebrow">Monitoreo eléctrico industrial</div>
-        <h1 class="hero-title">FM <span>POWER</span> ANALYZER</h1>
+        <div class="hero-logo">
+          <img src="https://www.fmelectrodo.com/wp-content/uploads/2026/03/FMPowerAnalyzerBlanco.svg" alt="FM Power Analyzer">
+        </div>
         <p class="hero-subtitle">Análisis de curvas y calidad de energía en tiempo real</p>
         <div class="hero-status">
           <span class="tag-live" id="tagStatus">--</span>
