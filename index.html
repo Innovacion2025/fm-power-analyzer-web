@@ -78,25 +78,108 @@
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
     /* HERO */
-    .hero-logo {
+    /* CONTENEDOR GENERAL */
+    .hero-inner {
       display: flex;
-      align-items: center;
+      align-items: stretch;
     }
     
-    .hero-logo img {
-      height: 48px;
-      filter: drop-shadow(0 2px 6px rgba(236,99,31,0.2));
+    /* BLOQUE LOGO */
+    .hero-logo-block {
+      padding: 18px 24px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 180px;
+    }
+    
+    .hero-logo-block img {
+      height: 70px;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
     }
         
-    .hero {
-      background: var(--surface); border: 1px solid var(--border2);
-      border-radius: var(--r-lg); overflow: hidden; position: relative; box-shadow: var(--shadow);
+    /* BLOQUE CENTRAL */
+    .hero-center {
+      flex: 1;
+      padding: 18px 28px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
     }
-    .hero::before {
-      content:''; position:absolute; top:0; left:0; right:0; height:3px;
-      background: linear-gradient(90deg, var(--orange) 0%, #ff7b36 50%, transparent 100%);
+    
+    .hero-center .hero-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--orange);
     }
-    .hero-inner { display:flex; align-items:stretch; flex-wrap:wrap; }
+    
+    .hero-center .hero-subtitle {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    
+    /* STATUS MÁS COMPACTO */
+    .hero-status {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    .hero-pills {
+      display: flex;
+      align-items: stretch;
+    }
+    
+    .hero-pill {
+      padding: 18px 26px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      min-width: 160px;
+    }
+    
+    .hero-pill:last-child {
+      border-right: none;
+    }
+    
+    <div class="hero-inner">
+      <!-- LOGO (IZQUIERDA) -->
+      <div class="hero-logo-block">
+        <img src="https://www.fmelectrodo.com/wp-content/uploads/2026/03/FMPowerAnalyzer1.svg" alt="FM Power Analyzer">
+      </div>
+      <!-- INFO CENTRAL -->
+      <div class="hero-center">
+        <div class="hero-eyebrow">Monitoreo eléctrico industrial</div>
+        <div class="hero-subtitle">Análisis de curvas y calidad de energía en tiempo real</div>
+          <div class="hero-status">
+          <span class="tag-live" id="tagStatus">--</span>
+          <span class="hero-status-item">Gateway: <strong id="heroDeviceName">--</strong></span>
+          <span class="hero-status-item">PM: <strong id="heroPmName">--</strong></span>
+          <span class="hero-status-item">Slave: <strong id="heroPmSlave">--</strong></span>
+        </div>
+      </div> 
+      <!-- PILLS DERECHA -->
+      <div class="hero-pills">
+        <div class="hero-pill">
+          <div class="hero-pill-label">Gateway ID</div>
+          <div class="hero-pill-value" id="device">--</div>
+        </div>
+        <div class="hero-pill">
+          <div class="hero-pill-label">Fecha consultada</div>
+          <div class="hero-pill-value" id="selectedDateText">--</div>
+        </div>
+      </div>
+    </div>
+    
     .hero-brand {
       padding: 22px 28px;
       border-right: 1px solid var(--border);
