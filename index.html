@@ -79,12 +79,14 @@
 
     /* HERO */
     /* CONTENEDOR GENERAL */
+   /* HERO NUEVO LAYOUT */
     .hero-inner {
       display: flex;
       align-items: stretch;
+      flex-wrap: nowrap;
     }
     
-    /* BLOQUE LOGO */
+    /* LOGO */
     .hero-logo-block {
       padding: 18px 24px;
       border-right: 1px solid var(--border);
@@ -95,11 +97,12 @@
     }
     
     .hero-logo-block img {
-      height: 70px;
-      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+      height: 65px;
+      width: auto;
+      object-fit: contain;
     }
-        
-    /* BLOQUE CENTRAL */
+    
+    /* CENTRO */
     .hero-center {
       flex: 1;
       padding: 18px 28px;
@@ -123,7 +126,7 @@
       color: var(--text-dim);
     }
     
-    /* STATUS MÁS COMPACTO */
+    /* STATUS */
     .hero-status {
       display: flex;
       align-items: center;
@@ -131,20 +134,21 @@
       margin-top: 6px;
       flex-wrap: wrap;
     }
-
+    
+    /* DERECHA */
     .hero-pills {
       display: flex;
       align-items: stretch;
     }
     
     .hero-pill {
-      padding: 18px 26px;
+      padding: 18px 24px;
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       justify-content: center;
       gap: 5px;
-      min-width: 160px;
+      min-width: 150px;
     }
     
     .hero-pill:last-child {
@@ -152,22 +156,22 @@
     }
     
     <div class="hero-inner">
-      <!-- LOGO (IZQUIERDA) -->
+      <!-- LOGO -->
       <div class="hero-logo-block">
         <img src="https://www.fmelectrodo.com/wp-content/uploads/2026/03/FMPowerAnalyzer1.svg" alt="FM Power Analyzer">
       </div>
-      <!-- INFO CENTRAL -->
+      <!-- CENTRO -->
       <div class="hero-center">
         <div class="hero-eyebrow">Monitoreo eléctrico industrial</div>
         <div class="hero-subtitle">Análisis de curvas y calidad de energía en tiempo real</div>
-          <div class="hero-status">
+        <div class="hero-status">
           <span class="tag-live" id="tagStatus">--</span>
           <span class="hero-status-item">Gateway: <strong id="heroDeviceName">--</strong></span>
           <span class="hero-status-item">PM: <strong id="heroPmName">--</strong></span>
           <span class="hero-status-item">Slave: <strong id="heroPmSlave">--</strong></span>
         </div>
-      </div> 
-      <!-- PILLS DERECHA -->
+      </div>
+      <!-- DERECHA -->
       <div class="hero-pills">
         <div class="hero-pill">
           <div class="hero-pill-label">Gateway ID</div>
