@@ -5,2074 +5,1063 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FM POWER ANALYZER</title>
 
-  <!-- ===================================================== -->
-  <!-- BLOQUE 1: FUENTES Y LIBRERIAS                         -->
-  <!-- ===================================================== -->
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- ===================================================== -->
-  <!-- BLOQUE 2: VARIABLES Y ESTILOS GENERALES               -->
-  <!-- ===================================================== -->
   <style>
     :root {
-      --green: #415447;
-      --orange: #EC631F;
-      --white: #FFFFFF;
-      --gray: #E6E7EA;
-      --text: #333333;
-      --bg: #f4f6f5;
-      --panel: #ffffff;
-      --border: #dde3df;
-      --shadow: 0 10px 24px rgba(0,0,0,0.08);
-      --shadow-soft: 0 6px 14px rgba(0,0,0,0.05);
-      --blue: #2D9CDB;
-      --red: #D64541;
-      --purple: #7B61FF;
-      --teal: #16a085;
-      --amber: #f39c12;
-      --soft-bg: #fafbfb;
-      --soft-border: #e7ece9;
+      --green:   #415447;
+      --orange:  #EC631F;
+      --white:   #FFFFFF;
+      --gray:    #E6E7EA;
+      --blue:    #2D9CDB;
+      --red:     #D64541;
+      --purple:  #7B61FF;
+      --teal:    #16a085;
+      --amber:   #f39c12;
+      --bg:        #0b0e10;
+      --surface:   #111518;
+      --surface2:  #161b1f;
+      --surface3:  #1c2227;
+      --border:    #232b31;
+      --border2:   #2c363e;
+      --text:      #e8edf0;
+      --text-dim:  #7a8c96;
+      --text-faint:#3e4d55;
+      --shadow:    0 4px 20px rgba(0,0,0,0.55);
+      --shadow-s:  0 2px 10px rgba(0,0,0,0.4);
+      --r-lg: 18px; --r-md: 12px; --r-sm: 8px;
+      --font: 'Rubik', sans-serif;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      padding: 16px;
-      font-family: 'Rubik', sans-serif;
-      background: linear-gradient(135deg, #eef2f0 0%, #f7f8f9 100%);
+      font-family: var(--font);
+      background: var(--bg);
       color: var(--text);
+      min-height: 100vh;
+      padding: 18px;
+      background-image: radial-gradient(ellipse 90% 40% at 50% -10%, rgba(236,99,31,0.07) 0%, transparent 70%);
     }
+    .page { max-width: 1540px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--surface); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
 
-    .page {
-      max-width: 1500px;
+    /* TAG LIVE */
+    .tag-live {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 99px;
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      background: rgba(22,160,133,0.12); color: var(--teal); border: 1px solid rgba(22,160,133,0.25);
+    }
+    .tag-live::before {
+      content:''; width:6px; height:6px; border-radius:50%;
+      background:var(--teal); box-shadow:0 0 6px var(--teal); animation:blink 2s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* HERO */
+    .hero {
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--r-lg); overflow: hidden; position: relative; box-shadow: var(--shadow);
+    }
+    .hero::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:3px;
+      background: linear-gradient(90deg, var(--orange) 0%, #ff7b36 50%, transparent 100%);
+    }
+    .hero-inner { display:flex; align-items:stretch; flex-wrap:wrap; }
+    .hero-brand {
+      padding: 22px 28px; border-right: 1px solid var(--border);
+      flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 6px; justify-content: center;
+    }
+    .hero-eyebrow { font-size:10px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:var(--orange); }
+    .hero-title { font-size:30px; font-weight:900; line-height:1; color:var(--text); }
+    .hero-title span { color: var(--orange); }
+    .hero-subtitle { font-size:12px; color:var(--text-dim); font-weight:400; margin-top:2px; }
+    .hero-status { display:flex; align-items:center; gap:14px; margin-top:10px; flex-wrap:wrap; }
+    .hero-status-item { font-size:11px; color:var(--text-dim); font-weight:400; }
+    .hero-status-item strong { color:var(--text); font-weight:700; }
+    .hero-pills { display:flex; align-items:stretch; }
+    .hero-pill {
+      padding:18px 26px; border-right:1px solid var(--border);
+      display:flex; flex-direction:column; justify-content:center; gap:5px; min-width:150px;
+    }
+    .hero-pill:last-child { border-right:none; }
+    .hero-pill-label { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text-faint); }
+    .hero-pill-value { font-size:16px; font-weight:800; color:var(--orange); }
+
+    /* TOOLBAR */
+    .toolbar {
+      background:var(--surface); border:1px solid var(--border2); border-radius:var(--r-lg);
+      padding:18px 24px; display:flex; align-items:center; gap:0; flex-wrap:wrap; box-shadow:var(--shadow-s);
+    }
+    .toolbar-section { display:flex; flex-direction:column; padding:0 24px; }
+    .toolbar-section:first-child { padding-left:0; }
+    .toolbar-section + .toolbar-section { border-left:1px solid var(--border); }
+    .toolbar-section-title {
+      font-size:10px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase;
+      color:var(--orange); margin-bottom:10px; display:flex; align-items:center; gap:6px;
+    }
+    .toolbar-section-title::before { content:''; width:3px; height:11px; background:var(--orange); border-radius:2px; }
+    .toolbar-row { display:flex; align-items:flex-end; gap:10px; flex-wrap:wrap; }
+    .ctrl { display:flex; flex-direction:column; gap:5px; }
+    .ctrl label { font-size:10px; font-weight:600; letter-spacing:0.8px; text-transform:uppercase; color:var(--text-dim); }
+    .ctrl input, .ctrl select {
+      height:36px; padding:0 12px; background:var(--surface3); border:1px solid var(--border2);
+      border-radius:var(--r-sm); color:var(--text); font-family:var(--font); font-size:13px;
+      font-weight:500; min-width:155px; outline:none; transition:border-color 0.15s, box-shadow 0.15s;
+    }
+    .ctrl input:focus, .ctrl select:focus {
+      border-color:var(--orange); box-shadow:0 0 0 3px rgba(236,99,31,0.15);
+    }
+    .ctrl select option { background:var(--surface3); }
+    .btn-primary {
+      height:36px; padding:0 18px; background:var(--orange); color:#fff; border:none;
+      border-radius:var(--r-sm); font-family:var(--font); font-size:13px; font-weight:700;
+      cursor:pointer; display:flex; align-items:center; gap:7px; transition:background 0.15s, transform 0.1s;
+    }
+    .btn-primary:hover { background:#ff7b36; transform:translateY(-1px); }
+    .btn-primary:active { transform:translateY(0); }
+
+    /* SECTION HEADER */
+    .section-head { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+    .section-head-bar { width:4px; height:22px; background:var(--orange); border-radius:2px; flex-shrink:0; }
+    .section-head h2 { font-size:11px; font-weight:800; letter-spacing:2.5px; text-transform:uppercase; color:var(--orange); }
+    .section-head p { font-size:11px; color:var(--text-dim); font-weight:400; margin-top:2px; }
+
+    /* QUALITY LAYOUT */
+    .quality-layout { display:grid; grid-template-columns:1.1fr 1fr; gap:12px; align-items:center; }
+    .quality-left { display:flex; flex-direction:column; gap:12px; }
+
+    /* MÉTRICAS */
+    .metrics-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .metric-card {
+      background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md);
+      padding:14px 16px; position:relative; overflow:hidden;
+    }
+    .metric-card::after {
+      content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--orange); opacity:0.7;
+    }
+    .metric-label { font-size:9px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:var(--text-dim); margin-bottom:8px; }
+    .metric-value { font-size:22px; font-weight:800; color:var(--text); line-height:1; }
+    .metric-sub { font-size:10px; color:var(--text-faint); margin-top:5px; }
+
+    /* GAUGES */
+    .gauges-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .gauge-card {
+      background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md);
+      padding:16px 14px 12px; display:flex; flex-direction:column; align-items:center; gap:8px;
+    }
+    .gauge-title { font-size:9px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:var(--text-dim); text-align:center; }
+    .gauge-svg-wrap { position:relative; width:130px; height:74px; }
+    .gauge-val { font-size:18px; font-weight:800; color:var(--text); text-align:center; }
+    .gauge-val span { font-size:11px; font-weight:500; color:var(--text-dim); }
+    .gauge-range { font-size:9px; color:var(--text-faint); text-align:center; }
+
+    /* THD CARD */
+    .quality-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:16px 18px; display:flex; flex-direction:column; align-items:center; }
+    .quality-card-title {
+      font-size:10px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase;
+      color:var(--text-dim); margin-bottom:14px; display:flex; align-items:center; gap:8px;
+      width: 100%;
+    }
+    .quality-card-title::before { content:''; width:10px; height:10px; border:2px solid var(--orange); border-radius:2px; flex-shrink:0; }
+
+    /* MINI-GAUGES THD — grid 3 col centrado en la tarjeta */
+    .thd-gauges-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 110px);
+      gap: 14px 10px;
+      width: fit-content;
       margin: 0 auto;
     }
-
-    .error {
-      text-align: center;
-      color: #c0392b;
-      font-weight: 700;
-      margin-top: 12px;
-      font-size: 14px;
-    }
-
-    @media (max-width: 1100px) {
-      body {
-        padding: 12px;
-      }
-    }
-  </style>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 2A: SPINNER DE DESCARGA                        -->
-  <!-- ===================================================== -->
-  <style>
-    .spinner-overlay{
-      position: fixed;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      background:rgba(0,0,0,0.25);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:9999;
-    }
-
-    .spinner-box{
-      background:white;
-      padding:30px 40px;
-      border-radius:14px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.2);
-      text-align:center;
-      font-family:'Rubik',sans-serif;
-    }
-
-    .spinner{
-      width:40px;
-      height:40px;
-      border:4px solid #ddd;
-      border-top:4px solid #EC631F;
-      border-radius:50%;
-      animation:spin 1s linear infinite;
-      margin:auto;
-      margin-bottom:12px;
-    }
-
-    @keyframes spin{
-      0%{transform:rotate(0deg)}
-      100%{transform:rotate(360deg)}
-    }
-
-    .spinner-text{
-      font-size:14px;
-      font-weight:600;
-      color:#333;
-    }
-  </style>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 2B: TOAST / AVISOS                             -->
-  <!-- ===================================================== -->
-  <style>
-    .toast {
-      position: fixed;
-      inset: 0;
-      background: rgba(28, 36, 32, 0.28);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      padding: 16px;
-    }
-
-    .toast.show {
-      display: flex;
-    }
-
-    .toast-card {
-      width: 100%;
-      max-width: 360px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      box-shadow: 0 18px 40px rgba(0,0,0,0.18);
-      padding: 18px 18px 16px 18px;
-      text-align: center;
-      animation: toastPop 0.18s ease-out;
-    }
-
-    .toast-title {
-      font-size: 18px;
-      font-weight: 900;
-      color: var(--green);
-      margin-bottom: 8px;
-    }
-
-    .toast-message {
-      font-size: 13px;
-      line-height: 1.45;
-      color: #5f6c74;
-      margin-bottom: 14px;
-    }
-
-    .toast-btn {
-      border: none;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--orange) 0%, #ff7b36 100%);
-      color: #fff;
-      font-family: 'Rubik', sans-serif;
-      font-size: 13px;
-      font-weight: 800;
-      padding: 10px 18px;
-      cursor: pointer;
-      box-shadow: 0 8px 16px rgba(236,99,31,0.20);
-    }
-
-    .toast-btn:hover {
-      transform: translateY(-1px);
-    }
-
-    @keyframes toastPop {
-      from { opacity: 0; transform: scale(0.96); }
-      to { opacity: 1; transform: scale(1); }
-    }
-  </style>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 3: HERO / ENCABEZADO                           -->
-  <!-- ===================================================== -->
-  <style>
-    .hero {
-      background: linear-gradient(135deg, var(--green) 0%, #546a5d 100%);
-      color: var(--white);
-      border-radius: 22px;
-      padding: 18px 22px;
-      box-shadow: var(--shadow);
-      margin-bottom: 14px;
-    }
-
-    .hero-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .hero-title {
-      margin: 0;
-      font-size: 28px;
-      font-weight: 900;
-      line-height: 1.1;
-    }
-
-    .hero-subtitle {
-      margin-top: 4px;
-      font-size: 13px;
-      opacity: 0.92;
-    }
-
-    .hero-info {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .hero-pill {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 14px;
-      padding: 10px 14px;
-      min-width: 170px;
-      text-align: center;
-    }
-
-    .hero-pill-label {
-      font-size: 11px;
-      font-weight: 500;
-      opacity: 0.82;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .hero-pill-value {
-      margin-top: 4px;
-      font-size: 20px;
-      font-weight: 800;
-    }
-
-    .status-line {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 12px;
-      font-size: 13px;
-      opacity: 0.95;
-      flex-wrap: wrap;
-    }
-
-    .status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #2ecc71;
-      box-shadow: 0 0 0 5px rgba(46, 204, 113, 0.16);
-      display: inline-block;
-    }
-  </style>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 4: TOOLBAR / FILTROS                           -->
-  <!-- ===================================================== -->
-  <style>
-    .toolbar-main{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:30px;
-      background:white;
-      border:1px solid #e5e9e6;
-      border-radius:18px;
-      padding:18px 22px;
-      box-shadow:0 8px 18px rgba(0,0,0,0.05);
-      margin-bottom:14px;
-      flex-wrap: wrap;
-    }
-
-    .toolbar-main-left{
-      max-width:420px;
-    }
-
-    .toolbar-main-title{
-      margin:0;
-      font-size:22px;
-      font-weight:900;
-      color:var(--green);
-    }
-
-    .toolbar-main-subtitle{
-      margin:4px 0 0 0;
-      font-size:13px;
-      color:#7c878e;
-    }
-
-    .toolbar-main-right{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:26px;
-      flex-wrap: wrap;
-    }
-
-    .toolbar-group{
-      display:flex;
-      align-items:end;
-      gap:12px;
-      position:relative;
-      padding-top:12px;
-      flex-wrap: wrap;
-    }
-
-    .toolbar-group + .toolbar-group{
-      padding-left:26px;
-      border-left:1px solid #e5e9e6;
-    }
-
-    .toolbar-group-title{
-      position:absolute;
-      top:-8px;
-      font-size:11px;
-      font-weight:800;
-      color:#8b959c;
-      letter-spacing:0.8px;
-    }
-
-    .control-group{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-    }
-
-    .control-group label{
-      font-size:11px;
-      color:#7a858c;
-      font-weight:600;
-    }
-
-    .control-group input,
-    .control-group select{
-      height:38px;
-      padding:0 12px;
-      border-radius:10px;
-      border:1px solid #d9dfdc;
-      font-family:'Rubik',sans-serif;
-      min-width: 180px;
-      background: white;
-    }
-
-    .btn-secondary{
-      height:38px;
-      padding:0 16px;
-      border-radius:10px;
-      border:none;
-      font-weight:800;
-      font-family:'Rubik',sans-serif;
-      cursor:pointer;
-      background:linear-gradient(135deg,var(--orange),#ff7b36);
-      color:white;
-    }
-
-    @media (max-width: 950px) {
-      .toolbar-group + .toolbar-group {
-        border-left: none;
-        padding-left: 0;
-      }
-    }
-  </style>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 5: SECCION / TITULOS                           -->
-  <!-- ===================================================== -->
-  <style>
-    .section-block {
-      margin-bottom: 14px;
-    }
-
-    .section-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-    }
-
-    .section-title {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 900;
-      color: var(--green);
-    }
-
-    .section-subtitle {
-      margin: 4px 0 0 0;
-      font-size: 13px;
-      color: #7c878e;
-    }
-  </style>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 6: TARJETAS RESUMEN                            -->
-  <!-- ===================================================== -->
-  <style>
-    .summary-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 0;
-    }
-  
-    .summary-card {
-      background: #ffffff;
-      border: 1px solid #dfe5e1;
-      border-radius: 14px;
-      box-shadow: none;
-      padding: 10px 14px;
-      min-height: 68px;
+    .mini-gauge {
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      align-items: center;
+      gap: 4px;
     }
-  
-    .summary-label {
-      font-size: 10px;
-      color: #7e8a91;
-      font-weight: 800;
+    .mini-gauge-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 4px;
-      line-height: 1.1;
+      color: var(--text-faint);
+      text-align: center;
+      line-height: 1.2;
     }
-  
-    .summary-value {
-      margin-top: 0;
-      font-size: 20px;
-      font-weight: 900;
-      color: var(--green);
-      line-height: 1.05;
+    .mini-gauge-svg { display:block; overflow:visible; }
+    .mini-gauge-val {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      text-align: center;
+      line-height: 1;
     }
-  
-    .summary-sub {
-      margin-top: 4px;
-      font-size: 10px;
-      color: #8a949a;
-      line-height: 1.15;
-    }
-  
-    @media (max-width: 900px) {
-      .summary-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+    .mini-gauge-val span { font-size:9px; font-weight:500; color:var(--text-faint); }
 
-  <!-- ===================================================== -->
-  <!-- BLOQUE 7: GRID DE GRAFICAS                            -->
-  <!-- ===================================================== -->
-  <style>
-    .charts-grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
+    /* CHARTS */
+    .charts-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     .chart-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      box-shadow: var(--shadow-soft);
-      padding: 14px;
-      min-height: 360px;
-      display: flex;
-      flex-direction: column;
+      background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg);
+      padding:16px 18px; display:flex; flex-direction:column; gap:12px; box-shadow:var(--shadow-s);
     }
-
-    .chart-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 14px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
+    .chart-header { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; }
+    .chart-title { font-size:14px; font-weight:700; color:var(--text); }
+    .chart-subtitle { font-size:10px; color:var(--text-faint); margin-top:3px; }
+    .chart-select {
+      height:30px; padding:0 10px; background:var(--surface3); border:1px solid var(--border2);
+      border-radius:var(--r-sm); color:var(--text); font-family:var(--font); font-size:11px; font-weight:600;
+      outline:none; cursor:pointer;
     }
+    .chart-body { background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); padding:10px; }
+    .chart-canvas { width:100% !important; height:210px !important; }
 
-    .chart-title {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 900;
-      color: var(--green);
-      line-height: 1.1;
+    /* TABLA DINÁMICA */
+    .data-table-wrap { overflow-x:auto; }
+    .data-table { width:100%; border-collapse:collapse; font-size:11px; }
+    .data-table thead tr { border-bottom:1px solid var(--border2); }
+    .data-table thead th {
+      padding:6px 10px; font-size:9px; font-weight:700; letter-spacing:1.5px;
+      text-transform:uppercase; text-align:left; white-space:nowrap; color:var(--text-faint);
     }
+    .data-table tbody tr { border-bottom:1px solid rgba(255,255,255,0.03); transition:background 0.1s; }
+    .data-table tbody tr:hover { background:rgba(255,255,255,0.025); }
+    .data-table tbody td { padding:5px 10px; font-weight:500; color:var(--text-dim); white-space:nowrap; text-align:center; }
+    .data-table thead th { text-align:center; }
+    .data-table tbody tr.row-latest td { color:var(--text); font-weight:700; }
 
-    .chart-subtitle {
-      margin: 4px 0 0 0;
-      font-size: 12px;
-      color: #7a858c;
+    /* ERROR */
+    .error-bar { text-align:center; font-size:12px; font-weight:600; color:var(--red); padding:6px 0; }
+
+    /* SPINNER */
+    .spinner-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,0.6); display:none;
+      align-items:center; justify-content:center; z-index:9999; backdrop-filter:blur(4px);
     }
+    .spinner-box { background:var(--surface2); border:1px solid var(--border2); padding:28px 36px; border-radius:var(--r-lg); text-align:center; }
+    .spinner { width:36px; height:36px; border:3px solid var(--border2); border-top:3px solid var(--orange); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 12px; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .spinner-text { font-size:12px; font-weight:600; color:var(--text-dim); }
 
-    .chart-live-value {
-      font-size: 18px;
-      font-weight: 900;
-      color: var(--green);
-      line-height: 1.1;
-      text-align: right;
-    }
+    /* TOAST */
+    .toast { position:fixed; inset:0; background:rgba(0,0,0,0.55); display:none; align-items:center; justify-content:center; z-index:9999; backdrop-filter:blur(3px); }
+    .toast.show { display:flex; }
+    .toast-card { background:var(--surface2); border:1px solid var(--border2); border-radius:var(--r-lg); padding:24px 28px; max-width:340px; width:100%; text-align:center; animation:tpop 0.15s ease-out; }
+    .toast-card::before { content:''; display:block; width:32px; height:3px; background:var(--orange); margin:0 auto 14px; border-radius:99px; }
+    .toast-title { font-size:15px; font-weight:800; color:var(--text); margin-bottom:8px; }
+    .toast-message { font-size:12px; color:var(--text-dim); line-height:1.6; margin-bottom:16px; }
+    .toast-btn { height:36px; padding:0 20px; background:var(--orange); color:#fff; border:none; border-radius:var(--r-sm); font-family:var(--font); font-size:13px; font-weight:700; cursor:pointer; transition:background 0.15s; }
+    .toast-btn:hover { background:#ff7b36; }
+    @keyframes tpop { from{opacity:0;transform:scale(0.95) translateY(8px)} to{opacity:1;transform:scale(1) translateY(0)} }
 
-    .chart-live-sub {
-      margin-top: 2px;
-      font-size: 11px;
-      color: #7a858c;
-      font-weight: 500;
-      text-align: right;
-    }
-
-    .chart-wrap {
-      background: var(--soft-bg);
-      border: 1px solid var(--soft-border);
-      border-radius: 16px;
-      padding: 10px;
-      flex: 1;
-      min-height: 0;
-    }
-
-    .chart-canvas {
-      width: 100%;
-      height: 255px !important;
-    }
-
-    @media (max-width: 1100px) {
-      .charts-grid-2 {
-        grid-template-columns: 1fr;
-      }
-
-      .chart-card {
-        min-height: 330px;
-      }
-    }
+    /* RESPONSIVE */
+    @media (max-width:1100px) { .charts-grid { grid-template-columns:1fr; } }
+    @media (max-width:960px)  { .quality-layout { grid-template-columns:1fr; } }
+    @media (max-width:700px)  { .metrics-grid { grid-template-columns:1fr; } .gauges-row { grid-template-columns:1fr; } }
   </style>
+</head>
+<body>
+<div class="page">
 
-  <!-- ===================================================== -->
-  <!-- BLOQUE 7A: SELECTOR INTERNO DE TARJETAS               -->
-  <!-- ===================================================== -->
-  <style>
-    .chart-inline-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .chart-inline-select {
-      height: 34px;
-      padding: 0 10px;
-      border-radius: 10px;
-      border: 1px solid #d9dfdc;
-      font-family: 'Rubik', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--green);
-      background: white;
-      outline: none;
-    }
-  </style>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 8: BARRAS DE CALIDAD                           -->
-  <!-- ===================================================== -->
-    <style>
-      .quality-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-    
-      .quality-card {
-        background: #ffffff;
-        border: 1px solid #dfe5e1;
-        border-radius: 14px;
-        box-shadow: none;
-        padding: 10px 14px;
-      }
-    
-      .quality-title {
-        margin: 0 0 10px 0;
-        font-size: 14px;
-        font-weight: 900;
-        color: var(--green);
-        line-height: 1.1;
-      }
-    
-      .quality-item {
-        margin-bottom: 10px;
-      }
-    
-      .quality-item:last-child {
-        margin-bottom: 0;
-      }
-    
-      .quality-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        margin-bottom: 4px;
-        font-size: 11px;
-      }
-    
-      .quality-name {
-        font-weight: 700;
-        color: #4f5f67;
-        line-height: 1.1;
-      }
-    
-      .quality-value {
-        font-weight: 900;
-        color: var(--green);
-        white-space: nowrap;
-        line-height: 1.1;
-      }
-    
-      .quality-bar {
-        width: 100%;
-        height: 8px;
-        border-radius: 999px;
-        background: #e3e8e5;
-        overflow: hidden;
-        border: none;
-      }
-    
-      .quality-fill {
-        height: 100%;
-        border-radius: 999px;
-        width: 0%;
-        transition: width 0.3s ease;
-      }
-    
-      .fill-green { background: linear-gradient(135deg, #2bbd6e, #36c06d); }
-      .fill-orange { background: linear-gradient(135deg, #f39c12, #f5b041); }
-      .fill-red { background: linear-gradient(135deg, #d64541, #ef5a47); }
-    
-      .summary-panel-layout {
-        display: grid;
-        grid-template-columns: 1.05fr 1fr;
-        gap: 12px;
-        align-items: start;
-      }
-    
-      .summary-panel-left {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        min-width: 0;
-      }
-    
-      .summary-panel-right {
-        min-width: 0;
-      }
-    
-      .summary-panel-left .quality-card {
-        min-height: auto;
-      }
-    
-      @media (max-width: 1000px) {
-        .summary-panel-layout {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
-    <!-- =================================================== -->
-    <!-- BLOQUE 9: HERO / ENCABEZADO                         -->
-    <!-- =================================================== -->
-    <section class="hero">
-      <div class="hero-row">
-        <div>
-          <h1 class="hero-title">FM POWER ANALYZER</h1>
-          <div class="hero-subtitle">Monitoreo eléctrico en tiempo real y análisis de curvas.</div>
-          <div class="status-line">
-            <span class="status-dot"></span>
-            <span id="heroDeviceName">Gateway: --</span>
-            <span id="heroPmName">PM: --</span>
-            <span id="heroPmSlave">Slave: --</span>
-          </div>
-        </div>
-        <div class="hero-info">
-          <div class="hero-pill">
-            <div class="hero-pill-label">Gateway ID</div>
-            <div class="hero-pill-value" id="device">--</div>
-          </div>
-          <div class="hero-pill">
-            <div class="hero-pill-label">Fecha consultada</div>
-            <div class="hero-pill-value" id="selectedDateText">--</div>
-          </div>
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-brand">
+        <div class="hero-eyebrow">Monitoreo eléctrico industrial</div>
+        <h1 class="hero-title">FM <span>POWER</span> ANALYZER</h1>
+        <p class="hero-subtitle">Análisis de curvas y calidad de energía en tiempo real</p>
+        <div class="hero-status">
+          <span class="tag-live">En vivo</span>
+          <span class="hero-status-item">Gateway: <strong id="heroDeviceName">--</strong></span>
+          <span class="hero-status-item">PM: <strong id="heroPmName">--</strong></span>
+          <span class="hero-status-item">Slave: <strong id="heroPmSlave">--</strong></span>
         </div>
       </div>
-    </section>
-
-    <!-- =================================================== -->
-    <!-- BLOQUE 10: TOOLBAR / HISTORIAL / EXPORTACION        -->
-    <!-- =================================================== -->
-    <section class="toolbar-main">
-      <div class="toolbar-main-left">
-        <h2 class="toolbar-main-title">Historial y exportación</h2>
-        <p class="toolbar-main-subtitle">
-          Seleccione el PM a visualizar.
-        </p>
-      </div>
-
-      <div class="toolbar-main-right">
-        <div class="toolbar-group" style="position:relative">
-          <div class="toolbar-group-title">MEDIDOR</div>
-          <div class="control-group">
-            <label for="pmSelect">PM disponible</label>
-            <select id="pmSelect"></select>
-          </div>
+      <div class="hero-pills">
+        <div class="hero-pill">
+          <div class="hero-pill-label">Gateway ID</div>
+          <div class="hero-pill-value" id="device">--</div>
         </div>
-
-        <div class="toolbar-group" style="position:relative">
-          <div class="toolbar-group-title">CURVAS</div>
-          <div class="control-group">
-            <label for="dayDate">Fecha</label>
-            <input type="date" id="dayDate">
-          </div>
-        </div>
-
-        <div class="toolbar-group" style="position:relative">
-          <div class="toolbar-group-title">EXPORTACIÓN CSV</div>
-          <div class="control-group">
-            <label for="csvFrom">Desde</label>
-            <input type="date" id="csvFrom">
-          </div>
-          <div class="control-group">
-            <label for="csvTo">Hasta</label>
-            <input type="date" id="csvTo">
-          </div>
-          <div class="control-group">
-            <label>&nbsp;</label>
-            <button class="btn-secondary" onclick="descargarCSV()">Descargar CSV</button>
-          </div>
+        <div class="hero-pill">
+          <div class="hero-pill-label">Fecha consultada</div>
+          <div class="hero-pill-value" id="selectedDateText">--</div>
         </div>
       </div>
-    </section>
+    </div>
+  </header>
 
-    <!-- =================================================== -->
-    <!-- BLOQUE 11: RESUMEN + CALIDAD DE ENERGIA             -->
-    <!-- =================================================== -->
-    <section class="section-block">
-      <div class="section-head">
-        <div>
-          <h2 class="section-title">CALIDAD DE ENERGIA</h2>
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="toolbar-section">
+      <div class="toolbar-section-title">Medidor</div>
+      <div class="toolbar-row">
+        <div class="ctrl">
+          <label for="pmSelect">PM disponible</label>
+          <select id="pmSelect"></select>
         </div>
       </div>
-    
-      <div class="summary-panel-layout">
-    
-        <!-- COLUMNA IZQUIERDA -->
-        <div class="summary-panel-left">
-    
-          <div class="summary-grid">
-            <div class="summary-card">
-              <div class="summary-label">Potencia activa total</div>
-              <div class="summary-value" id="summaryPTot">--</div>
-              <div class="summary-sub">Valor instantáneo</div>
-            </div>
-    
-            <div class="summary-card">
-              <div class="summary-label">Factor de potencia total</div>
-              <div class="summary-value" id="summaryPfTot">--</div>
-              <div class="summary-sub">FP total</div>
-            </div>
-    
-            <div class="summary-card">
-              <div class="summary-label">Frecuencia</div>
-              <div class="summary-value" id="summaryFrequency">--</div>
-              <div class="summary-sub">Red</div>
-            </div>
-    
-            <div class="summary-card">
-              <div class="summary-label">Corriente de neutro</div>
-              <div class="summary-value" id="summaryCurrentN">--</div>
-              <div class="summary-sub">Corriente instantánea en neutro calculada</div>
-            </div>
-          </div>
-    
-          <div class="quality-card">
-            <h3 class="quality-title">Desbalance</h3>
-    
-            <div class="quality-item">
-              <div class="quality-row">
-                <span class="quality-name">Desbalance de voltaje</span>
-                <span class="quality-value" id="q_desbalance_v">--</span>
-              </div>
-              <div class="quality-bar">
-                <div id="bar_desbalance_v" class="quality-fill fill-green"></div>
-              </div>
-            </div>
-    
-            <div class="quality-item">
-              <div class="quality-row">
-                <span class="quality-name">Desbalance de corriente</span>
-                <span class="quality-value" id="q_desbalance_i">--</span>
-              </div>
-              <div class="quality-bar">
-                <div id="bar_desbalance_i" class="quality-fill fill-green"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-    
-        <!-- COLUMNA DERECHA -->
-        <div class="summary-panel-right">
-          <div class="quality-card">
-            <h3 class="quality-title">THD de voltaje y corriente</h3>
-    
-            <div class="quality-item">
-              <div class="quality-row">
-                <span class="quality-name">THD Voltaje A</span>
-                <span class="quality-value" id="q_thd_va">--</span>
-              </div>
-              <div class="quality-bar">
-                <div id="bar_thd_va" class="quality-fill fill-green"></div>
-              </div>
-            </div>
-    
-            <div class="quality-item">
-              <div class="quality-row">
-                <span class="quality-name">THD Voltaje B</span>
-                <span class="quality-value" id="q_thd_vb">--</span>
-              </div>
-              <div class="quality-bar">
-                <div id="bar_thd_vb" class="quality-fill fill-green"></div>
-              </div>
-            </div>
-    
-            <div class="quality-item">
-              <div class="quality-row">
-                <span class="quality-name">THD Voltaje C</span>
-                <span class="quality-value" id="q_thd_vc">--</span>
-              </div>
-              <div class="quality-bar">
-                <div id="bar_thd_vc" class="quality-fill fill-green"></div>
-              </div>
-            </div>
-    
-            <div class="quality-item">
-              <div class="quality-row">
-                <span class="quality-name">THD Corriente A</span>
-                <span class="quality-value" id="q_thd_ia">--</span>
-              </div>
-              <div class="quality-bar">
-                <div id="bar_thd_ia" class="quality-fill fill-green"></div>
-              </div>
-            </div>
-    
-            <div class="quality-item">
-              <div class="quality-row">
-                <span class="quality-name">THD Corriente B</span>
-                <span class="quality-value" id="q_thd_ib">--</span>
-              </div>
-              <div class="quality-bar">
-                <div id="bar_thd_ib" class="quality-fill fill-green"></div>
-              </div>
-            </div>
-    
-            <div class="quality-item">
-              <div class="quality-row">
-                <span class="quality-name">THD Corriente C</span>
-                <span class="quality-value" id="q_thd_ic">--</span>
-              </div>
-              <div class="quality-bar">
-                <div id="bar_thd_ic" class="quality-fill fill-green"></div>
-              </div>
-            </div>
-    
-            <div class="quality-item">
-              <div class="quality-row">
-                <span class="quality-name">THD Corriente N</span>
-                <span class="quality-value" id="q_thd_in">--</span>
-              </div>
-              <div class="quality-bar">
-                <div id="bar_thd_in" class="quality-fill fill-green"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-    
-      </div>
-    </section>
-  
-    <!-- =================================================== -->
-    <!-- BLOQUE 12: CURVAS ELECTRICAS                        -->
-    <!-- =================================================== -->
-    <section class="section-block">
-      <div class="section-head">
-        <div>
-          <h2 class="section-title">CURVAS HISTORICAS</h2>
-          <p class="section-subtitle">Comportamiento temporal.</p>
+    </div>
+    <div class="toolbar-section">
+      <div class="toolbar-section-title">Curvas históricas</div>
+      <div class="toolbar-row">
+        <div class="ctrl">
+          <label for="dayDate">Fecha</label>
+          <input type="date" id="dayDate">
         </div>
       </div>
-
-      <div class="charts-grid-2">
-        <div class="chart-card">
-          <div class="chart-top">
-            <div>
-              <h3 class="chart-title">Voltajes por fase</h3>
-              <p class="chart-subtitle">Curvas temporales de V A, V B y V C.</p>
-            </div>
-            <div>
-              <div class="chart-live-value" id="liveVoltages">--</div>
-              <div class="chart-live-sub">A | B | C</div>
-            </div>
-          </div>
-          <div class="chart-wrap">
-            <canvas id="chartVoltages" class="chart-canvas"></canvas>
-          </div>
+    </div>
+    <div class="toolbar-section">
+      <div class="toolbar-section-title">Exportación CSV</div>
+      <div class="toolbar-row">
+        <div class="ctrl">
+          <label for="csvFrom">Desde</label>
+          <input type="date" id="csvFrom">
         </div>
-
-        <div class="chart-card">
-          <div class="chart-top">
-            <div>
-              <h3 class="chart-title">Corrientes por fase</h3>
-              <p class="chart-subtitle">Curvas temporales de I A, I B, I C y I N.</p>
-            </div>
-            <div>
-              <div class="chart-live-value" id="liveCurrents">--</div>
-              <div class="chart-live-sub">A | B | C | N</div>
-            </div>
-          </div>
-          <div class="chart-wrap">
-            <canvas id="chartCurrents" class="chart-canvas"></canvas>
-          </div>
+        <div class="ctrl">
+          <label for="csvTo">Hasta</label>
+          <input type="date" id="csvTo">
         </div>
-
-        <div class="chart-card">
-          <div class="chart-top">
-            <div>
-              <h3 class="chart-title">Potencias totales</h3>
-              <p class="chart-subtitle">Curvas de potencia activa, reactiva y aparente total.</p>
-            </div>
-            <div>
-              <div class="chart-live-value" id="livePowers">--</div>
-              <div class="chart-live-sub">P | Q | S</div>
-            </div>
-          </div>
-          <div class="chart-wrap">
-            <canvas id="chartPowers" class="chart-canvas"></canvas>
-          </div>
-        </div>
-
-        <div class="chart-card">
-          <div class="chart-top">
-            <div>
-              <h3 class="chart-title">Potencia por fase</h3>
-              <p class="chart-subtitle">Curvas de potencia activa, reactiva y aparente por fase.</p>
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
-              <div class="chart-inline-controls">
-                <select id="phasePowerMode" class="chart-inline-select">
-                  <option value="activa">Activa</option>
-                  <option value="reactiva">Reactiva</option>
-                  <option value="aparente">Aparente</option>
-                </select>
-              </div>
-              <div>
-                <div class="chart-live-value" id="livePhasePowers">--</div>
-                <div class="chart-live-sub" id="livePhasePowersSub">PA | PB | PC</div>
-              </div>
-            </div>
-          </div>
-          <div class="chart-wrap">
-            <canvas id="chartPhasePowers" class="chart-canvas"></canvas>
-          </div>
-        </div>
-
-        <div class="chart-card">
-          <div class="chart-top">
-            <div>
-              <h3 class="chart-title">Factor de potencia</h3>
-              <p class="chart-subtitle">Curvas de FP.</p>
-            </div>
-            <div>
-              <div class="chart-live-value" id="livePf">--</div>
-              <div class="chart-live-sub">FPA | FPB | FPC | FPTotal</div>
-            </div>
-          </div>
-          <div class="chart-wrap">
-            <canvas id="chartPf" class="chart-canvas"></canvas>
-          </div>
-        </div>
-
-        <div class="chart-card">
-          <div class="chart-top">
-            <div>
-              <h3 class="chart-title">Frecuencia</h3>
-              <p class="chart-subtitle">Curva de frecuencia de la red.</p>
-            </div>
-            <div>
-              <div class="chart-live-value" id="liveFrequency">--</div>
-              <div class="chart-live-sub">Hz instantáneo</div>
-            </div>
-          </div>
-          <div class="chart-wrap">
-            <canvas id="chartFrequency" class="chart-canvas"></canvas>
-          </div>
+        <div class="ctrl">
+          <label>&nbsp;</label>
+          <button class="btn-primary" onclick="descargarCSV()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Descargar CSV
+          </button>
         </div>
       </div>
-    </section>
-
-    <!-- =================================================== -->
-    <!-- BLOQUE 14: MENSAJE DE ERROR                         -->
-    <!-- =================================================== -->
-    <div class="error" id="error"></div>
-  </div>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 15: OVERLAY DE DESCARGA                        -->
-  <!-- ===================================================== -->
-  <div class="spinner-overlay" id="downloadSpinner">
-    <div class="spinner-box">
-      <div class="spinner"></div>
-      <div class="spinner-text">Generando archivo CSV...</div>
     </div>
   </div>
 
-  <!-- ===================================================== -->
-  <!-- BLOQUE 16: TOAST                                      -->
-  <!-- ===================================================== -->
-  <div class="toast" id="toast">
-    <div class="toast-card">
-      <div class="toast-title">Aviso</div>
-      <div class="toast-message" id="toastMessage">No hay datos para graficar en la fecha seleccionada</div>
-      <button class="toast-btn" onclick="cerrarToast()">Entendido</button>
+  <!-- CALIDAD DE ENERGÍA -->
+  <section>
+    <div class="section-head">
+      <div class="section-head-bar"></div>
+      <div>
+        <h2>Calidad de energía</h2>
+        <p>Parámetros instantáneos y métricas de calidad de red</p>
+      </div>
     </div>
-  </div>
 
-  <!-- ===================================================== -->
-  <!-- BLOQUE 17: VARIABLES GLOBALES Y UTILIDADES           -->
-  <!-- ===================================================== -->
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const device = params.get("device") || "FMPAN-0001";
-    const API_BASE = "https://fm-power-analyzer-server.onrender.com";
-  
-    let chartVoltages = null;
-    let chartCurrents = null;
-    let chartPowers = null;
-    let chartPhasePowers = null;
-    let chartPf = null;
-    let chartFrequency = null;
-  
-    let phasePowerMode = "activa";
-  
-    let meters = [];
-    let currentMeter = null;
-  
-    let ultimoTimestampHistorico = null;
-    let ultimoTimestampLive = null;
-    let ultimaHoraVisible = null;
-    let fechaHistoricaActual = null;
-    let pmHistoricoActual = null;
-    let pollingTiempoRealEnCurso = false;
-  
-    function hoyTexto() {
-      const ahora = new Date();
-      const y = ahora.getFullYear();
-      const m = String(ahora.getMonth() + 1).padStart(2, "0");
-      const d = String(ahora.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
+    <div class="quality-layout">
+      <div class="quality-left">
+        <!-- Métricas -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label">Potencia activa total</div>
+            <div class="metric-value" id="summaryPTot">--</div>
+            <div class="metric-sub">Valor instantáneo</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Factor de potencia total</div>
+            <div class="metric-value" id="summaryPfTot">--</div>
+            <div class="metric-sub">FP total</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Frecuencia de red</div>
+            <div class="metric-value" id="summaryFrequency">--</div>
+            <div class="metric-sub">Red</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Corriente de neutro</div>
+            <div class="metric-value" id="summaryCurrentN">--</div>
+            <div class="metric-sub">Corriente instantánea calculada</div>
+          </div>
+        </div>
+
+        <!-- Gauges de desbalance -->
+        <div class="gauges-row">
+          <!-- Voltaje -->
+          <div class="gauge-card">
+            <div class="gauge-title">Desbalance de voltaje</div>
+            <div class="gauge-svg-wrap">
+              <svg viewBox="0 0 130 74" width="130" height="74" style="overflow:visible">
+                <!-- Pista fondo -->
+                <path d="M12,68 A53,53 0 0,1 118,68" fill="none" stroke="#1c2227" stroke-width="10" stroke-linecap="round"/>
+                <!-- Zonas de color (fondo decorativo) -->
+                <path d="M12,68 A53,53 0 0,1 118,68" fill="none" stroke="url(#gradV)" stroke-width="10" stroke-linecap="round" opacity="0.15"/>
+                <!-- Relleno activo -->
+                <path id="gaugeFillV" d="M12,68 A53,53 0 0,1 118,68" fill="none" stroke="#16a085" stroke-width="10" stroke-linecap="round"
+                  stroke-dasharray="166" stroke-dashoffset="166"
+                  style="transition:stroke-dashoffset 0.7s ease, stroke 0.4s;"/>
+                <!-- Aguja -->
+                <line id="gaugeNeedleV" x1="65" y1="68" x2="65" y2="24"
+                  stroke="#EC631F" stroke-width="2.5" stroke-linecap="round"
+                  style="transform-origin:65px 68px; transform:rotate(-90deg); transition:transform 0.7s ease;"/>
+                <circle cx="65" cy="68" r="5" fill="#EC631F"/>
+                <circle cx="65" cy="68" r="2.5" fill="#0b0e10"/>
+                <!-- Marcas -->
+                <text x="9"   y="80" fill="#3e4d55" font-size="7.5" font-family="Rubik" text-anchor="middle" font-weight="600">0%</text>
+                <text x="65"  y="14" fill="#3e4d55" font-size="7.5" font-family="Rubik" text-anchor="middle" font-weight="600">5%</text>
+                <text x="121" y="80" fill="#3e4d55" font-size="7.5" font-family="Rubik" text-anchor="middle" font-weight="600">10%</text>
+                <defs>
+                  <linearGradient id="gradV" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%"   stop-color="#16a085"/>
+                    <stop offset="40%"  stop-color="#f39c12"/>
+                    <stop offset="100%" stop-color="#D64541"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <div class="gauge-val" id="gaugeValV">--<span> %</span></div>
+            <div class="gauge-range">Límite recomendado ≤ 2 %</div>
+          </div>
+
+          <!-- Corriente -->
+          <div class="gauge-card">
+            <div class="gauge-title">Desbalance de corriente</div>
+            <div class="gauge-svg-wrap">
+              <svg viewBox="0 0 130 74" width="130" height="74" style="overflow:visible">
+                <path d="M12,68 A53,53 0 0,1 118,68" fill="none" stroke="#1c2227" stroke-width="10" stroke-linecap="round"/>
+                <path d="M12,68 A53,53 0 0,1 118,68" fill="none" stroke="url(#gradI)" stroke-width="10" stroke-linecap="round" opacity="0.15"/>
+                <path id="gaugeFillI" d="M12,68 A53,53 0 0,1 118,68" fill="none" stroke="#16a085" stroke-width="10" stroke-linecap="round"
+                  stroke-dasharray="166" stroke-dashoffset="166"
+                  style="transition:stroke-dashoffset 0.7s ease, stroke 0.4s;"/>
+                <line id="gaugeNeedleI" x1="65" y1="68" x2="65" y2="24"
+                  stroke="#EC631F" stroke-width="2.5" stroke-linecap="round"
+                  style="transform-origin:65px 68px; transform:rotate(-90deg); transition:transform 0.7s ease;"/>
+                <circle cx="65" cy="68" r="5" fill="#EC631F"/>
+                <circle cx="65" cy="68" r="2.5" fill="#0b0e10"/>
+                <text x="9"   y="80" fill="#3e4d55" font-size="7.5" font-family="Rubik" text-anchor="middle" font-weight="600">0%</text>
+                <text x="65"  y="14" fill="#3e4d55" font-size="7.5" font-family="Rubik" text-anchor="middle" font-weight="600">10%</text>
+                <text x="121" y="80" fill="#3e4d55" font-size="7.5" font-family="Rubik" text-anchor="middle" font-weight="600">20%</text>
+                <defs>
+                  <linearGradient id="gradI" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%"   stop-color="#16a085"/>
+                    <stop offset="40%"  stop-color="#f39c12"/>
+                    <stop offset="100%" stop-color="#D64541"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <div class="gauge-val" id="gaugeValI">--<span> %</span></div>
+            <div class="gauge-range">Límite recomendado ≤ 5 %</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- THD — mini-gauges -->
+      <div class="quality-card">
+        <div class="quality-card-title">THD — Voltaje y corriente</div>
+        <div class="thd-gauges-grid">
+
+          <!-- THD V A -->
+          <div class="mini-gauge">
+            <div class="mini-gauge-label">THD Voltaje A</div>
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="100" height="58">
+              <defs><linearGradient id="gTHD1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
+              <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
+              <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD1)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
+              <path id="mgFill_thd_va" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="129" stroke-dashoffset="129" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
+              <line id="mgNeedle_thd_va" x1="50" y1="54" x2="50" y2="18" stroke="#EC631F" stroke-width="2.5" stroke-linecap="round" style="transform-origin:50px 54px;transform:rotate(-90deg);transition:transform 0.6s ease;"/>
+              <circle cx="50" cy="54" r="4.5" fill="#EC631F"/><circle cx="50" cy="54" r="2.2" fill="#0b0e10"/>
+              <text x="6"  y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">0</text>
+              <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
+            </svg>
+            <div class="mini-gauge-val" id="q_thd_va">--<span> %</span></div>
+          </div>
+
+          <!-- THD V B -->
+          <div class="mini-gauge">
+            <div class="mini-gauge-label">THD Voltaje B</div>
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="100" height="58">
+              <defs><linearGradient id="gTHD2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
+              <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
+              <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD2)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
+              <path id="mgFill_thd_vb" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="129" stroke-dashoffset="129" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
+              <line id="mgNeedle_thd_vb" x1="50" y1="54" x2="50" y2="18" stroke="#EC631F" stroke-width="2.5" stroke-linecap="round" style="transform-origin:50px 54px;transform:rotate(-90deg);transition:transform 0.6s ease;"/>
+              <circle cx="50" cy="54" r="4.5" fill="#EC631F"/><circle cx="50" cy="54" r="2.2" fill="#0b0e10"/>
+              <text x="6"  y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">0</text>
+              <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
+            </svg>
+            <div class="mini-gauge-val" id="q_thd_vb">--<span> %</span></div>
+          </div>
+
+          <!-- THD V C -->
+          <div class="mini-gauge">
+            <div class="mini-gauge-label">THD Voltaje C</div>
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="100" height="58">
+              <defs><linearGradient id="gTHD3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
+              <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
+              <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD3)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
+              <path id="mgFill_thd_vc" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="129" stroke-dashoffset="129" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
+              <line id="mgNeedle_thd_vc" x1="50" y1="54" x2="50" y2="18" stroke="#EC631F" stroke-width="2.5" stroke-linecap="round" style="transform-origin:50px 54px;transform:rotate(-90deg);transition:transform 0.6s ease;"/>
+              <circle cx="50" cy="54" r="4.5" fill="#EC631F"/><circle cx="50" cy="54" r="2.2" fill="#0b0e10"/>
+              <text x="6"  y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">0</text>
+              <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
+            </svg>
+            <div class="mini-gauge-val" id="q_thd_vc">--<span> %</span></div>
+          </div>
+
+          <!-- THD I A -->
+          <div class="mini-gauge">
+            <div class="mini-gauge-label">THD Corriente A</div>
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="100" height="58">
+              <defs><linearGradient id="gTHD4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
+              <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
+              <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD4)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
+              <path id="mgFill_thd_ia" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="129" stroke-dashoffset="129" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
+              <line id="mgNeedle_thd_ia" x1="50" y1="54" x2="50" y2="18" stroke="#EC631F" stroke-width="2.5" stroke-linecap="round" style="transform-origin:50px 54px;transform:rotate(-90deg);transition:transform 0.6s ease;"/>
+              <circle cx="50" cy="54" r="4.5" fill="#EC631F"/><circle cx="50" cy="54" r="2.2" fill="#0b0e10"/>
+              <text x="6"  y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">0</text>
+              <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
+            </svg>
+            <div class="mini-gauge-val" id="q_thd_ia">--<span> %</span></div>
+          </div>
+
+          <!-- THD I B -->
+          <div class="mini-gauge">
+            <div class="mini-gauge-label">THD Corriente B</div>
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="100" height="58">
+              <defs><linearGradient id="gTHD5" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
+              <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
+              <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD5)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
+              <path id="mgFill_thd_ib" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="129" stroke-dashoffset="129" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
+              <line id="mgNeedle_thd_ib" x1="50" y1="54" x2="50" y2="18" stroke="#EC631F" stroke-width="2.5" stroke-linecap="round" style="transform-origin:50px 54px;transform:rotate(-90deg);transition:transform 0.6s ease;"/>
+              <circle cx="50" cy="54" r="4.5" fill="#EC631F"/><circle cx="50" cy="54" r="2.2" fill="#0b0e10"/>
+              <text x="6"  y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">0</text>
+              <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
+            </svg>
+            <div class="mini-gauge-val" id="q_thd_ib">--<span> %</span></div>
+          </div>
+
+          <!-- THD I C -->
+          <div class="mini-gauge">
+            <div class="mini-gauge-label">THD Corriente C</div>
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="100" height="58">
+              <defs><linearGradient id="gTHD6" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
+              <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
+              <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD6)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
+              <path id="mgFill_thd_ic" d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#16a085" stroke-width="8" stroke-linecap="round" stroke-dasharray="129" stroke-dashoffset="129" style="transition:stroke-dashoffset 0.6s ease,stroke 0.3s;"/>
+              <line id="mgNeedle_thd_ic" x1="50" y1="54" x2="50" y2="18" stroke="#EC631F" stroke-width="2.5" stroke-linecap="round" style="transform-origin:50px 54px;transform:rotate(-90deg);transition:transform 0.6s ease;"/>
+              <circle cx="50" cy="54" r="4.5" fill="#EC631F"/><circle cx="50" cy="54" r="2.2" fill="#0b0e10"/>
+              <text x="6"  y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">0</text>
+              <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
+            </svg>
+            <div class="mini-gauge-val" id="q_thd_ic">--<span> %</span></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CURVAS HISTÓRICAS -->
+  <section>
+    <div class="section-head">
+      <div class="section-head-bar"></div>
+      <div>
+        <h2>Curvas históricas</h2>
+        <p>Comportamiento temporal de las variables eléctricas</p>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+
+      <!-- Voltajes -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div><div class="chart-title">Voltajes por fase</div><div class="chart-subtitle">V A · V B · V C</div></div>
+        </div>
+        <div class="chart-body"><canvas id="chartVoltages" class="chart-canvas"></canvas></div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr><th style="color:#EC631F">V A</th><th style="color:#2D9CDB">V B</th><th style="color:#16a085">V C</th></tr></thead>
+            <tbody id="tbodyVoltages"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Corrientes -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div><div class="chart-title">Corrientes por fase</div><div class="chart-subtitle">I A · I B · I C · I N</div></div>
+        </div>
+        <div class="chart-body"><canvas id="chartCurrents" class="chart-canvas"></canvas></div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr><th style="color:#EC631F">I A</th><th style="color:#2D9CDB">I B</th><th style="color:#7B61FF">I C</th><th style="color:#D64541">I N</th></tr></thead>
+            <tbody id="tbodyCurrents"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Potencias totales -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div><div class="chart-title">Potencias totales</div><div class="chart-subtitle" id="subtitlePowers">Activa · Reactiva · Aparente</div></div>
+          <select id="totalPowerMode" class="chart-select">
+            <option value="activa">Activa (kW)</option>
+            <option value="reactiva">Reactiva (kVAR)</option>
+            <option value="aparente">Aparente (kVA)</option>
+          </select>
+        </div>
+        <div class="chart-body"><canvas id="chartPowers" class="chart-canvas"></canvas></div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead id="theadPowers"><tr><th style="color:#EC631F">P (kW)</th><th style="color:#2D9CDB">Q (kVAR)</th><th style="color:#7B61FF">S (kVA)</th></tr></thead>
+            <tbody id="tbodyPowers"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Potencia por fase -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div><div class="chart-title">Potencia por fase</div><div class="chart-subtitle">Seleccione el tipo de potencia</div></div>
+          <select id="phasePowerMode" class="chart-select">
+            <option value="activa">Activa</option>
+            <option value="reactiva">Reactiva</option>
+            <option value="aparente">Aparente</option>
+          </select>
+        </div>
+        <div class="chart-body"><canvas id="chartPhasePowers" class="chart-canvas"></canvas></div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr><th id="thPpA" style="color:#EC631F">P A</th><th id="thPpB" style="color:#2D9CDB">P B</th><th id="thPpC" style="color:#16a085">P C</th></tr></thead>
+            <tbody id="tbodyPhasePowers"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Factor de potencia -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div><div class="chart-title">Factor de potencia</div><div class="chart-subtitle">FP A · FP B · FP C · FP Total</div></div>
+        </div>
+        <div class="chart-body"><canvas id="chartPf" class="chart-canvas"></canvas></div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr><th style="color:#EC631F">FP A</th><th style="color:#2D9CDB">FP B</th><th style="color:#16a085">FP C</th><th style="color:#7B61FF">FP Tot</th></tr></thead>
+            <tbody id="tbodyPf"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Frecuencia -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div><div class="chart-title">Frecuencia de red</div><div class="chart-subtitle">Hz — curva continua</div></div>
+        </div>
+        <div class="chart-body"><canvas id="chartFrequency" class="chart-canvas"></canvas></div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr><th style="color:#2D9CDB">Hz</th></tr></thead>
+            <tbody id="tbodyFrequency"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="error-bar" id="error"></div>
+</div>
+
+<!-- Spinner -->
+<div class="spinner-overlay" id="downloadSpinner">
+  <div class="spinner-box">
+    <div class="spinner"></div>
+    <div class="spinner-text">Generando archivo CSV…</div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="toast-card">
+    <div class="toast-title">Aviso</div>
+    <div class="toast-message" id="toastMessage">No hay datos para graficar en la fecha seleccionada</div>
+    <button class="toast-btn" onclick="cerrarToast()">Entendido</button>
+  </div>
+</div>
+
+<script>
+  const params   = new URLSearchParams(window.location.search);
+  const device   = params.get("device") || "FMPAN-0001";
+  const API_BASE = "https://fm-power-analyzer-server.onrender.com";
+
+  let chartVoltages=null, chartCurrents=null, chartPowers=null;
+  let chartPhasePowers=null, chartPf=null, chartFrequency=null;
+  let phasePowerMode="activa", totalPowerMode="activa", meters=[], currentMeter=null;
+  let ultimoTimestampHistorico=null, ultimoTimestampLive=null;
+  let ultimaHoraVisible=null, fechaHistoricaActual=null, pmHistoricoActual=null;
+  let pollingTiempoRealEnCurso=false;
+
+  /* Utilidades */
+  function hoyTexto() {
+    const a=new Date();
+    return `${a.getFullYear()}-${String(a.getMonth()+1).padStart(2,'0')}-${String(a.getDate()).padStart(2,'0')}`;
+  }
+  function formatearHoraReal(iso) {
+    if (!iso) return "--";
+    const f=new Date(iso); if (isNaN(f.getTime())) return "--";
+    return f.toLocaleTimeString("es-EC",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+  }
+  function formatearFechaCorta(iso) { return new Date(iso+"T00:00:00").toLocaleDateString("es-EC"); }
+  function mostrarToast(msg) { document.getElementById("toastMessage").innerText=msg; document.getElementById("toast").classList.add("show"); }
+  function cerrarToast() { document.getElementById("toast").classList.remove("show"); }
+  function valorSeguro(...vals) { for (const v of vals) if (v!==undefined&&v!==null&&v!=="") return v; return null; }
+  function numeroSeguro(...vals) { const v=valorSeguro(...vals); if(v===null) return null; const n=Number(v); return Number.isFinite(n)?n:null; }
+  function textoValor(v,sufijo="",dec=3) { if(v===null||v===undefined||v==="") return "--"; const n=Number(v); return Number.isFinite(n)?`${n.toFixed(dec)}${sufijo}`:"--"; }
+  function getCurrentPmSlave() { return currentMeter?Number(currentMeter.pm_slave):null; }
+  function corregirPfFase(v) { if(v===null||v===undefined||v==="") return null; const n=Number(v); return Number.isFinite(n)?2-n:null; }
+  function actualizarEncabezadoMeter() {
+    document.getElementById("device").innerText         = currentMeter?.device_id||device;
+    document.getElementById("heroDeviceName").innerText = currentMeter?.device_name||currentMeter?.device_id||"--";
+    document.getElementById("heroPmName").innerText     = currentMeter?.pm_name||"--";
+    document.getElementById("heroPmSlave").innerText    = currentMeter?.pm_slave??"--";
+  }
+  function crearFilaInicioDia(f) {
+    const iso=`${f}T00:00:00`;
+    return {visible_at:iso,created_at:iso,timestamp_ms:null,
+      voltage_a:null,voltage_b:null,voltage_c:null,current_a:null,current_b:null,current_c:null,current_n:null,
+      p_a:null,p_b:null,p_c:null,p_tot:null,q_a:null,q_b:null,q_c:null,q_tot:null,
+      s_a:null,s_b:null,s_c:null,s_tot:null,pf_a:null,pf_b:null,pf_c:null,pf_tot:null,
+      frecuencia:null,thd_va:null,thd_vb:null,thd_vc:null,thd_ia:null,thd_ib:null,thd_ic:null,thd_in:null,
+      desbalance_v:null,desbalance_i:null,raw_payload:null};
+  }
+
+  /* Gauges SVG — arco total ≈ 166px para r=53 */
+  function actualizarGauge(fillId, needleId, valId, value, maxVal) {
+    const fill=document.getElementById(fillId);
+    const needle=document.getElementById(needleId);
+    const valEl=document.getElementById(valId);
+    if (!fill||!needle||!valEl) return;
+    if (value===null||!Number.isFinite(Number(value))) {
+      fill.style.strokeDashoffset="166"; needle.style.transform="rotate(-90deg)";
+      valEl.childNodes[0].textContent="--"; fill.style.stroke="#16a085"; return;
     }
-  
-    function formatearHoraReal(fechaIso) {
-      if (!fechaIso) return "--";
-      const f = new Date(fechaIso);
-      if (isNaN(f.getTime())) return "--";
-      return f.toLocaleTimeString("es-EC", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit"
+    const n=Number(value);
+    const pct=Math.max(0,Math.min(n/maxVal,1));
+    fill.style.strokeDashoffset=(166-pct*166).toFixed(1);
+    needle.style.transform=`rotate(${(-90+pct*180).toFixed(1)}deg)`;
+    valEl.childNodes[0].textContent=n.toFixed(3);
+    const isV=fillId.includes("FillV");
+    fill.style.stroke = isV
+      ? (n>=5?"#D64541":n>=2?"#f39c12":"#16a085")
+      : (n>=10?"#D64541":n>=5?"#f39c12":"#16a085");
+  }
+
+  /* Mini-gauges THD — arco total 129px (r=41, 180°) */
+  function setMiniGauge(key, value) {
+    const fill   = document.getElementById("mgFill_"   + key);
+    const needle = document.getElementById("mgNeedle_" + key);
+    const valEl  = document.getElementById("q_" + key);
+    if (!fill||!needle||!valEl) return;
+    if (value===null||!Number.isFinite(Number(value))) {
+      fill.style.strokeDashoffset="129"; needle.style.transform="rotate(-90deg)";
+      valEl.childNodes[0].textContent="--"; fill.style.stroke="#16a085"; return;
+    }
+    const n=Number(value);
+    const pct=Math.max(0,Math.min(n/100,1));
+    fill.style.strokeDashoffset=(129-pct*129).toFixed(1);
+    needle.style.transform=`rotate(${(-90+pct*180).toFixed(1)}deg)`;
+    valEl.childNodes[0].textContent=n.toFixed(1);
+    fill.style.stroke = n>=8?"#D64541":n>=5?"#f39c12":"#16a085";
+  }
+
+  /* Tablas dinámicas — sin columna hora */
+  const TABLE_ROWS=5;
+  function renderTabla(tbodyId, columns) {
+    const tbody=document.getElementById(tbodyId); if(!tbody) return;
+    if(!columns||columns.length===0) return;
+    const total=columns[0].length; const desde=Math.max(0,total-TABLE_ROWS);
+    tbody.innerHTML="";
+    for (let i=desde;i<total;i++) {
+      const tr=document.createElement("tr");
+      if (i===total-1) tr.classList.add("row-latest");
+      let html="";
+      for (const col of columns) { const v=col[i]; html+=`<td>${v!==null&&Number.isFinite(v)?v.toFixed(3):"--"}</td>`; }
+      tr.innerHTML=html; tbody.appendChild(tr);
+    }
+  }
+  function actualizarTodasLasTablas(labels,rows) {
+    renderTabla("tbodyVoltages",[
+      rows.map(r=>numeroSeguro(r.voltage_a,r.voltage_an)),
+      rows.map(r=>numeroSeguro(r.voltage_b)),
+      rows.map(r=>numeroSeguro(r.voltage_c))]);
+    renderTabla("tbodyCurrents",[
+      rows.map(r=>numeroSeguro(r.current_a)),
+      rows.map(r=>numeroSeguro(r.current_b)),
+      rows.map(r=>numeroSeguro(r.current_c)),
+      rows.map(r=>numeroSeguro(r.current_n))]);
+    actualizarTablaPotenciasTotales(rows);
+    const cfg=getPhasePowerConfig();
+    document.getElementById("thPpA").textContent=cfg.labelA;
+    document.getElementById("thPpB").textContent=cfg.labelB;
+    document.getElementById("thPpC").textContent=cfg.labelC;
+    renderTabla("tbodyPhasePowers",[
+      rows.map(r=>numeroSeguro(r[cfg.keyA])),
+      rows.map(r=>numeroSeguro(r[cfg.keyB])),
+      rows.map(r=>numeroSeguro(r[cfg.keyC]))]);
+    renderTabla("tbodyPf",[
+      rows.map(r=>corregirPfFase(numeroSeguro(r.pf_a))),
+      rows.map(r=>corregirPfFase(numeroSeguro(r.pf_b))),
+      rows.map(r=>corregirPfFase(numeroSeguro(r.pf_c))),
+      rows.map(r=>numeroSeguro(r.pf_tot))]);
+    renderTabla("tbodyFrequency",[rows.map(r=>numeroSeguro(r.frecuencia,r.frequency))]);
+  }
+  function limpiarTablas() {
+    ["tbodyVoltages","tbodyCurrents","tbodyPowers","tbodyPhasePowers","tbodyPf","tbodyFrequency"]
+      .forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML="";});
+  }
+
+  /* Medidores */
+  async function cargarMedidores() {
+    try {
+      const res=await fetch(`${API_BASE}/api/meters/${encodeURIComponent(device)}?t=${Date.now()}`,{cache:"no-store"});
+      const json=await res.json();
+      if (!json||json.ok!==true||!Array.isArray(json.data)||json.data.length===0) {
+        document.getElementById("error").innerText="No se encontraron medidores para este gateway"; return false;
+      }
+      meters=json.data.slice().sort((a,b)=>Number(a.pm_slave)-Number(b.pm_slave));
+      const sel=document.getElementById("pmSelect"); sel.innerHTML="";
+      meters.forEach((m,i)=>{
+        const o=document.createElement("option"); o.value=String(m.pm_slave);
+        o.textContent=`${m.pm_name||"PM sin nombre"} (Slave ${m.pm_slave})`;
+        if(i===0)o.selected=true; sel.appendChild(o);
       });
+      const pmFromUrl=params.get("pm_slave");
+      const firstSlave=pmFromUrl?Number(pmFromUrl):Number(meters[0].pm_slave);
+      const meterIni=meters.find(m=>Number(m.pm_slave)===firstSlave)||meters[0];
+      sel.value=String(meterIni.pm_slave); currentMeter=meterIni; actualizarEncabezadoMeter();
+      document.getElementById("error").innerText=""; return true;
+    } catch(e) { document.getElementById("error").innerText="Error consultando los medidores del gateway"; return false; }
+  }
+  function actualizarMeterSeleccionadoDesdeSelect() {
+    const slave=Number(document.getElementById("pmSelect").value);
+    const found=meters.find(m=>Number(m.pm_slave)===slave);
+    if(found){currentMeter=found;actualizarEncabezadoMeter();}
+  }
+
+  /* CSV */
+  function descargarCSV() {
+    const from=document.getElementById("csvFrom").value, to=document.getElementById("csvTo").value;
+    const pm_slave=getCurrentPmSlave();
+    if(!pm_slave){mostrarToast("Seleccione un PM antes de descargar");return;}
+    if(!from||!to){mostrarToast("Seleccione el rango de fechas para descargar el CSV");return;}
+    const url=`${API_BASE}/api/history/export?device_id=${encodeURIComponent(device)}&pm_slave=${encodeURIComponent(pm_slave)}&from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
+    document.getElementById("downloadSpinner").style.display="flex";
+    setTimeout(()=>{window.location.href=url;},500);
+    setTimeout(()=>{document.getElementById("downloadSpinner").style.display="none";},4000);
+  }
+
+  /* Tiempo real */
+  async function actualizarTiempoReal() {
+    try {
+      const pm_slave=getCurrentPmSlave(); if(!pm_slave) return null;
+      const res=await fetch(`${API_BASE}/api/device/${encodeURIComponent(device)}?pm_slave=${encodeURIComponent(pm_slave)}&t=${Date.now()}`,{cache:"no-store"});
+      const data=await res.json();
+      if(!data||data.ok!==true){document.getElementById("error").innerText="No hay datos del PM seleccionado";return null;}
+      const d=data.data||{};
+      document.getElementById("error").innerText="";
+      currentMeter={
+        device_id:valorSeguro(d.device_id,currentMeter?.device_id,device),
+        device_name:valorSeguro(d.device_name,currentMeter?.device_name),
+        pm_name:valorSeguro(d.pm_name,currentMeter?.pm_name),
+        pm_slave:valorSeguro(d.pm_slave,currentMeter?.pm_slave,pm_slave)};
+      actualizarEncabezadoMeter();
+      document.getElementById("summaryPTot").innerText      = textoValor(numeroSeguro(d.p_tot,d.ptot)," kW",3);
+      document.getElementById("summaryPfTot").innerText     = textoValor(numeroSeguro(d.pf_tot),"",3);
+      document.getElementById("summaryFrequency").innerText = textoValor(numeroSeguro(d.frecuencia,d.frequency)," Hz",3);
+      document.getElementById("summaryCurrentN").innerText  = textoValor(numeroSeguro(d.current_n)," A",3);
+      actualizarGauge("gaugeFillV","gaugeNeedleV","gaugeValV",numeroSeguro(d.desbalance_v),10);
+      actualizarGauge("gaugeFillI","gaugeNeedleI","gaugeValI",numeroSeguro(d.desbalance_i),20);
+      setMiniGauge("thd_va",numeroSeguro(d.thd_va));
+      setMiniGauge("thd_vb",numeroSeguro(d.thd_vb));
+      setMiniGauge("thd_vc",numeroSeguro(d.thd_vc));
+      setMiniGauge("thd_ia",numeroSeguro(d.thd_ia));
+      setMiniGauge("thd_ib",numeroSeguro(d.thd_ib));
+      setMiniGauge("thd_ic",numeroSeguro(d.thd_ic));
+      return d;
+    } catch(e) { document.getElementById("error").innerText="Error conectando con la API"; return null; }
+  }
+
+  /* Opciones gráfica */
+  function chartOpts(yLabel,minV=null,maxV=null) {
+    const o={
+      responsive:true, maintainAspectRatio:false, animation:false, interaction:{mode:"index",intersect:false},
+      plugins:{
+        legend:{display:true,labels:{color:"#7a8c96",font:{family:"'Rubik',sans-serif",size:11,weight:"600"},usePointStyle:true}},
+        tooltip:{backgroundColor:"rgba(11,14,16,0.96)",titleColor:"#EC631F",bodyColor:"#e8edf0",
+          borderColor:"#2c363e",borderWidth:1,padding:10,
+          titleFont:{family:"'Rubik',sans-serif",size:11,weight:"700"},bodyFont:{family:"'Rubik',sans-serif",size:11}}
+      },
+      scales:{
+        x:{grid:{color:"rgba(255,255,255,0.03)"},ticks:{color:"#3e4d55",maxTicksLimit:6,font:{family:"'Rubik',sans-serif",size:10}},border:{color:"#1c2227"}},
+        y:{grid:{color:"rgba(255,255,255,0.04)"},ticks:{color:"#3e4d55",font:{family:"'Rubik',sans-serif",size:10}},border:{color:"#1c2227"},
+          title:{display:true,text:yLabel,color:"#3e4d55",font:{family:"'Rubik',sans-serif",size:10}}}
+      }};
+    if(minV!==null)o.scales.y.min=minV; if(maxV!==null)o.scales.y.max=maxV; return o;
+  }
+  function ds(label,data,color) {
+    return {label,data,borderColor:color,backgroundColor:"transparent",borderWidth:2,
+      pointRadius:0,pointHoverRadius:3,tension:0.25,fill:false,spanGaps:true};
+  }
+  function getPhasePowerConfig() {
+    if(phasePowerMode==="reactiva") return {keyA:"q_a",keyB:"q_b",keyC:"q_c",labelA:"Q A",labelB:"Q B",labelC:"Q C",yLabel:"kVAR"};
+    if(phasePowerMode==="aparente") return {keyA:"s_a",keyB:"s_b",keyC:"s_c",labelA:"S A",labelB:"S B",labelC:"S C",yLabel:"kVA"};
+    return {keyA:"p_a",keyB:"p_b",keyC:"p_c",labelA:"P A",labelB:"P B",labelC:"P C",yLabel:"kW"};
+  }
+
+  /* Gráficas */
+  function actualizarGraficaVoltajes(labels,rows) {
+    const va=rows.map(r=>numeroSeguro(r.voltage_a,r.voltage_an)), vb=rows.map(r=>numeroSeguro(r.voltage_b)), vc=rows.map(r=>numeroSeguro(r.voltage_c));
+    const ctx=document.getElementById("chartVoltages").getContext("2d");
+    if(!chartVoltages){chartVoltages=new Chart(ctx,{type:"line",data:{labels,datasets:[ds("V A",va,"#EC631F"),ds("V B",vb,"#2D9CDB"),ds("V C",vc,"#16a085")]},options:chartOpts("V",0)});}
+    else{chartVoltages.data.labels=labels;[va,vb,vc].forEach((d,i)=>chartVoltages.data.datasets[i].data=d);chartVoltages.update("none");}
+  }
+  function actualizarGraficaCorrientes(labels,rows) {
+    const ia=rows.map(r=>numeroSeguro(r.current_a)),ib=rows.map(r=>numeroSeguro(r.current_b)),ic=rows.map(r=>numeroSeguro(r.current_c)),iN=rows.map(r=>numeroSeguro(r.current_n));
+    const ctx=document.getElementById("chartCurrents").getContext("2d");
+    if(!chartCurrents){chartCurrents=new Chart(ctx,{type:"line",data:{labels,datasets:[ds("I A",ia,"#EC631F"),ds("I B",ib,"#2D9CDB"),ds("I C",ic,"#7B61FF"),ds("I N",iN,"#D64541")]},options:chartOpts("A",0)});}
+    else{chartCurrents.data.labels=labels;[ia,ib,ic,iN].forEach((d,i)=>chartCurrents.data.datasets[i].data=d);chartCurrents.update("none");}
+  }
+  /* Config de potencias totales según selector */
+  function getTotalPowerConfig() {
+    if(totalPowerMode==="activa")   return {key:"p_tot",alt:"ptot",label:"P activa",unit:"kW",color:"#EC631F"};
+    if(totalPowerMode==="reactiva") return {key:"q_tot",alt:"qtot",label:"Q reactiva",unit:"kVAR",color:"#2D9CDB"};
+    if(totalPowerMode==="aparente") return {key:"s_tot",alt:"stot",label:"S aparente",unit:"kVA",color:"#7B61FF"};
+    return null; // "todas"
+  }
+  function actualizarTablaPotenciasTotales(rows) {
+    const thead=document.getElementById("theadPowers");
+    const cfg=getTotalPowerConfig();
+    if(cfg) {
+      thead.innerHTML=`<tr><th style="color:${cfg.color}">${cfg.label} (${cfg.unit})</th></tr>`;
+      renderTabla("tbodyPowers",[rows.map(r=>numeroSeguro(r[cfg.key],r[cfg.alt]))]);
+    } else {
+      thead.innerHTML=`<tr><th style="color:#EC631F">P (kW)</th><th style="color:#2D9CDB">Q (kVAR)</th><th style="color:#7B61FF">S (kVA)</th></tr>`;
+      renderTabla("tbodyPowers",[
+        rows.map(r=>numeroSeguro(r.p_tot,r.ptot)),
+        rows.map(r=>numeroSeguro(r.q_tot,r.qtot)),
+        rows.map(r=>numeroSeguro(r.s_tot,r.stot))]);
     }
-  
-    function formatearFechaCorta(fechaIso) {
-      const f = new Date(fechaIso + "T00:00:00");
-      return f.toLocaleDateString("es-EC");
-    }
-  
-    function mostrarToast(mensaje) {
-      document.getElementById("toastMessage").innerText = mensaje;
-      document.getElementById("toast").classList.add("show");
-    }
-  
-    function cerrarToast() {
-      document.getElementById("toast").classList.remove("show");
-    }
-  
-    function valorSeguro(...valores) {
-      for (const v of valores) {
-        if (v !== undefined && v !== null && v !== "") return v;
-      }
-      return null;
-    }
-  
-    function numeroSeguro(...valores) {
-      const v = valorSeguro(...valores);
-      if (v === null) return null;
-      const n = Number(v);
-      return Number.isFinite(n) ? n : null;
-    }
-  
-    function textoValor(v, sufijo = "", decimales = 3) {
-      if (v === null || v === undefined || v === "") return "--";
-      const n = Number(v);
-      if (!Number.isFinite(n)) return "--";
-      return `${n.toFixed(decimales)}${sufijo}`;
-    }
-  
-    function getCurrentPmSlave() {
-      if (!currentMeter) return null;
-      return Number(currentMeter.pm_slave);
-    }
-  
-    function corregirPfFase(v) {
-      if (v === null || v === undefined || v === "") return null;
-      const n = Number(v);
-      if (!Number.isFinite(n)) return null;
-      return 2 - n;
-    }
-  
-    function actualizarEncabezadoMeter() {
-      document.getElementById("device").innerText = currentMeter?.device_id || device;
-      document.getElementById("heroDeviceName").innerText =
-        "Gateway: " + (currentMeter?.device_name || currentMeter?.device_id || "--");
-      document.getElementById("heroPmName").innerText =
-        "PM: " + (currentMeter?.pm_name || "--");
-      document.getElementById("heroPmSlave").innerText =
-        "Slave: " + (currentMeter?.pm_slave ?? "--");
-    }
-  
-    function crearFilaInicioDia(fechaTexto) {
-      const inicioIso = `${fechaTexto}T00:00:00`;
-  
-      return {
-        visible_at: inicioIso,
-        created_at: inicioIso,
-        timestamp_ms: null,
-  
-        voltage_a: null,
-        voltage_b: null,
-        voltage_c: null,
-  
-        current_a: null,
-        current_b: null,
-        current_c: null,
-        current_n: null,
-  
-        p_a: null,
-        p_b: null,
-        p_c: null,
-        p_tot: null,
-  
-        q_a: null,
-        q_b: null,
-        q_c: null,
-        q_tot: null,
-  
-        s_a: null,
-        s_b: null,
-        s_c: null,
-        s_tot: null,
-  
-        pf_a: null,
-        pf_b: null,
-        pf_c: null,
-        pf_tot: null,
-  
-        frecuencia: null,
-  
-        thd_va: null,
-        thd_vb: null,
-        thd_vc: null,
-  
-        thd_ia: null,
-        thd_ib: null,
-        thd_ic: null,
-        thd_in: null,
-  
-        desbalance_v: null,
-        desbalance_i: null,
-  
-        raw_payload: null
-      };
-    }
-  </script>
-    
-  <!-- ===================================================== -->
-  <!-- BLOQUE 18: CARGA DE MEDIDORES                         -->
-  <!-- ===================================================== -->
-  <script>
-    async function cargarMedidores() {
-      try {
-        const url = `${API_BASE}/api/meters/${encodeURIComponent(device)}?t=${Date.now()}`;
-        const res = await fetch(url, { cache: "no-store" });
-        const json = await res.json();
-
-        if (!json || json.ok !== true || !Array.isArray(json.data) || json.data.length === 0) {
-          document.getElementById("error").innerText = "No se encontraron medidores para este gateway";
-          return false;
-        }
-
-        meters = json.data.slice().sort((a, b) => Number(a.pm_slave) - Number(b.pm_slave));
-
-        const pmSelect = document.getElementById("pmSelect");
-        pmSelect.innerHTML = "";
-
-        meters.forEach((meter, index) => {
-          const opt = document.createElement("option");
-          opt.value = String(meter.pm_slave);
-          opt.textContent = `${meter.pm_name || "PM sin nombre"} (Slave ${meter.pm_slave})`;
-          if (index === 0) opt.selected = true;
-          pmSelect.appendChild(opt);
-        });
-
-        const pmFromUrl = params.get("pm_slave");
-        const firstSlave = pmFromUrl ? Number(pmFromUrl) : Number(meters[0].pm_slave);
-        const meterInicial = meters.find(m => Number(m.pm_slave) === Number(firstSlave)) || meters[0];
-
-        pmSelect.value = String(meterInicial.pm_slave);
-        currentMeter = meterInicial;
-        actualizarEncabezadoMeter();
-        document.getElementById("error").innerText = "";
-        return true;
-      } catch (e) {
-        document.getElementById("error").innerText = "Error consultando los medidores del gateway";
-        return false;
-      }
-    }
-
-    function actualizarMeterSeleccionadoDesdeSelect() {
-      const pmSelect = document.getElementById("pmSelect");
-      const slave = Number(pmSelect.value);
-      const found = meters.find(m => Number(m.pm_slave) === slave);
-      if (found) {
-        currentMeter = found;
-        actualizarEncabezadoMeter();
-      }
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 19: DESCARGAR CSV                              -->
-  <!-- ===================================================== -->
-  <script>
-    function descargarCSV() {
-      const from = document.getElementById("csvFrom").value;
-      const to = document.getElementById("csvTo").value;
-      const pm_slave = getCurrentPmSlave();
-
-      if (!pm_slave) {
-        mostrarToast("Seleccione un PM antes de descargar");
-        return;
-      }
-
-      if (!from || !to) {
-        mostrarToast("Seleccione el rango de fechas para descargar el CSV");
-        return;
-      }
-
-      const url = `${API_BASE}/api/history/export?device_id=${encodeURIComponent(device)}&pm_slave=${encodeURIComponent(pm_slave)}&from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
-
-      const spinner = document.getElementById("downloadSpinner");
-      spinner.style.display = "flex";
-
-      setTimeout(() => {
-        window.location.href = url;
-      }, 500);
-
-      setTimeout(() => {
-        spinner.style.display = "none";
-      }, 4000);
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 20: TIEMPO REAL                                -->
-  <!-- ===================================================== -->
-  <script>
-    function setQualityBar(barId, labelId, value, maxScale = 100) {
-      const label = document.getElementById(labelId);
-      const bar = document.getElementById(barId);
-      if (!label || !bar) return;
-
-      if (value === null || value === undefined || !Number.isFinite(Number(value))) {
-        label.innerText = "--";
-        bar.style.width = "0%";
-        bar.className = "quality-fill fill-green";
-        return;
-      }
-
-      const n = Number(value);
-      label.innerText = `${n.toFixed(3)} %`;
-
-      const width = Math.max(0, Math.min((n / maxScale) * 100, 100));
-      bar.style.width = `${width}%`;
-
-      let fillClass = "fill-green";
-      if (n >= 8) fillClass = "fill-red";
-      else if (n >= 5) fillClass = "fill-orange";
-
-      if (barId.includes("desbalance")) {
-        if (n >= 5) fillClass = "fill-red";
-        else if (n >= 2) fillClass = "fill-orange";
-        else fillClass = "fill-green";
-      }
-
-      bar.className = `quality-fill ${fillClass}`;
-    }
-
-    async function actualizarTiempoReal() {
-      try {
-        const pm_slave = getCurrentPmSlave();
-        if (!pm_slave) return null;
-
-        const url = `${API_BASE}/api/device/${encodeURIComponent(device)}?pm_slave=${encodeURIComponent(pm_slave)}&t=${Date.now()}`;
-        const res = await fetch(url, { cache: "no-store" });
-        const data = await res.json();
-
-        if (!data || data.ok !== true) {
-          document.getElementById("error").innerText = "No hay datos del PM seleccionado";
-          return null;
-        }
-
-        const d = data.data || {};
-        document.getElementById("error").innerText = "";
-
-        currentMeter = {
-          device_id: valorSeguro(d.device_id, currentMeter?.device_id, device),
-          device_name: valorSeguro(d.device_name, currentMeter?.device_name),
-          pm_name: valorSeguro(d.pm_name, currentMeter?.pm_name),
-          pm_slave: valorSeguro(d.pm_slave, currentMeter?.pm_slave, pm_slave)
-        };
-
-        actualizarEncabezadoMeter();
-
-        const voltageA = numeroSeguro(d.voltage_a, d.voltage_an);
-        const voltageB = numeroSeguro(d.voltage_b);
-        const voltageC = numeroSeguro(d.voltage_c);
-
-        const currentA = numeroSeguro(d.current_a);
-        const currentB = numeroSeguro(d.current_b);
-        const currentC = numeroSeguro(d.current_c);
-        const currentN = numeroSeguro(d.current_n);
-
-        const pTot = numeroSeguro(d.p_tot, d.ptot);
-        const qTot = numeroSeguro(d.q_tot, d.qtot);
-        const sTot = numeroSeguro(d.s_tot, d.stot);
-
-        const pfA = corregirPfFase(numeroSeguro(d.pf_a));
-        const pfB = corregirPfFase(numeroSeguro(d.pf_b));
-        const pfC = corregirPfFase(numeroSeguro(d.pf_c));
-        const pfTot = numeroSeguro(d.pf_tot);
-
-        const frequency = numeroSeguro(d.frecuencia, d.frequency);
-
-        document.getElementById("summaryPTot").innerText = textoValor(pTot, " kW", 3);
-        document.getElementById("summaryPfTot").innerText = textoValor(pfTot, "", 3);
-        document.getElementById("summaryFrequency").innerText = textoValor(frequency, " Hz", 3);
-        document.getElementById("summaryCurrentN").innerText = textoValor(currentN, " A", 3);
-
-        document.getElementById("liveVoltages").innerText = `${textoValor(voltageA)} | ${textoValor(voltageB)} | ${textoValor(voltageC)}`;
-        document.getElementById("liveCurrents").innerText = `${textoValor(currentA)} | ${textoValor(currentB)} | ${textoValor(currentC)} | ${textoValor(currentN)}`;
-        document.getElementById("livePowers").innerText = `${textoValor(pTot)} | ${textoValor(qTot)} | ${textoValor(sTot)}`;
-
-        actualizarLivePhasePowersDesdePayload(d);
-
-        document.getElementById("livePf").innerText = `${textoValor(pfA)} | ${textoValor(pfB)} | ${textoValor(pfC)} | ${textoValor(pfTot)}`;
-        document.getElementById("liveFrequency").innerText = textoValor(frequency, " Hz", 3);
-
-        setQualityBar("bar_thd_va", "q_thd_va", numeroSeguro(d.thd_va), 100);
-        setQualityBar("bar_thd_vb", "q_thd_vb", numeroSeguro(d.thd_vb), 100);
-        setQualityBar("bar_thd_vc", "q_thd_vc", numeroSeguro(d.thd_vc), 100);
-        setQualityBar("bar_thd_ia", "q_thd_ia", numeroSeguro(d.thd_ia), 100);
-        setQualityBar("bar_thd_ib", "q_thd_ib", numeroSeguro(d.thd_ib), 100);
-        setQualityBar("bar_thd_ic", "q_thd_ic", numeroSeguro(d.thd_ic), 100);
-        setQualityBar("bar_thd_in", "q_thd_in", numeroSeguro(d.thd_in), 100);
-        setQualityBar("bar_desbalance_v", "q_desbalance_v", numeroSeguro(d.desbalance_v), 100);
-        setQualityBar("bar_desbalance_i", "q_desbalance_i", numeroSeguro(d.desbalance_i), 200);
-
-        console.log("====================================");
-        console.log("[TIEMPO REAL] pm_slave:", pm_slave);
-        console.log("[TIEMPO REAL] timestamp_ms:", d.timestamp_ms);
-        console.log("[TIEMPO REAL] visible_at:", d.visible_at);
-        console.log("[TIEMPO REAL] payload:", d);
-
-        return d;
-      } catch (e) {
-        document.getElementById("error").innerText = "Error conectando con la API";
-        console.error("[TIEMPO REAL] Error:", e);
-        return null;
-      }
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 21: OPCIONES COMUNES DE GRAFICAS               -->
-  <!-- ===================================================== -->
-  <script>
-    function commonChartOptions(yLabel, minValue = null, maxValue = null, showLegend = true) {
-      const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: false,
-        interaction: { mode: "index", intersect: false },
-        plugins: {
-          legend: {
-            display: showLegend,
-            labels: {
-              color: "#4d5a63",
-              font: { family: "Rubik", size: 12, weight: "600" },
-              usePointStyle: true
-            }
-          },
-          tooltip: {
-            backgroundColor: "rgba(32, 44, 52, 0.92)",
-            titleColor: "#fff",
-            bodyColor: "#fff",
-            borderColor: "rgba(255,255,255,0.08)",
-            borderWidth: 1,
-            padding: 10
-          }
-        },
-        scales: {
-          x: {
-            grid: { color: "rgba(140, 152, 160, 0.10)" },
-            ticks: {
-              color: "#6d7f90",
-              maxTicksLimit: 6,
-              font: { family: "Rubik", size: 11 }
-            }
-          },
-          y: {
-            grid: { color: "rgba(140, 152, 160, 0.12)" },
-            ticks: {
-              color: "#6d7f90",
-              font: { family: "Rubik", size: 11 }
-            },
-            title: {
-              display: true,
-              text: yLabel,
-              color: "#5e6b73",
-              font: { family: "Rubik", size: 12, weight: "700" }
-            }
-          }
-        }
-      };
-
-      if (minValue !== null) options.scales.y.min = minValue;
-      if (maxValue !== null) options.scales.y.max = maxValue;
-      return options;
-    }
-
-    function lineDataset(label, data, borderColor, backgroundColor = "transparent") {
-      return {
-        label,
-        data,
-        borderColor,
-        backgroundColor,
-        borderWidth: 3,
-        pointRadius: 0,
-        pointHoverRadius: 3,
-        tension: 0.25,
-        fill: false,
-        spanGaps: true
-      };
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 21A: UTILIDADES PARA POTENCIA POR FASE         -->
-  <!-- ===================================================== -->
-  <script>
-    function getPhasePowerConfig() {
-      if (phasePowerMode === "reactiva") {
-        return {
-          keyA: "q_a",
-          keyB: "q_b",
-          keyC: "q_c",
-          labelA: "Q A",
-          labelB: "Q B",
-          labelC: "Q C",
-          liveSub: "Q A | Q B | Q C",
-          yLabel: "kVAR"
-        };
-      }
-
-      if (phasePowerMode === "aparente") {
-        return {
-          keyA: "s_a",
-          keyB: "s_b",
-          keyC: "s_c",
-          labelA: "S A",
-          labelB: "S B",
-          labelC: "S C",
-          liveSub: "S A | S B | S C",
-          yLabel: "kVA"
-        };
-      }
-
-      return {
-        keyA: "p_a",
-        keyB: "p_b",
-        keyC: "p_c",
-        labelA: "P A",
-        labelB: "P B",
-        labelC: "P C",
-        liveSub: "P A | P B | P C",
-        yLabel: "kW"
-      };
-    }
-
-    function actualizarLivePhasePowersDesdePayload(d) {
-      const cfg = getPhasePowerConfig();
-      const a = numeroSeguro(d[cfg.keyA]);
-      const b = numeroSeguro(d[cfg.keyB]);
-      const c = numeroSeguro(d[cfg.keyC]);
-
-      const live = document.getElementById("livePhasePowers");
-      const sub = document.getElementById("livePhasePowersSub");
-
-      if (live) {
-        live.innerText = `${textoValor(a)} | ${textoValor(b)} | ${textoValor(c)}`;
-      }
-
-      if (sub) {
-        sub.innerText = cfg.liveSub;
-      }
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 22: CONSULTA DEL HISTORICO                     -->
-  <!-- ===================================================== -->
-  <script>
-    async function obtenerHistorico() {
-      const day = document.getElementById("dayDate").value;
-      const pm_slave = getCurrentPmSlave();
-
-      if (!day) throw new Error("No hay fecha seleccionada");
-      if (!pm_slave) throw new Error("No hay PM seleccionado");
-
-      const url = `${API_BASE}/api/history?device_id=${encodeURIComponent(device)}&pm_slave=${encodeURIComponent(pm_slave)}&from=${encodeURIComponent(day)}&to=${encodeURIComponent(day)}&t=${Date.now()}`;
-      const res = await fetch(url, { cache: "no-store" });
-
-      if (!res.ok) {
-        throw new Error("La API respondió con error");
-      }
-
-      return await res.json();
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 23: GRAFICA DE VOLTAJES                        -->
-  <!-- ===================================================== -->
-  <script>
-    function actualizarGraficaVoltajes(labels, rows) {
-      const va = rows.map(item => numeroSeguro(item.voltage_a, item.voltage_an));
-      const vb = rows.map(item => numeroSeguro(item.voltage_b));
-      const vc = rows.map(item => numeroSeguro(item.voltage_c));
-
-      const ctx = document.getElementById("chartVoltages").getContext("2d");
-
-      if (!chartVoltages) {
-        chartVoltages = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels,
-            datasets: [
-              lineDataset("Voltaje A", va, "#EC631F"),
-              lineDataset("Voltaje B", vb, "#2D9CDB"),
-              lineDataset("Voltaje C", vc, "#16a085")
-            ]
-          },
-          options: commonChartOptions("V", 0, null, true)
-        });
+  }
+  function actualizarGraficaPotencias(labels,rows) {
+    const ctx=document.getElementById("chartPowers").getContext("2d");
+    const cfg=getTotalPowerConfig();
+    const subtitleEl=document.getElementById("subtitlePowers");
+    if(cfg) {
+      // Una sola serie
+      const data=rows.map(r=>numeroSeguro(r[cfg.key],r[cfg.alt]));
+      if(subtitleEl) subtitleEl.textContent=`${cfg.label} (${cfg.unit})`;
+      if(!chartPowers){
+        chartPowers=new Chart(ctx,{type:"line",data:{labels,datasets:[ds(cfg.label,data,cfg.color)]},options:chartOpts(cfg.unit,0)});
       } else {
-        chartVoltages.data.labels = labels;
-        chartVoltages.data.datasets[0].data = va;
-        chartVoltages.data.datasets[1].data = vb;
-        chartVoltages.data.datasets[2].data = vc;
-        chartVoltages.update("none");
+        chartPowers.data.labels=labels;
+        // Ajustar a 1 dataset si venía de "todas"
+        chartPowers.data.datasets=[ds(cfg.label,data,cfg.color)];
+        chartPowers.options.scales.y.title.text=cfg.unit;
+        chartPowers.update("none");
       }
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 24: GRAFICA DE CORRIENTES                      -->
-  <!-- ===================================================== -->
-  <script>
-    function actualizarGraficaCorrientes(labels, rows) {
-      const ia = rows.map(item => numeroSeguro(item.current_a));
-      const ib = rows.map(item => numeroSeguro(item.current_b));
-      const ic = rows.map(item => numeroSeguro(item.current_c));
-      const inN = rows.map(item => numeroSeguro(item.current_n));
-
-      const ctx = document.getElementById("chartCurrents").getContext("2d");
-
-      if (!chartCurrents) {
-        chartCurrents = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels,
-            datasets: [
-              lineDataset("Corriente A", ia, "#415447"),
-              lineDataset("Corriente B", ib, "#2D9CDB"),
-              lineDataset("Corriente C", ic, "#7B61FF"),
-              lineDataset("Corriente N", inN, "#D64541")
-            ]
-          },
-          options: commonChartOptions("A", 0, null, true)
-        });
+    } else {
+      // Tres series
+      const pa=rows.map(r=>numeroSeguro(r.p_tot,r.ptot));
+      const qa=rows.map(r=>numeroSeguro(r.q_tot,r.qtot));
+      const sa=rows.map(r=>numeroSeguro(r.s_tot,r.stot));
+      if(subtitleEl) subtitleEl.textContent="Activa · Reactiva · Aparente";
+      if(!chartPowers){
+        chartPowers=new Chart(ctx,{type:"line",data:{labels,datasets:[ds("P (kW)",pa,"#EC631F"),ds("Q (kVAR)",qa,"#2D9CDB"),ds("S (kVA)",sa,"#7B61FF")]},options:chartOpts("10³",0)});
       } else {
-        chartCurrents.data.labels = labels;
-        chartCurrents.data.datasets[0].data = ia;
-        chartCurrents.data.datasets[1].data = ib;
-        chartCurrents.data.datasets[2].data = ic;
-        chartCurrents.data.datasets[3].data = inN;
-        chartCurrents.update("none");
-      }
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 25: GRAFICA DE POTENCIAS                       -->
-  <!-- ===================================================== -->
-  <script>
-    function actualizarGraficaPotencias(labels, rows) {
-      const activa = rows.map(item => numeroSeguro(item.p_tot, item.ptot, item.raw_payload?.p_tot, item.raw_payload?.ptot));
-      const reactiva = rows.map(item => numeroSeguro(item.q_tot, item.qtot, item.raw_payload?.q_tot, item.raw_payload?.qtot));
-      const aparente = rows.map(item => numeroSeguro(item.s_tot, item.stot, item.raw_payload?.s_tot, item.raw_payload?.stot));
-
-      const ctx = document.getElementById("chartPowers").getContext("2d");
-
-      if (!chartPowers) {
-        chartPowers = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels,
-            datasets: [
-              lineDataset("Activa total", activa, "#EC631F"),
-              lineDataset("Reactiva total", reactiva, "#2D9CDB"),
-              lineDataset("Aparente total", aparente, "#7B61FF")
-            ]
-          },
-          options: commonChartOptions("Potencia 10^3", 0, null, true)
-        });
-      } else {
-        chartPowers.data.labels = labels;
-        chartPowers.data.datasets[0].data = activa;
-        chartPowers.data.datasets[1].data = reactiva;
-        chartPowers.data.datasets[2].data = aparente;
+        chartPowers.data.labels=labels;
+        chartPowers.data.datasets=[ds("P (kW)",pa,"#EC631F"),ds("Q (kVAR)",qa,"#2D9CDB"),ds("S (kVA)",sa,"#7B61FF")];
+        chartPowers.options.scales.y.title.text="10³";
         chartPowers.update("none");
       }
     }
-  </script>
+  }
+  function actualizarGraficaPotenciaPorFase(labels,rows) {
+    const cfg=getPhasePowerConfig();
+    const sA=rows.map(r=>numeroSeguro(r[cfg.keyA])),sB=rows.map(r=>numeroSeguro(r[cfg.keyB])),sC=rows.map(r=>numeroSeguro(r[cfg.keyC]));
+    const ctx=document.getElementById("chartPhasePowers").getContext("2d");
+    if(!chartPhasePowers){chartPhasePowers=new Chart(ctx,{type:"line",data:{labels,datasets:[ds(cfg.labelA,sA,"#EC631F"),ds(cfg.labelB,sB,"#2D9CDB"),ds(cfg.labelC,sC,"#16a085")]},options:chartOpts(cfg.yLabel,0)});}
+    else{chartPhasePowers.data.labels=labels;chartPhasePowers.data.datasets[0].label=cfg.labelA;chartPhasePowers.data.datasets[1].label=cfg.labelB;chartPhasePowers.data.datasets[2].label=cfg.labelC;[sA,sB,sC].forEach((d,i)=>chartPhasePowers.data.datasets[i].data=d);chartPhasePowers.options.scales.y.title.text=cfg.yLabel;chartPhasePowers.update("none");}
+  }
+  function actualizarGraficaFp(labels,rows) {
+    const pfa=rows.map(r=>corregirPfFase(numeroSeguro(r.pf_a))),pfb=rows.map(r=>corregirPfFase(numeroSeguro(r.pf_b))),pfc=rows.map(r=>corregirPfFase(numeroSeguro(r.pf_c))),pft=rows.map(r=>numeroSeguro(r.pf_tot));
+    const ctx=document.getElementById("chartPf").getContext("2d");
+    if(!chartPf){chartPf=new Chart(ctx,{type:"line",data:{labels,datasets:[ds("FP A",pfa,"#EC631F"),ds("FP B",pfb,"#2D9CDB"),ds("FP C",pfc,"#16a085"),ds("FP Total",pft,"#7B61FF")]},options:chartOpts("FP",-1,1.2)});}
+    else{chartPf.data.labels=labels;[pfa,pfb,pfc,pft].forEach((d,i)=>chartPf.data.datasets[i].data=d);chartPf.update("none");}
+  }
+  function actualizarGraficaFrecuencia(labels,rows) {
+    const fr=rows.map(r=>numeroSeguro(r.frecuencia,r.frequency));
+    const ctx=document.getElementById("chartFrequency").getContext("2d");
+    if(!chartFrequency){chartFrequency=new Chart(ctx,{type:"line",data:{labels,datasets:[ds("Hz",fr,"#2D9CDB")]},options:chartOpts("Hz",55,65)});}
+    else{chartFrequency.data.labels=labels;chartFrequency.data.datasets[0].data=fr;chartFrequency.update("none");}
+  }
 
-  <!-- ===================================================== -->
-  <!-- BLOQUE 25A: GRAFICA DE POTENCIA POR FASE              -->
-  <!-- ===================================================== -->
-  <script>
-    function actualizarGraficaPotenciaPorFase(labels, rows) {
-      const cfg = getPhasePowerConfig();
-      const serieA = rows.map(item => numeroSeguro(item[cfg.keyA]));
-      const serieB = rows.map(item => numeroSeguro(item[cfg.keyB]));
-      const serieC = rows.map(item => numeroSeguro(item[cfg.keyC]));
-
-      const ctx = document.getElementById("chartPhasePowers").getContext("2d");
-
-      if (!chartPhasePowers) {
-        chartPhasePowers = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels,
-            datasets: [
-              lineDataset(cfg.labelA, serieA, "#EC631F"),
-              lineDataset(cfg.labelB, serieB, "#2D9CDB"),
-              lineDataset(cfg.labelC, serieC, "#16a085")
-            ]
-          },
-          options: commonChartOptions(cfg.yLabel, 0, null, true)
-        });
-      } else {
-        chartPhasePowers.data.labels = labels;
-        chartPhasePowers.data.datasets[0].label = cfg.labelA;
-        chartPhasePowers.data.datasets[1].label = cfg.labelB;
-        chartPhasePowers.data.datasets[2].label = cfg.labelC;
-        chartPhasePowers.data.datasets[0].data = serieA;
-        chartPhasePowers.data.datasets[1].data = serieB;
-        chartPhasePowers.data.datasets[2].data = serieC;
-        chartPhasePowers.options.scales.y.title.text = cfg.yLabel;
-        chartPhasePowers.update("none");
-      }
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 26: GRAFICA DE FACTOR DE POTENCIA              -->
-  <!-- ===================================================== -->
-  <script>
-    function actualizarGraficaFp(labels, rows) {
-      const pfa = rows.map(item => corregirPfFase(numeroSeguro(item.pf_a)));
-      const pfb = rows.map(item => corregirPfFase(numeroSeguro(item.pf_b)));
-      const pfc = rows.map(item => corregirPfFase(numeroSeguro(item.pf_c)));
-      const pft = rows.map(item => numeroSeguro(item.pf_tot));
-
-      const ctx = document.getElementById("chartPf").getContext("2d");
-
-      if (!chartPf) {
-        chartPf = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels,
-            datasets: [
-              lineDataset("FP A", pfa, "#EC631F"),
-              lineDataset("FP B", pfb, "#2D9CDB"),
-              lineDataset("FP C", pfc, "#16a085"),
-              lineDataset("FP Total", pft, "#7B61FF")
-            ]
-          },
-          options: commonChartOptions("FP", -1, 1.2, true)
-        });
-      } else {
-        chartPf.data.labels = labels;
-        chartPf.data.datasets[0].data = pfa;
-        chartPf.data.datasets[1].data = pfb;
-        chartPf.data.datasets[2].data = pfc;
-        chartPf.data.datasets[3].data = pft;
-        chartPf.update("none");
-      }
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 26A: GRAFICA DE FRECUENCIA                     -->
-  <!-- ===================================================== -->
-  <script>
-    function actualizarGraficaFrecuencia(labels, rows) {
-      const frecuencia = rows.map(item => numeroSeguro(item.frecuencia, item.frequency));
-
-      const ctx = document.getElementById("chartFrequency").getContext("2d");
-
-      if (!chartFrequency) {
-        chartFrequency = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels,
-            datasets: [
-              lineDataset("Frecuencia", frecuencia, "#2D9CDB")
-            ]
-          },
-          options: commonChartOptions("Hz", 55, 65, true)
-        });
-      } else {
-        chartFrequency.data.labels = labels;
-        chartFrequency.data.datasets[0].data = frecuencia;
-        chartFrequency.update("none");
-      }
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 27: LIMPIEZA DE GRAFICAS                       -->
-  <!-- ===================================================== -->
-  <script>
-    function limpiarGraficas() {
-      const labelsVacios = [];
-      ultimoTimestampHistorico = null;
-      ultimoTimestampLive = null;
-      ultimaHoraVisible = null;
-
-      if (chartVoltages) {
-        chartVoltages.data.labels = labelsVacios;
-        chartVoltages.data.datasets.forEach(ds => ds.data = []);
-        chartVoltages.update("none");
-      }
-
-      if (chartCurrents) {
-        chartCurrents.data.labels = labelsVacios;
-        chartCurrents.data.datasets.forEach(ds => ds.data = []);
-        chartCurrents.update("none");
-      }
-
-      if (chartPowers) {
-        chartPowers.data.labels = labelsVacios;
-        chartPowers.data.datasets.forEach(ds => ds.data = []);
-        chartPowers.update("none");
-      }
-
-      if (chartPhasePowers) {
-        chartPhasePowers.data.labels = labelsVacios;
-        chartPhasePowers.data.datasets.forEach(ds => ds.data = []);
-        chartPhasePowers.update("none");
-      }
-
-      if (chartPf) {
-        chartPf.data.labels = labelsVacios;
-        chartPf.data.datasets.forEach(ds => ds.data = []);
-        chartPf.update("none");
-      }
-
-      if (chartFrequency) {
-        chartFrequency.data.labels = labelsVacios;
-        chartFrequency.data.datasets.forEach(ds => ds.data = []);
-        chartFrequency.update("none");
-      }
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 28: AGREGAR SOLO PUNTOS NUEVOS                 -->
-  <!-- ===================================================== -->
-  <script>
-    function agregarSoloPuntosNuevos(rowsNuevos) {
-      if (!rowsNuevos || rowsNuevos.length === 0) return;
-
-      const cfg = getPhasePowerConfig();
-
-      for (const item of rowsNuevos) {
-        const label = item.visible_at
-          ? formatearHoraReal(item.visible_at)
-          : formatearHoraDesdeMs(item.timestamp_ms);
-
-        if (chartVoltages) {
-          chartVoltages.data.labels.push(label);
-          chartVoltages.data.datasets[0].data.push(numeroSeguro(item.voltage_a, item.voltage_an));
-          chartVoltages.data.datasets[1].data.push(numeroSeguro(item.voltage_b));
-          chartVoltages.data.datasets[2].data.push(numeroSeguro(item.voltage_c));
-        }
-
-        if (chartCurrents) {
-          chartCurrents.data.labels.push(label);
-          chartCurrents.data.datasets[0].data.push(numeroSeguro(item.current_a));
-          chartCurrents.data.datasets[1].data.push(numeroSeguro(item.current_b));
-          chartCurrents.data.datasets[2].data.push(numeroSeguro(item.current_c));
-          chartCurrents.data.datasets[3].data.push(numeroSeguro(item.current_n));
-        }
-
-        if (chartPowers) {
-          chartPowers.data.labels.push(label);
-          chartPowers.data.datasets[0].data.push(numeroSeguro(item.p_tot, item.ptot, item.raw_payload?.p_tot, item.raw_payload?.ptot));
-          chartPowers.data.datasets[1].data.push(numeroSeguro(item.q_tot, item.qtot, item.raw_payload?.q_tot, item.raw_payload?.qtot));
-          chartPowers.data.datasets[2].data.push(numeroSeguro(item.s_tot, item.stot, item.raw_payload?.s_tot, item.raw_payload?.stot));
-        }
-
-        if (chartPhasePowers) {
-          chartPhasePowers.data.labels.push(label);
-          chartPhasePowers.data.datasets[0].data.push(numeroSeguro(item[cfg.keyA]));
-          chartPhasePowers.data.datasets[1].data.push(numeroSeguro(item[cfg.keyB]));
-          chartPhasePowers.data.datasets[2].data.push(numeroSeguro(item[cfg.keyC]));
-        }
-
-        if (chartPf) {
-          chartPf.data.labels.push(label);
-          chartPf.data.datasets[0].data.push(corregirPfFase(numeroSeguro(item.pf_a)));
-          chartPf.data.datasets[1].data.push(corregirPfFase(numeroSeguro(item.pf_b)));
-          chartPf.data.datasets[2].data.push(corregirPfFase(numeroSeguro(item.pf_c)));
-          chartPf.data.datasets[3].data.push(numeroSeguro(item.pf_tot));
-        }
-
-        if (chartFrequency) {
-          chartFrequency.data.labels.push(label);
-          chartFrequency.data.datasets[0].data.push(numeroSeguro(item.frecuencia, item.frequency));
-        }
-      }
-
-      if (chartVoltages) chartVoltages.update("none");
-      if (chartCurrents) chartCurrents.update("none");
-      if (chartPowers) chartPowers.update("none");
-      if (chartPhasePowers) chartPhasePowers.update("none");
-      if (chartPf) chartPf.update("none");
-      if (chartFrequency) chartFrequency.update("none");
-
-      ultimoTimestampHistorico = rowsNuevos[rowsNuevos.length - 1].timestamp_ms;
-    }
-  </script>
-
-  <!-- ===================================================== -->
-  <!-- BLOQUE 29: ORQUESTADOR GENERAL                       -->
-  <!-- ===================================================== -->
-  <script>
-    async function consultarTodo(forzarRecargaCompleta = false) {
-      try {
-        const errorBox = document.getElementById("error");
-        const dayInput = document.getElementById("dayDate");
-        const selectedDateText = document.getElementById("selectedDateText");
-        const pm_slave = getCurrentPmSlave();
-  
-        if (!dayInput || !pm_slave) return;
-  
-        const day = dayInput.value;
-  
-        if (!day) {
-          limpiarGraficas();
-          errorBox.innerText = "";
-          mostrarToast("Seleccione una fecha");
-          return;
-        }
-  
-        if (selectedDateText) {
-          selectedDateText.innerText = formatearFechaCorta(day);
-        }
-  
-        const esNuevaFecha = fechaHistoricaActual !== day;
-        const esNuevoPm = Number(pmHistoricoActual) !== Number(pm_slave);
-  
-        if (forzarRecargaCompleta || esNuevaFecha || esNuevoPm) {
-          cerrarToast();
-          limpiarGraficas();
-          errorBox.innerText = "Cargando datos del día seleccionado...";
-        }
-  
-        const json = await obtenerHistorico();
-  
-        if (!json || json.ok !== true || !Array.isArray(json.data)) {
-          errorBox.innerText = "";
-          limpiarGraficas();
-          mostrarToast("Error consultando el histórico");
-          return;
-        }
-  
-        if (json.data.length === 0) {
-          errorBox.innerText = "";
-          limpiarGraficas();
-          fechaHistoricaActual = day;
-          pmHistoricoActual = pm_slave;
-          mostrarToast("No hay datos para graficar en la fecha seleccionada");
-          return;
-        }
-  
-        const rowsOrdenadas = json.data.slice().sort((a, b) => {
-          const aTime = new Date(a.visible_at || a.created_at || 0).getTime();
-          const bTime = new Date(b.visible_at || b.created_at || 0).getTime();
-          return aTime - bTime;
-        });
-  
-        const filaInicio = crearFilaInicioDia(day);
-        const primerReal = rowsOrdenadas[0];
-        const horaPrimerReal = new Date(primerReal.visible_at || primerReal.created_at || 0).getTime();
-        const horaInicio = new Date(filaInicio.visible_at).getTime();
-  
-        let rowsFinales = rowsOrdenadas;
-  
-        if (Number.isFinite(horaPrimerReal) && horaPrimerReal > horaInicio) {
-          rowsFinales = [filaInicio, ...rowsOrdenadas];
-        }
-  
-        const labels = rowsFinales.map(item =>
-          formatearHoraReal(item.visible_at || item.created_at)
-        );
-  
-        actualizarGraficaVoltajes(labels, rowsFinales);
-        actualizarGraficaCorrientes(labels, rowsFinales);
-        actualizarGraficaPotencias(labels, rowsFinales);
-        actualizarGraficaPotenciaPorFase(labels, rowsFinales);
-        actualizarGraficaFp(labels, rowsFinales);
-        actualizarGraficaFrecuencia(labels, rowsFinales);
-  
-        const ultimoReal = rowsOrdenadas[rowsOrdenadas.length - 1];
-  
-        ultimoTimestampHistorico = ultimoReal?.timestamp_ms ?? null;
-        ultimoTimestampLive = ultimoTimestampHistorico;
-        ultimaHoraVisible = ultimoReal?.visible_at || ultimoReal?.created_at || null;
-        fechaHistoricaActual = day;
-        pmHistoricoActual = pm_slave;
-        errorBox.innerText = "";
-  
-        console.log("====================================");
-        console.log("[HISTORICO] Curva reconstruida");
-        console.log("[HISTORICO] total puntos reales:", rowsOrdenadas.length);
-        console.log("[HISTORICO] total puntos graficados:", rowsFinales.length);
-        console.log("[HISTORICO] ultimo visible_at:", ultimaHoraVisible);
-      } catch (e) {
-        console.error("[HISTORICO] Error en consultarTodo:", e);
-        document.getElementById("error").innerText = "";
-        limpiarGraficas();
-        mostrarToast("Error al consultar las curvas");
-      }
-    }
-  </script>
-  
-  <!-- ===================================================== -->
-  <!-- BLOQUE 30: INICIALIZACION Y EVENTOS                   -->
-  <!-- ===================================================== -->
-  <script>
-    window.addEventListener("load", async () => {
-      const hoy = hoyTexto();
-
-      document.getElementById("dayDate").value = hoy;
-      document.getElementById("selectedDateText").innerText = formatearFechaCorta(hoy);
-
-      const csvFrom = document.getElementById("csvFrom");
-      const csvTo = document.getElementById("csvTo");
-
-      if (csvFrom) csvFrom.value = hoy;
-      if (csvTo) csvTo.value = hoy;
-
-      const okMeters = await cargarMedidores();
-      if (!okMeters) return;
-
-      await actualizarTiempoReal();
-      await consultarTodo(true);
-
-      setInterval(async () => {
-        if (pollingTiempoRealEnCurso) return;
-        pollingTiempoRealEnCurso = true;
-
-        try {
-          const daySeleccionado = document.getElementById("dayDate").value;
-          const hoyActual = hoyTexto();
-
-          console.log("====================================");
-          console.log("[INTERVALO] Ciclo unificado");
-
-          await actualizarTiempoReal();
-
-          if (daySeleccionado === hoyActual) {
-            console.log("[INTERVALO] Refrescando curva completa...");
-            await consultarTodo(false);
-          }
-        } catch (e) {
-          console.error("[INTERVALO] Error:", e);
-        } finally {
-          pollingTiempoRealEnCurso = false;
-        }
-      }, 2000);
+  /* Limpiar */
+  function limpiarGraficas() {
+    ultimoTimestampHistorico=null;ultimoTimestampLive=null;ultimaHoraVisible=null;
+    [chartVoltages,chartCurrents,chartPowers,chartPhasePowers,chartPf,chartFrequency].forEach(c=>{
+      if(!c)return; c.data.labels=[]; c.data.datasets.forEach(d=>d.data=[]); c.update("none");
     });
+    limpiarTablas();
+  }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const dayDate = document.getElementById("dayDate");
-      const pmSelect = document.getElementById("pmSelect");
-      const phasePowerModeSelect = document.getElementById("phasePowerMode");
+  /* Histórico */
+  async function obtenerHistorico() {
+    const day=document.getElementById("dayDate").value, pm_slave=getCurrentPmSlave();
+    if(!day) throw new Error("No hay fecha"); if(!pm_slave) throw new Error("No hay PM");
+    const res=await fetch(`${API_BASE}/api/history?device_id=${encodeURIComponent(device)}&pm_slave=${encodeURIComponent(pm_slave)}&from=${encodeURIComponent(day)}&to=${encodeURIComponent(day)}&t=${Date.now()}`,{cache:"no-store"});
+    if(!res.ok) throw new Error("Error API"); return await res.json();
+  }
 
-      if (dayDate) {
-        dayDate.addEventListener("change", () => {
-          console.log("[EVENTO] Cambio de fecha");
-          consultarTodo(true);
-        });
-      }
+  /* Orquestador */
+  async function consultarTodo(forzar=false) {
+    try {
+      const errorBox=document.getElementById("error"), dayInput=document.getElementById("dayDate"), pm_slave=getCurrentPmSlave();
+      if(!dayInput||!pm_slave) return;
+      const day=dayInput.value;
+      if(!day){limpiarGraficas();mostrarToast("Seleccione una fecha");return;}
+      document.getElementById("selectedDateText").innerText=formatearFechaCorta(day);
+      const esNuevaFecha=fechaHistoricaActual!==day, esNuevoPm=Number(pmHistoricoActual)!==Number(pm_slave);
+      if(forzar||esNuevaFecha||esNuevoPm){cerrarToast();limpiarGraficas();errorBox.innerText="Cargando datos...";}
+      const json=await obtenerHistorico();
+      if(!json||json.ok!==true||!Array.isArray(json.data)){errorBox.innerText="";limpiarGraficas();mostrarToast("Error consultando el histórico");return;}
+      if(json.data.length===0){errorBox.innerText="";limpiarGraficas();fechaHistoricaActual=day;pmHistoricoActual=pm_slave;mostrarToast("No hay datos para graficar en la fecha seleccionada");return;}
+      const ordenadas=json.data.slice().sort((a,b)=>new Date(a.visible_at||a.created_at||0)-new Date(b.visible_at||b.created_at||0));
+      const rowsFinales = ordenadas;
+      const labels=rowsFinales.map(r=>formatearHoraReal(r.visible_at||r.created_at));
+      actualizarGraficaVoltajes(labels,rowsFinales);
+      actualizarGraficaCorrientes(labels,rowsFinales);
+      actualizarGraficaPotencias(labels,rowsFinales);
+      actualizarGraficaPotenciaPorFase(labels,rowsFinales);
+      actualizarGraficaFp(labels,rowsFinales);
+      actualizarGraficaFrecuencia(labels,rowsFinales);
+      actualizarTodasLasTablas(labels,rowsFinales);
+      const ultimo=ordenadas[ordenadas.length-1];
+      ultimoTimestampHistorico=ultimoTimestampLive=ultimo?.timestamp_ms??null;
+      ultimaHoraVisible=ultimo?.visible_at||ultimo?.created_at||null;
+      fechaHistoricaActual=day; pmHistoricoActual=pm_slave; errorBox.innerText="";
+    } catch(e) { document.getElementById("error").innerText=""; limpiarGraficas(); mostrarToast("Error al consultar las curvas"); }
+  }
 
-      if (pmSelect) {
-        pmSelect.addEventListener("change", async () => {
-          console.log("[EVENTO] Cambio de PM");
-          actualizarMeterSeleccionadoDesdeSelect();
-          await actualizarTiempoReal();
-          await consultarTodo(true);
-        });
-      }
-
-      if (phasePowerModeSelect) {
-        phasePowerModeSelect.addEventListener("change", async (e) => {
-          console.log("[EVENTO] Cambio de modo potencia por fase:", e.target.value);
-          phasePowerMode = e.target.value;
-          await consultarTodo(true);
-        });
-      }
-    });
-  </script>
+  /* Init */
+  window.addEventListener("load",async()=>{
+    const hoy=hoyTexto();
+    document.getElementById("dayDate").value=hoy;
+    document.getElementById("selectedDateText").innerText=formatearFechaCorta(hoy);
+    const cf=document.getElementById("csvFrom"),ct=document.getElementById("csvTo");
+    if(cf)cf.value=hoy; if(ct)ct.value=hoy;
+    const ok=await cargarMedidores(); if(!ok) return;
+    await actualizarTiempoReal(); await consultarTodo(true);
+    setInterval(async()=>{
+      if(pollingTiempoRealEnCurso) return;
+      pollingTiempoRealEnCurso=true;
+      try{await actualizarTiempoReal();if(document.getElementById("dayDate").value===hoyTexto())await consultarTodo(false);}
+      catch(e){}finally{pollingTiempoRealEnCurso=false;}
+    },2000);
+  });
+  document.addEventListener("DOMContentLoaded",()=>{
+    document.getElementById("dayDate")?.addEventListener("change",()=>consultarTodo(true));
+    document.getElementById("pmSelect")?.addEventListener("change",async()=>{actualizarMeterSeleccionadoDesdeSelect();await actualizarTiempoReal();await consultarTodo(true);});
+    document.getElementById("phasePowerMode")?.addEventListener("change",async(e)=>{phasePowerMode=e.target.value;await consultarTodo(true);});
+    document.getElementById("totalPowerMode")?.addEventListener("change",async(e)=>{totalPowerMode=e.target.value;await consultarTodo(true);});
+  });
+</script>
 </body>
 </html>
