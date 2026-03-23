@@ -77,43 +77,73 @@
     }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-    /* HERO */
-    /* CONTENEDOR GENERAL */
-   /* HERO NUEVO LAYOUT */
+   /* HERO */
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      position: relative;
+      box-shadow: var(--shadow);
+    }
+    
+    .hero::before {
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      height:3px;
+      background: linear-gradient(90deg, var(--orange) 0%, #ff7b36 50%, transparent 100%);
+    }
+    
     .hero-inner {
       display: flex;
       align-items: stretch;
-      flex-wrap: nowrap;
+      min-height: 138px;
     }
     
-    /* LOGO */
+    /* LOGO IZQUIERDA */
     .hero-logo-block {
-      padding: 18px 24px;
+      width: 290px;
+      min-width: 290px;
+      max-width: 290px;
+      padding: 16px 18px;
       border-right: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 180px;
     }
     
-    .hero-logo-block img {
-      height: 65px;
-      width: auto;
+    .hero-logo-wrap {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .hero-logo-wrap img {
+      display: block;
+      width: 100%;
+      max-width: 220px;
+      max-height: 100px;
+      height: auto;
       object-fit: contain;
     }
     
     /* CENTRO */
     .hero-center {
       flex: 1;
-      padding: 18px 28px;
+      min-width: 0;
+      padding: 20px 26px;
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 6px;
+      gap: 8px;
     }
     
-    .hero-center .hero-eyebrow {
+    .hero-eyebrow {
       font-size: 10px;
       font-weight: 700;
       letter-spacing: 2.5px;
@@ -121,38 +151,64 @@
       color: var(--orange);
     }
     
-    .hero-center .hero-subtitle {
+    .hero-subtitle {
       font-size: 12px;
       color: var(--text-dim);
+      font-weight: 400;
     }
     
-    /* STATUS */
     .hero-status {
       display: flex;
       align-items: center;
       gap: 14px;
-      margin-top: 6px;
+      margin-top: 4px;
       flex-wrap: wrap;
+    }
+    
+    .hero-status-item {
+      font-size: 11px;
+      color: var(--text-dim);
+      font-weight: 400;
+    }
+    
+    .hero-status-item strong {
+      color: var(--text);
+      font-weight: 700;
     }
     
     /* DERECHA */
     .hero-pills {
       display: flex;
       align-items: stretch;
+      flex-shrink: 0;
     }
     
     .hero-pill {
-      padding: 18px 24px;
+      min-width: 155px;
+      padding: 18px 22px;
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       justify-content: center;
       gap: 5px;
-      min-width: 150px;
     }
     
     .hero-pill:last-child {
       border-right: none;
+    }
+    
+    .hero-pill-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+    
+    .hero-pill-value {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--orange);
     }
     
     <div class="hero-inner">
@@ -379,20 +435,82 @@
     @media (max-width:1100px) { .charts-grid { grid-template-columns:1fr; } }
     @media (max-width:960px)  { .quality-layout { grid-template-columns:1fr; } }
     @media (max-width:700px)  { .metrics-grid { grid-template-columns:1fr; } .gauges-row { grid-template-columns:1fr; } }
+    @media (max-width: 980px) {
+  .hero-inner {
+    flex-wrap: wrap;
+  }
+
+  .hero-logo-block {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 18px 20px 10px;
+  }
+
+  .hero-logo-wrap img {
+    max-width: 240px;
+    max-height: 90px;
+  }
+
+  .hero-center {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-pills {
+    width: 100%;
+  }
+
+  .hero-pill {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+  @media (max-width: 640px) {
+    .hero-center {
+      padding: 18px 18px;
+    }
+  
+    .hero-status {
+      gap: 8px;
+    }
+  
+    .hero-pill {
+      padding: 16px 14px;
+    }
+  
+    .hero-pill-value {
+      font-size: 14px;
+    }
+  }
   </style>
 </head>
 <body>
 <div class="page">
 
   <!-- HERO -->
-  <header class="hero">
+   <header class="hero">
     <div class="hero-inner">
-      <div class="hero-brand">
-        <div class="hero-eyebrow">Monitoreo eléctrico industrial</div>
-        <div class="hero-logo">
-          <img src="https://www.fmelectrodo.com/wp-content/uploads/2026/03/FMPowerAnalyzerBlanco.svg" alt="FM Power Analyzer">
+  
+      <!-- BLOQUE LOGO -->
+      <div class="hero-logo-block">
+        <div class="hero-logo-wrap">
+          <img
+            src="https://www.fmelectrodo.com/wp-content/uploads/2026/03/FMPowerAnalyzer1.svg"
+            alt="FM Power Analyzer"
+          >
         </div>
-        <p class="hero-subtitle">Análisis de curvas y calidad de energía en tiempo real</p>
+      </div>
+  
+      <!-- BLOQUE CENTRAL -->
+      <div class="hero-center">
+        <div class="hero-eyebrow">Monitoreo eléctrico industrial</div>
+        <div class="hero-subtitle">Análisis de curvas y calidad de energía en tiempo real</div>
+  
         <div class="hero-status">
           <span class="tag-live" id="tagStatus">--</span>
           <span class="hero-status-item">Gateway: <strong id="heroDeviceName">--</strong></span>
@@ -400,6 +518,8 @@
           <span class="hero-status-item">Slave: <strong id="heroPmSlave">--</strong></span>
         </div>
       </div>
+  
+      <!-- BLOQUE DERECHO -->
       <div class="hero-pills">
         <div class="hero-pill">
           <div class="hero-pill-label">Gateway ID</div>
@@ -410,8 +530,10 @@
           <div class="hero-pill-value" id="selectedDateText">--</div>
         </div>
       </div>
+  
     </div>
   </header>
+ 
 
   <!-- TOOLBAR -->
   <div class="toolbar">
