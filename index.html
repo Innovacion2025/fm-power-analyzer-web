@@ -166,7 +166,18 @@
       align-items: stretch;
       min-height: 138px;
     }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
     
+    .hero-alert-box {
+      min-width: 260px;
+      max-width: 320px;
+    }
+        
     /* LOGO IZQUIERDA */
     .hero-logo-block {
       width: 290px;
@@ -202,9 +213,9 @@
       padding: 20px 26px;
       border-right: 1px solid var(--border);
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
     }
     
     .hero-eyebrow {
@@ -782,20 +793,26 @@
   
       <!-- BLOQUE CENTRAL -->
       <div class="hero-center">
-        <div class="hero-eyebrow">Monitoreo eléctrico industrial</div>
-        <div class="hero-subtitle">Análisis de curvas y calidad de energía en tiempo real</div>
       
-        <div class="hero-status">
-          <span class="tag-live" id="tagStatus">--</span>
-          <span class="hero-status-item">Gateway: <strong id="heroDeviceName">--</strong></span>
-          <span class="hero-status-item">PM: <strong id="heroPmName">--</strong></span>
-          <span class="hero-status-item">Slave: <strong id="heroPmSlave">--</strong></span>
+        <!-- IZQUIERDA -->
+        <div class="hero-left">
+          <div class="hero-eyebrow">Monitoreo eléctrico industrial</div>
+          <div class="hero-subtitle">Análisis de curvas y calidad de energía en tiempo real</div>
+      
+          <div class="hero-status">
+            <span class="tag-live" id="tagStatus">--</span>
+            <span class="hero-status-item">Gateway: <strong id="heroDeviceName">--</strong></span>
+            <span class="hero-status-item">PM: <strong id="heroPmName">--</strong></span>
+            <span class="hero-status-item">Slave: <strong id="heroPmSlave">--</strong></span>
+          </div>
         </div>
       
+        <!-- DERECHA -->
         <div class="hero-alert-box" id="heroAlertBox">
           <div class="hero-alert-title">PMs en advertencia</div>
           <div class="hero-alert-list" id="heroAlertList">--</div>
         </div>
+      
       </div>
   
       <!-- BLOQUE DERECHO -->
