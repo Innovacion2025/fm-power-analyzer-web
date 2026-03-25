@@ -2014,9 +2014,29 @@
             ds("VA",va,"#EC631F"),
             ds("VB",vb,"#2D9CDB"),
             ds("VC",vc,"#16a085"),
+  
+            // 🔴 LÍMITE SUPERIOR
+            {
+              label:"Límite superior",
+              data:limSupArr,
+              borderColor:"#D64541",
+              borderDash:[6,6],
+              pointRadius:0,
+              borderWidth:1.5
+            },
+  
+            // 🟡 LÍMITE INFERIOR
+            {
+              label:"Límite inferior",
+              data:limInfArr,
+              borderColor:"#f39c12",
+              borderDash:[6,6],
+              pointRadius:0,
+              borderWidth:1.5
+            }
           ]
         },
-        options:chartOpts("V",80)
+        options:chartOpts("V",0)
       });
     } 
     else {
@@ -2104,7 +2124,7 @@
   function actualizarGraficaFp(labels,rows) {
     const pfa=rows.map(r=>corregirPfFase(numeroSeguro(r.pf_a))),pfb=rows.map(r=>corregirPfFase(numeroSeguro(r.pf_b))),pfc=rows.map(r=>corregirPfFase(numeroSeguro(r.pf_c))),pft=rows.map(r=>numeroSeguro(r.pf_tot));
     const ctx=document.getElementById("chartPf").getContext("2d");
-    if(!chartPf){chartPf=new Chart(ctx,{type:"line",data:{labels,datasets:[ds("FP A",pfa,"#EC631F"),ds("FP B",pfb,"#2D9CDB"),ds("FP C",pfc,"#16a085"),ds("FP Total",pft,"#7B61FF")]},options:chartOpts("FP",0,1.2)});}
+    if(!chartPf){chartPf=new Chart(ctx,{type:"line",data:{labels,datasets:[ds("FP A",pfa,"#EC631F"),ds("FP B",pfb,"#2D9CDB"),ds("FP C",pfc,"#16a085"),ds("FP Total",pft,"#7B61FF")]},options:chartOpts("FP",-1,1.2)});}
     else{chartPf.data.labels=labels;[pfa,pfb,pfc,pft].forEach((d,i)=>chartPf.data.datasets[i].data=d);chartPf.update("none");}
   }
   function actualizarGraficaFrecuencia(labels,rows) {
