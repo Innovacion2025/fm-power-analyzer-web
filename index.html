@@ -829,7 +829,7 @@
         <div class="gauges-row">
           <!-- Voltaje -->
           <div class="gauge-card">
-            <div class="gauge-title">Desbalance de voltaje  · IEC 61000-2-4</div>
+            <div class="gauge-title">Desbalance de voltaje  · ARCONEL 009/24</div>
             <div class="gauge-svg-wrap">
               <svg viewBox="0 0 130 74" width="130" height="74" style="overflow:visible">
                 <!-- Pista fondo -->
@@ -864,7 +864,7 @@
 
           <!-- Corriente -->
           <div class="gauge-card">
-            <div class="gauge-title">Desbalance de corriente  · IEC 61000-2-4</div>
+            <div class="gauge-title">Desbalance de corriente</div>
             <div class="gauge-svg-wrap">
               <svg viewBox="0 0 130 74" width="130" height="74" style="overflow:visible">
                 <path d="M12,68 A53,53 0 0,1 118,68" fill="none" stroke="#1c2227" stroke-width="10" stroke-linecap="round"/>
@@ -896,7 +896,7 @@
 
       <!-- THD — mini-gauges -->
       <div class="quality-card">
-        <div class="quality-card-title">THD — Voltaje y corriente · IEEE 519</div>
+        <div class="quality-card-title">THD de Voltaje · ARCONEL 009/24 y THD de corriente</div>
         <div class="thd-gauges-grid">
 
           <!-- THD V A -->
@@ -913,7 +913,7 @@
               <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
             </svg>
             <div class="mini-gauge-val" id="q_thd_va">--<span> %</span></div>
-            <div class="gauge-range">Límite recomendado ≤ 5 %</div>
+            <div class="gauge-range">Límite recomendado ≤ 8 %</div>
           </div>
 
           <!-- THD V B -->
@@ -930,7 +930,7 @@
               <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
             </svg>
             <div class="mini-gauge-val" id="q_thd_vb">--<span> %</span></div>
-            <div class="gauge-range">Límite recomendado ≤ 5 %</div>
+            <div class="gauge-range">Límite recomendado ≤ 8 %</div>
           </div>
 
           <!-- THD V C -->
@@ -947,7 +947,7 @@
               <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
             </svg>
             <div class="mini-gauge-val" id="q_thd_vc">--<span> %</span></div>
-            <div class="gauge-range">Límite recomendado ≤ 5 %</div>
+            <div class="gauge-range">Límite recomendado ≤ 8 %</div>
           </div>
 
           <!-- THD I A -->
@@ -1021,12 +1021,12 @@
       <!-- Voltajes -->
       <div class="chart-card">
         <div class="chart-header">
-          <div><div class="chart-title">Voltajes por fase</div><div class="chart-subtitle">V A · V B · V C</div></div>
+          <div><div class="chart-title">Voltajes por fase</div><div class="chart-subtitle">VA · VB · VC</div></div>
         </div>
         <div class="chart-body"><canvas id="chartVoltages" class="chart-canvas"></canvas></div>
         <div class="data-table-wrap">
           <table class="data-table">
-            <thead><tr><th style="color:#EC631F">V A</th><th style="color:#2D9CDB">V B</th><th style="color:#16a085">V C</th></tr></thead>
+            <thead><tr><th style="color:#EC631F">VA</th><th style="color:#2D9CDB">VB</th><th style="color:#16a085">VC</th></tr></thead>
             <tbody id="tbodyVoltages"></tbody>
           </table>
         </div>
@@ -1035,12 +1035,12 @@
       <!-- Corrientes -->
       <div class="chart-card">
         <div class="chart-header">
-          <div><div class="chart-title">Corrientes por fase</div><div class="chart-subtitle">I A · I B · I C · I N</div></div>
+          <div><div class="chart-title">Corrientes por fase</div><div class="chart-subtitle">IA · IB · IC · IN</div></div>
         </div>
         <div class="chart-body"><canvas id="chartCurrents" class="chart-canvas"></canvas></div>
         <div class="data-table-wrap">
           <table class="data-table">
-            <thead><tr><th style="color:#EC631F">I A</th><th style="color:#2D9CDB">I B</th><th style="color:#7B61FF">I C</th><th style="color:#D64541">I N</th></tr></thead>
+            <thead><tr><th style="color:#EC631F">IA</th><th style="color:#2D9CDB">IB</th><th style="color:#7B61FF">IC</th><th style="color:#D64541">IN</th></tr></thead>
             <tbody id="tbodyCurrents"></tbody>
           </table>
         </div>
@@ -1531,10 +1531,68 @@
 
   /* Gráficas */
   function actualizarGraficaVoltajes(labels,rows) {
-    const va=rows.map(r=>numeroSeguro(r.voltage_a,r.voltage_an)), vb=rows.map(r=>numeroSeguro(r.voltage_b)), vc=rows.map(r=>numeroSeguro(r.voltage_c));
-    const ctx=document.getElementById("chartVoltages").getContext("2d");
-    if(!chartVoltages){chartVoltages=new Chart(ctx,{type:"line",data:{labels,datasets:[ds("V A",va,"#EC631F"),ds("V B",vb,"#2D9CDB"),ds("V C",vc,"#16a085")]},options:chartOpts("V",0)});}
-    else{chartVoltages.data.labels=labels;[va,vb,vc].forEach((d,i)=>chartVoltages.data.datasets[i].data=d);chartVoltages.update("none");}
+    const va = rows.map(r=>numeroSeguro(r.voltage_a,r.voltage_an));
+    const vb = rows.map(r=>numeroSeguro(r.voltage_b));
+    const vc = rows.map(r=>numeroSeguro(r.voltage_c));
+  
+    // 🔴 DEFINE TUS LÍMITES AQUÍ
+    const LIM_SUP = 129.6; // +8% 
+    const LIM_INF = 110.4; // -8%
+  
+    const n = labels.length;
+    const limSupArr = Array(n).fill(LIM_SUP);
+    const limInfArr = Array(n).fill(LIM_INF);
+  
+    const ctx = document.getElementById("chartVoltages").getContext("2d");
+  
+    if(!chartVoltages){
+      chartVoltages = new Chart(ctx,{
+        type:"line",
+        data:{
+          labels,
+          datasets:[
+            ds("V A",va,"#EC631F"),
+            ds("V B",vb,"#2D9CDB"),
+            ds("V C",vc,"#16a085"),
+  
+            // 🔴 LÍMITE SUPERIOR
+            {
+              label:"Límite superior",
+              data:limSupArr,
+              borderColor:"#D64541",
+              borderDash:[6,6],
+              pointRadius:0,
+              borderWidth:1.5
+            },
+  
+            // 🟡 LÍMITE INFERIOR
+            {
+              label:"Límite inferior",
+              data:limInfArr,
+              borderColor:"#f39c12",
+              borderDash:[6,6],
+              pointRadius:0,
+              borderWidth:1.5
+            }
+          ]
+        },
+        options:chartOpts("V",0)
+      });
+    } 
+    else {
+      chartVoltages.data.labels = labels;
+  
+      // Fases
+      chartVoltages.data.datasets[0].data = va;
+      chartVoltages.data.datasets[1].data = vb;
+      chartVoltages.data.datasets[2].data = vc;
+  
+      // Límites
+      chartVoltages.data.datasets[3].data = limSupArr;
+      chartVoltages.data.datasets[4].data = limInfArr;
+  
+      chartVoltages.update("none");
+    }
   }
   function actualizarGraficaCorrientes(labels,rows) {
     const ia=rows.map(r=>numeroSeguro(r.current_a)),ib=rows.map(r=>numeroSeguro(r.current_b)),ic=rows.map(r=>numeroSeguro(r.current_c)),iN=rows.map(r=>numeroSeguro(r.current_n));
