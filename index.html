@@ -1236,7 +1236,7 @@
         <div class="chart-body"><canvas id="chartPhasePowers" class="chart-canvas"></canvas></div>
         <div class="data-table-wrap">
           <table class="data-table">
-            <thead><tr><th id="thPpA" style="color:#EC631F">P A</th><th id="thPpB" style="color:#2D9CDB">P B</th><th id="thPpC" style="color:#16a085">P C</th></tr></thead>
+            <thead><tr><th id="thPpA" style="color:#EC631F">PA</th><th id="thPpB" style="color:#2D9CDB">PB</th><th id="thPpC" style="color:#16a085">PC</th></tr></thead>
             <tbody id="tbodyPhasePowers"></tbody>
           </table>
         </div>
@@ -1245,12 +1245,12 @@
       <!-- Factor de potencia -->
       <div class="chart-card">
         <div class="chart-header">
-          <div><div class="chart-title">Factor de potencia</div><div class="chart-subtitle">FP A · FP B · FP C · FP Total</div></div>
+          <div><div class="chart-title">Factor de potencia</div><div class="chart-subtitle">FPA · FPB · FPC · FPTotal</div></div>
         </div>
         <div class="chart-body"><canvas id="chartPf" class="chart-canvas"></canvas></div>
         <div class="data-table-wrap">
           <table class="data-table">
-            <thead><tr><th style="color:#EC631F">FP A</th><th style="color:#2D9CDB">FP B</th><th style="color:#16a085">FP C</th><th style="color:#7B61FF">FP Tot</th></tr></thead>
+            <thead><tr><th style="color:#EC631F">FPA</th><th style="color:#2D9CDB">FPB</th><th style="color:#16a085">FPC</th><th style="color:#7B61FF">FPTot</th></tr></thead>
             <tbody id="tbodyPf"></tbody>
           </table>
         </div>
@@ -1834,9 +1834,9 @@
         data:{
           labels,
           datasets:[
-            ds("V A",va,"#EC631F"),
-            ds("V B",vb,"#2D9CDB"),
-            ds("V C",vc,"#16a085"),
+            ds("VA",va,"#EC631F"),
+            ds("VB",vb,"#2D9CDB"),
+            ds("VC",vc,"#16a085"),
   
             // 🔴 LÍMITE SUPERIOR
             {
@@ -1880,14 +1880,14 @@
   function actualizarGraficaCorrientes(labels,rows) {
     const ia=rows.map(r=>numeroSeguro(r.current_a)),ib=rows.map(r=>numeroSeguro(r.current_b)),ic=rows.map(r=>numeroSeguro(r.current_c)),iN=rows.map(r=>numeroSeguro(r.current_n));
     const ctx=document.getElementById("chartCurrents").getContext("2d");
-    if(!chartCurrents){chartCurrents=new Chart(ctx,{type:"line",data:{labels,datasets:[ds("I A",ia,"#EC631F"),ds("I B",ib,"#2D9CDB"),ds("I C",ic,"#7B61FF"),ds("I N",iN,"#D64541")]},options:chartOpts("A",0)});}
+    if(!chartCurrents){chartCurrents=new Chart(ctx,{type:"line",data:{labels,datasets:[ds("IA",ia,"#EC631F"),ds("IB",ib,"#2D9CDB"),ds("IC",ic,"#7B61FF"),ds("IN",iN,"#D64541")]},options:chartOpts("A",0)});}
     else{chartCurrents.data.labels=labels;[ia,ib,ic,iN].forEach((d,i)=>chartCurrents.data.datasets[i].data=d);chartCurrents.update("none");}
   }
   /* Config de potencias totales según selector */
   function getTotalPowerConfig() {
-    if(totalPowerMode==="activa")   return {key:"p_tot",alt:"ptot",label:"P activa",unit:"kW",color:"#EC631F"};
-    if(totalPowerMode==="reactiva") return {key:"q_tot",alt:"qtot",label:"Q reactiva",unit:"kVAR",color:"#2D9CDB"};
-    if(totalPowerMode==="aparente") return {key:"s_tot",alt:"stot",label:"S aparente",unit:"kVA",color:"#7B61FF"};
+    if(totalPowerMode==="activa")   return {key:"p_tot",alt:"ptot",label:"P ",unit:"kW",color:"#EC631F"};
+    if(totalPowerMode==="reactiva") return {key:"q_tot",alt:"qtot",label:"Q ",unit:"kVAR",color:"#2D9CDB"};
+    if(totalPowerMode==="aparente") return {key:"s_tot",alt:"stot",label:"S ",unit:"kVA",color:"#7B61FF"};
     return null; // "todas"
   }
   function actualizarTablaPotenciasTotales(rows) {
