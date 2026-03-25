@@ -48,35 +48,99 @@
     ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
 
     /* TAG LIVE */
-    .tag-live.online {
+    .tag-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
       background: rgba(22,160,133,0.12);
       color: var(--teal);
       border: 1px solid rgba(22,160,133,0.25);
     }
     
-    .tag-live.offline {
+    .tag-live::before {
+      content:'';
+      width:6px;
+      height:6px;
+      border-radius:50%;
+      background:var(--teal);
+      box-shadow:0 0 6px var(--teal);
+      animation:blink 2s infinite;
+    }
+    
+    .tag-live.online {
+      background: rgba(22,160,133,0.12);
+      color: var(--teal);
+      border: 1px solid rgba(22,160,133,0.25);
+    }
+    .tag-live.online::before {
+      background: var(--teal);
+      box-shadow: 0 0 6px var(--teal);
+      animation: blink 2s infinite;
+    }
+    
+    .tag-live.warning {
+      background: rgba(243,156,18,0.12);
+      color: var(--amber);
+      border: 1px solid rgba(243,156,18,0.28);
+    }
+    .tag-live.warning::before {
+      background: var(--amber);
+      box-shadow: 0 0 6px var(--amber);
+      animation: none;
+    }
+    
+    .tag-live.dead {
       background: rgba(214,69,65,0.12);
       color: var(--red);
       border: 1px solid rgba(214,69,65,0.25);
     }
-    
-    .tag-live.offline::before {
+    .tag-live.dead::before {
       background: var(--red);
       box-shadow: 0 0 6px var(--red);
-      animation: none; /* sin parpadeo */
+      animation: none;
     }
-    .tag-live {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 4px 10px; border-radius: 99px;
-      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-      background: rgba(22,160,133,0.12); color: var(--teal); border: 1px solid rgba(22,160,133,0.25);
-    }
-    .tag-live::before {
-      content:''; width:6px; height:6px; border-radius:50%;
-      background:var(--teal); box-shadow:0 0 6px var(--teal); animation:blink 2s infinite;
-    }
+    
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
+    
+    /* Caja de advertencia superior */
+    .hero-alert-box {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: var(--r-sm);
+      border: 1px solid rgba(243,156,18,0.28);
+      background: rgba(243,156,18,0.10);
+    }
+    
+    .hero-alert-box.show {
+      display: block;
+    }
+    
+    .hero-alert-title {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 6px;
+    }
+    
+    .hero-alert-list {
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    
+    .hero-alert-list span {
+      color: var(--text-dim);
+    }
+        
    /* HERO */
     .hero {
       background: var(--surface);
@@ -720,12 +784,17 @@
       <div class="hero-center">
         <div class="hero-eyebrow">Monitoreo eléctrico industrial</div>
         <div class="hero-subtitle">Análisis de curvas y calidad de energía en tiempo real</div>
-  
+      
         <div class="hero-status">
           <span class="tag-live" id="tagStatus">--</span>
           <span class="hero-status-item">Gateway: <strong id="heroDeviceName">--</strong></span>
           <span class="hero-status-item">PM: <strong id="heroPmName">--</strong></span>
           <span class="hero-status-item">Slave: <strong id="heroPmSlave">--</strong></span>
+        </div>
+      
+        <div class="hero-alert-box" id="heroAlertBox">
+          <div class="hero-alert-title">PMs en advertencia</div>
+          <div class="hero-alert-list" id="heroAlertList">--</div>
         </div>
       </div>
   
@@ -1149,25 +1218,32 @@
   let ultimoTimestampHistorico=null, ultimoTimestampLive=null;
   let ultimaHoraVisible=null, fechaHistoricaActual=null, pmHistoricoActual=null;
   let pollingTiempoRealEnCurso=false;
+  let estadoGatewayActual="unknown";
+  let listaPmAdvertencia=[];
 
   /* Utilidades */
   function actualizarEstadoConexion(status) {
     const el = document.getElementById("tagStatus");
     if (!el) return;
   
-    if (status === "online") {
+    const st = String(status || "").toLowerCase();
+  
+    el.classList.remove("online", "warning", "dead");
+  
+    if (st === "online") {
       el.textContent = "CONECTADO";
-      el.classList.remove("offline");
       el.classList.add("online");
-    } 
-    else if (status === "meter_offline") {
+    }
+    else if (st === "meter_offline" || st === "meters_offline") {
+      el.textContent = "ADVERTENCIA";
+      el.classList.add("warning");
+    }
+    else if (st === "dead") {
       el.textContent = "DESCONECTADO";
-      el.classList.remove("online");
-      el.classList.add("offline");
-    } 
+      el.classList.add("dead");
+    }
     else {
       el.textContent = "--";
-      el.classList.remove("online", "offline");
     }
   }
     
@@ -1194,6 +1270,73 @@
     document.getElementById("heroPmName").innerText     = currentMeter?.pm_name||"--";
     document.getElementById("heroPmSlave").innerText    = currentMeter?.pm_slave??"--";
   }
+
+  function limpiarResumenInstantaneo() {
+    document.getElementById("summaryPTot").innerText = "--";
+    document.getElementById("summaryPfTot").innerText = "--";
+    document.getElementById("summaryFrequency").innerText = "--";
+    document.getElementById("summaryCurrentN").innerText = "--";
+  
+    actualizarGauge("gaugeFillV","gaugeNeedleV","gaugeValV",null,10);
+    actualizarGauge("gaugeFillI","gaugeNeedleI","gaugeValI",null,20);
+  
+    setMiniGauge("thd_va",null);
+    setMiniGauge("thd_vb",null);
+    setMiniGauge("thd_vc",null);
+    setMiniGauge("thd_ia",null);
+    setMiniGauge("thd_ib",null);
+    setMiniGauge("thd_ic",null);
+  }
+  
+  function actualizarCajaAdvertenciaPM(lista) {
+    const box = document.getElementById("heroAlertBox");
+    const list = document.getElementById("heroAlertList");
+    if (!box || !list) return;
+  
+    if (!Array.isArray(lista) || lista.length === 0) {
+      box.classList.remove("show");
+      list.innerHTML = "--";
+      return;
+    }
+  
+    list.innerHTML = lista.map(pm => {
+      const nombre = pm.pm_name || "PM sin nombre";
+      const slave = pm.pm_slave ?? "--";
+      return `<div><strong>${nombre}</strong> <span>(Slave ${slave})</span></div>`;
+    }).join("");
+  
+    box.classList.add("show");
+  }
+  
+  async function obtenerPmEnAdvertencia() {
+    if (!Array.isArray(meters) || meters.length === 0) return [];
+  
+    const consultas = meters.map(async (m) => {
+      try {
+        const res = await fetch(
+          `${API_BASE}/api/device/${encodeURIComponent(device)}?pm_slave=${encodeURIComponent(m.pm_slave)}&t=${Date.now()}`,
+          { cache: "no-store" }
+        );
+        const json = await res.json();
+        if (!json || json.ok !== true || !json.data) return null;
+  
+        const st = String(json.data.status || "").toLowerCase();
+        if (st === "meter_offline" || st === "meters_offline") {
+          return {
+            pm_slave: json.data.pm_slave ?? m.pm_slave,
+            pm_name: json.data.pm_name || m.pm_name || "PM sin nombre"
+          };
+        }
+        return null;
+      } catch (e) {
+        return null;
+      }
+    });
+  
+    const resultados = await Promise.all(consultas);
+    return resultados.filter(Boolean);
+  }
+  
   function crearFilaInicioDia(f) {
     const iso=`${f}T00:00:00`;
     return {visible_at:iso,created_at:iso,timestamp_ms:null,
@@ -1471,35 +1614,77 @@
   }
 
   /* Tiempo real */
-  async function actualizarTiempoReal() {
+   async function actualizarTiempoReal() {
     try {
-      const pm_slave=getCurrentPmSlave(); if(!pm_slave) return null;
-      const res=await fetch(`${API_BASE}/api/device/${encodeURIComponent(device)}?pm_slave=${encodeURIComponent(pm_slave)}&t=${Date.now()}`,{cache:"no-store"});
-      const data=await res.json();
-      if(!data||data.ok!==true){document.getElementById("error").innerText="No hay datos del PM seleccionado";return null;}
-      const d=data.data||{};
-      actualizarEstadoConexion(d.status);
-      document.getElementById("error").innerText="";
-      currentMeter={
-        device_id:valorSeguro(d.device_id,currentMeter?.device_id,device),
-        device_name:valorSeguro(d.device_name,currentMeter?.device_name),
-        pm_name:valorSeguro(d.pm_name,currentMeter?.pm_name),
-        pm_slave:valorSeguro(d.pm_slave,currentMeter?.pm_slave,pm_slave)};
+      const pm_slave = getCurrentPmSlave();
+      if (!pm_slave) return null;
+  
+      const res = await fetch(
+        `${API_BASE}/api/device/${encodeURIComponent(device)}?pm_slave=${encodeURIComponent(pm_slave)}&t=${Date.now()}`,
+        { cache: "no-store" }
+      );
+      const data = await res.json();
+  
+      if (!data || data.ok !== true) {
+        document.getElementById("error").innerText = "No hay datos del PM seleccionado";
+        return null;
+      }
+  
+      const d = data.data || {};
+      const statusNormalizado = String(d.status || "").toLowerCase();
+  
+      estadoGatewayActual = statusNormalizado;
+      actualizarEstadoConexion(statusNormalizado);
+  
+      document.getElementById("error").innerText = "";
+  
+      currentMeter = {
+        device_id: valorSeguro(d.device_id, currentMeter?.device_id, device),
+        device_name: valorSeguro(d.device_name, currentMeter?.device_name),
+        pm_name: valorSeguro(d.pm_name, currentMeter?.pm_name),
+        pm_slave: valorSeguro(d.pm_slave, currentMeter?.pm_slave, pm_slave)
+      };
       actualizarEncabezadoMeter();
+  
+      // DEAD: no mostrar nada en calidad ni históricas
+      if (statusNormalizado === "dead") {
+        listaPmAdvertencia = [];
+        actualizarCajaAdvertenciaPM([]);
+        limpiarResumenInstantaneo();
+        limpiarGraficas();
+        document.getElementById("error").innerText = "Gateway desconectado";
+        return d;
+      }
+  
+      // WARNING: mostrar lista de PMs en advertencia
+      if (statusNormalizado === "meter_offline" || statusNormalizado === "meters_offline") {
+        listaPmAdvertencia = await obtenerPmEnAdvertencia();
+        actualizarCajaAdvertenciaPM(listaPmAdvertencia);
+      } else {
+        listaPmAdvertencia = [];
+        actualizarCajaAdvertenciaPM([]);
+      }
+  
       document.getElementById("summaryPTot").innerText      = textoValor(numeroSeguro(d.p_tot,d.ptot)," kW",3);
       document.getElementById("summaryPfTot").innerText     = textoValor(numeroSeguro(d.pf_tot),"",3);
       document.getElementById("summaryFrequency").innerText = textoValor(numeroSeguro(d.frecuencia,d.frequency)," Hz",3);
       document.getElementById("summaryCurrentN").innerText  = textoValor(numeroSeguro(d.current_n)," A",3);
+  
       actualizarGauge("gaugeFillV","gaugeNeedleV","gaugeValV",numeroSeguro(d.desbalance_v),10);
       actualizarGauge("gaugeFillI","gaugeNeedleI","gaugeValI",numeroSeguro(d.desbalance_i),20);
+  
       setMiniGauge("thd_va",numeroSeguro(d.thd_va));
       setMiniGauge("thd_vb",numeroSeguro(d.thd_vb));
       setMiniGauge("thd_vc",numeroSeguro(d.thd_vc));
       setMiniGauge("thd_ia",numeroSeguro(d.thd_ia));
       setMiniGauge("thd_ib",numeroSeguro(d.thd_ib));
       setMiniGauge("thd_ic",numeroSeguro(d.thd_ic));
+  
       return d;
-    } catch(e) { document.getElementById("error").innerText="Error conectando con la API"; return null; }
+    } catch(e) {
+      document.getElementById("error").innerText = "Error conectando con la API";
+      return null;
+    }
   }
 
   /* Opciones gráfica */
@@ -1692,21 +1877,64 @@
   }
 
   /* Orquestador */
-  async function consultarTodo(forzar=false) {
+   async function consultarTodo(forzar=false) {
     try {
-      const errorBox=document.getElementById("error"), dayInput=document.getElementById("dayDate"), pm_slave=getCurrentPmSlave();
-      if(!dayInput||!pm_slave) return;
-      const day=dayInput.value;
-      if(!day){limpiarGraficas();mostrarToast("Seleccione una fecha");return;}
-      document.getElementById("selectedDateText").innerText=formatearFechaCorta(day);
-      const esNuevaFecha=fechaHistoricaActual!==day, esNuevoPm=Number(pmHistoricoActual)!==Number(pm_slave);
-      if(forzar||esNuevaFecha||esNuevoPm){cerrarToast();limpiarGraficas();errorBox.innerText="Cargando datos...";}
-      const json=await obtenerHistorico();
-      if(!json||json.ok!==true||!Array.isArray(json.data)){errorBox.innerText="";limpiarGraficas();mostrarToast("Error consultando el histórico");return;}
-      if(json.data.length===0){errorBox.innerText="";limpiarGraficas();fechaHistoricaActual=day;pmHistoricoActual=pm_slave;mostrarToast("No hay datos para graficar en la fecha seleccionada");return;}
-      const ordenadas=json.data.slice().sort((a,b)=>new Date(a.visible_at||a.created_at||0)-new Date(b.visible_at||b.created_at||0));
+      const errorBox = document.getElementById("error");
+      const dayInput = document.getElementById("dayDate");
+      const pm_slave = getCurrentPmSlave();
+  
+      if (!dayInput || !pm_slave) return;
+  
+      const day = dayInput.value;
+      if (!day) {
+        limpiarGraficas();
+        mostrarToast("Seleccione una fecha");
+        return;
+      }
+  
+      document.getElementById("selectedDateText").innerText = formatearFechaCorta(day);
+  
+      // Si el gateway está dead, no mostrar curvas ni tablas
+      if (estadoGatewayActual === "dead") {
+        limpiarGraficas();
+        errorBox.innerText = "Gateway desconectado";
+        return;
+      }
+  
+      const esNuevaFecha = fechaHistoricaActual !== day;
+      const esNuevoPm = Number(pmHistoricoActual) !== Number(pm_slave);
+  
+      if (forzar || esNuevaFecha || esNuevoPm) {
+        cerrarToast();
+        limpiarGraficas();
+        errorBox.innerText = "Cargando datos...";
+      }
+  
+      const json = await obtenerHistorico();
+  
+      if (!json || json.ok !== true || !Array.isArray(json.data)) {
+        errorBox.innerText = "";
+        limpiarGraficas();
+        mostrarToast("Error consultando el histórico");
+        return;
+      }
+  
+      if (json.data.length === 0) {
+        errorBox.innerText = "";
+        limpiarGraficas();
+        fechaHistoricaActual = day;
+        pmHistoricoActual = pm_slave;
+        mostrarToast("No hay datos para graficar en la fecha seleccionada");
+        return;
+      }
+  
+      const ordenadas = json.data.slice().sort(
+        (a,b) => new Date(a.visible_at || a.created_at || 0) - new Date(b.visible_at || b.created_at || 0)
+      );
+  
       const rowsFinales = ordenadas;
-      const labels=rowsFinales.map(r=>formatearHoraReal(r.visible_at||r.created_at));
+      const labels = rowsFinales.map(r => formatearHoraReal(r.visible_at || r.created_at));
+  
       actualizarGraficaVoltajes(labels,rowsFinales);
       actualizarGraficaCorrientes(labels,rowsFinales);
       actualizarGraficaPotencias(labels,rowsFinales);
@@ -1714,11 +1942,18 @@
       actualizarGraficaFp(labels,rowsFinales);
       actualizarGraficaFrecuencia(labels,rowsFinales);
       actualizarTodasLasTablas(labels,rowsFinales);
-      const ultimo=ordenadas[ordenadas.length-1];
-      ultimoTimestampHistorico=ultimoTimestampLive=ultimo?.timestamp_ms??null;
-      ultimaHoraVisible=ultimo?.visible_at||ultimo?.created_at||null;
-      fechaHistoricaActual=day; pmHistoricoActual=pm_slave; errorBox.innerText="";
-    } catch(e) { document.getElementById("error").innerText=""; limpiarGraficas(); mostrarToast("Error al consultar las curvas"); }
+  
+      const ultimo = ordenadas[ordenadas.length - 1];
+      ultimoTimestampHistorico = ultimoTimestampLive = ultimo?.timestamp_ms ?? null;
+      ultimaHoraVisible = ultimo?.visible_at || ultimo?.created_at || null;
+      fechaHistoricaActual = day;
+      pmHistoricoActual = pm_slave;
+      errorBox.innerText = "";
+    } catch(e) {
+      document.getElementById("error").innerText = "";
+      limpiarGraficas();
+      mostrarToast("Error al consultar las curvas");
+    }
   }
 
   /* Init */
