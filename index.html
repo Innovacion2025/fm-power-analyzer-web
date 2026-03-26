@@ -418,32 +418,54 @@
       flex-direction: column;
       align-items: stretch;
       justify-content: center;
+      min-width: 0; /* importante para evitar overflow en grid/flex */
     }
+    
     .quality-card-title {
-      font-size:10px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase;
-      color:var(--text-dim); margin-bottom:14px; display:flex; align-items:center; gap:8px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       width: 100%;
+      min-width: 0;
+      line-height: 1.4;
     }
-    .quality-card-title::before { content:''; width:10px; height:10px; border:2px solid var(--orange); border-radius:2px; flex-shrink:0; }
-
+    
+    .quality-card-title::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border: 2px solid var(--orange);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    
     .thd-gauges-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(150px, 1fr));
-      column-gap: 42px;
-      row-gap: 16px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
       width: 100%;
-      max-width: 620px;
+      max-width: 100%;
       margin: 0 auto;
-      justify-items: center;
+      justify-items: stretch;
       align-items: start;
     }
+    
     .mini-gauge {
-      width: 150px;
+      width: 100%;
+      min-width: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 6px;
+      padding: 6px 4px;
     }
+    
     .mini-gauge-label {
       font-size: 9px;
       font-weight: 700;
@@ -452,8 +474,17 @@
       color: var(--text-faint);
       text-align: center;
       line-height: 1.2;
+      word-break: break-word;
     }
-    .mini-gauge-svg { display:block; overflow:visible; }
+    
+    .mini-gauge-svg {
+      display: block;
+      overflow: visible;
+      width: 100%;
+      max-width: 130px;
+      height: auto;
+    }
+    
     .mini-gauge-val {
       font-size: 18px;
       font-weight: 800;
@@ -461,7 +492,12 @@
       text-align: center;
       line-height: 1;
     }
-    .mini-gauge-val span { font-size:9px; font-weight:500; color:var(--text-faint); }
+    
+    .mini-gauge-val span {
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--text-faint);
+    }
 
     /* CHARTS */
     .charts-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
@@ -582,10 +618,94 @@
     @media (max-width:1100px) { .charts-grid { grid-template-columns:1fr; } }
     @media (max-width:960px)  { .quality-layout { grid-template-columns:1fr; } }
     @media (max-width:700px)  { .metrics-grid { grid-template-columns:1fr; } .gauges-row { grid-template-columns:1fr; } }
-    @media (max-width: 980px) {
-  .hero-inner {
-    flex-wrap: wrap;
-  }
+    @media (max-width: 980px) {.hero-inner { flex-wrap: wrap; }
+                               
+    /* Tablets */
+    @media (max-width: 900px) {
+      .thd-gauges-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    
+      .quality-card {
+        padding: 16px 18px;
+      }
+    }
+    
+    /* Celulares iOS y Android */
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+      }
+    
+      .quality-layout {
+        gap: 12px;
+      }
+    
+      .quality-card {
+        padding: 14px 14px;
+      }
+    
+      .metrics-grid,
+      .gauges-row,
+      .thd-gauges-grid {
+        grid-template-columns: 1fr;
+      }
+    
+      .gauge-card,
+      .mini-gauge {
+        width: 100%;
+      }
+    
+      .gauge-svg-wrap {
+        width: min(100%, 130px);
+        height: auto;
+        aspect-ratio: 130 / 74;
+      }
+    
+      .quality-card-title {
+        font-size: 9px;
+        letter-spacing: 1.2px;
+      }
+    
+      .metric-value {
+        font-size: 20px;
+      }
+    
+      .gauge-val,
+      .mini-gauge-val {
+        font-size: 16px;
+      }
+    
+      .gauge-range,
+      .mini-gauge .gauge-range {
+        font-size: 8px;
+        text-align: center;
+        line-height: 1.3;
+      }
+    }
+    
+    /* Pantallas muy angostas */
+    @media (max-width: 380px) {
+      .quality-card {
+        padding: 12px;
+      }
+    
+      .mini-gauge-svg {
+        max-width: 116px;
+      }
+    
+      .gauge-svg-wrap {
+        width: min(100%, 116px);
+      }
+    
+      .metric-card {
+        padding: 12px 14px;
+      }
+    
+      .metric-value {
+        font-size: 18px;
+      }
+    }
 
   .hero-logo-block {
     width: 100%;
@@ -989,7 +1109,7 @@
           <div class="gauge-card">
             <div class="gauge-title">Desbalance de voltaje  · ARCONEL 009/24</div>
             <div class="gauge-svg-wrap">
-              <svg viewBox="0 0 130 74" width="130" height="74" style="overflow:visible">
+              <svg viewBox="0 0 130 74" style="width:100%;height:100%;overflow:visible">
                 <!-- Pista fondo -->
                 <path d="M12,68 A53,53 0 0,1 118,68" fill="none" stroke="#1c2227" stroke-width="10" stroke-linecap="round"/>
                 <!-- Zonas de color (fondo decorativo) -->
@@ -1024,7 +1144,7 @@
           <div class="gauge-card">
             <div class="gauge-title">Desbalance de corriente</div>
             <div class="gauge-svg-wrap">
-              <svg viewBox="0 0 130 74" width="130" height="74" style="overflow:visible">
+              <svg viewBox="0 0 130 74" style="width:100%;height:100%;overflow:visible">
                 <path d="M12,68 A53,53 0 0,1 118,68" fill="none" stroke="#1c2227" stroke-width="10" stroke-linecap="round"/>
                 <path d="M12,68 A53,53 0 0,1 118,68" fill="none" stroke="url(#gradI)" stroke-width="10" stroke-linecap="round" opacity="0.15"/>
                 <path id="gaugeFillI" d="M12,68 A53,53 0 0,1 118,68" fill="none" stroke="#16a085" stroke-width="10" stroke-linecap="round"
@@ -1060,7 +1180,7 @@
           <!-- THD V A -->
           <div class="mini-gauge">
             <div class="mini-gauge-label">THD Voltaje A</div>
-            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="130" height="74">
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58">
               <defs><linearGradient id="gTHD1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD1)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
@@ -1077,7 +1197,7 @@
           <!-- THD V B -->
           <div class="mini-gauge">
             <div class="mini-gauge-label">THD Voltaje B</div>
-            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="130" height="74">
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58">
               <defs><linearGradient id="gTHD2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD2)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
@@ -1094,7 +1214,7 @@
           <!-- THD V C -->
           <div class="mini-gauge">
             <div class="mini-gauge-label">THD Voltaje C</div>
-            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="130" height="74">
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58">
               <defs><linearGradient id="gTHD3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD3)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
@@ -1111,7 +1231,7 @@
           <!-- THD I A -->
           <div class="mini-gauge">
             <div class="mini-gauge-label">THD Corriente A</div>
-            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="130" height="74">
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58">
               <defs><linearGradient id="gTHD4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD4)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
@@ -1128,7 +1248,7 @@
           <!-- THD I B -->
           <div class="mini-gauge">
             <div class="mini-gauge-label">THD Corriente B</div>
-            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="130" height="74">
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58">
               <defs><linearGradient id="gTHD5" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD5)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
@@ -1145,7 +1265,7 @@
           <!-- THD I C -->
           <div class="mini-gauge">
             <div class="mini-gauge-label">THD Corriente C</div>
-            <svg class="mini-gauge-svg" viewBox="0 0 100 58" width="130" height="74">
+            <svg class="mini-gauge-svg" viewBox="0 0 100 58">
               <defs><linearGradient id="gTHD6" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a085"/><stop offset="50%" stop-color="#f39c12"/><stop offset="100%" stop-color="#D64541"/></linearGradient></defs>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="#1c2227" stroke-width="8" stroke-linecap="round"/>
               <path d="M9,54 A41,41 0 0,1 91,54" fill="none" stroke="url(#gTHD6)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
