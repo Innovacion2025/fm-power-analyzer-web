@@ -2052,7 +2052,7 @@
             }
           ]
         },
-        options:chartOpts("V",0)
+        options:chartOpts("V",100,140)
       });
     } 
     else {
@@ -2140,7 +2140,7 @@
   function actualizarGraficaFp(labels,rows) {
     const pfa=rows.map(r=>corregirPfFase(numeroSeguro(r.pf_a))),pfb=rows.map(r=>corregirPfFase(numeroSeguro(r.pf_b))),pfc=rows.map(r=>corregirPfFase(numeroSeguro(r.pf_c))),pft=rows.map(r=>numeroSeguro(r.pf_tot));
     const ctx=document.getElementById("chartPf").getContext("2d");
-    if(!chartPf){chartPf=new Chart(ctx,{type:"line",data:{labels,datasets:[ds("FP A",pfa,"#EC631F"),ds("FP B",pfb,"#2D9CDB"),ds("FP C",pfc,"#16a085"),ds("FP Total",pft,"#7B61FF")]},options:chartOpts("FP",-1,1.2)});}
+    if(!chartPf){chartPf=new Chart(ctx,{type:"line",data:{labels,datasets:[ds("FP A",pfa,"#EC631F"),ds("FP B",pfb,"#2D9CDB"),ds("FP C",pfc,"#16a085"),ds("FP Total",pft,"#7B61FF")]},options:chartOpts("FP",0,1.2)});}
     else{chartPf.data.labels=labels;[pfa,pfb,pfc,pft].forEach((d,i)=>chartPf.data.datasets[i].data=d);chartPf.update("none");}
   }
   function actualizarGraficaFrecuencia(labels,rows) {
