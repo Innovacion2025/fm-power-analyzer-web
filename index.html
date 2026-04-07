@@ -1735,8 +1735,9 @@
         pollingTiempoRealEnCurso = true;
         try {
           await actualizarTiempoReal();
+          // OPTIMIZACIÓN DE EGRESS: Solo usar incremental si es hoy
           if (document.getElementById("dayDate").value === hoyTexto()) {
-            await consultarTodo(false);
+            await obtenerHistoricoDesdeUltimoDato();
           }
         } catch (e) {
         } finally {
@@ -2215,6 +2216,75 @@
 
     const res=await fetch(url,{cache:"no-store"});
     if(!res.ok) throw new Error("Error API"); return await res.json();
+  }
+
+  /* Función incremental: obtiene solo nuevos datos desde el último punto cargado */
+  async function obtenerHistoricoDesdeUltimoDato() {
+    try {
+      const day = document.getElementById("dayDate").value;
+      const pm_slave = getCurrentPmSlave();
+      const errorBox = document.getElementById("error");
+
+      if (!day || !pm_slave) return;
+
+      // Solo hacer polling incremental si es hoy
+      if (day !== hoyTexto()) return;
+
+      // Si no hay último timestamp, no consultar incrementales
+      if (!ultimaHoraVisible) return;
+
+      // Consultar solo nuevos datos desde el último visible
+      const url = `${API_BASE}/api/history/since?device_id=${encodeURIComponent(device)}&pm_slave=${encodeURIComponent(pm_slave)}&from=${encodeURIComponent(day)}&to=${encodeURIComponent(day)}&last_created_at=${encodeURIComponent(ultimaHoraVisible)}&t=${Date.now()}`;
+      const res = await fetch(url, { cache: "no-store" });
+
+      if (!res.ok) {
+        console.warn("Error obteniendo incremental");
+        return;
+      }
+
+      const json = await res.json();
+
+      if (!json || json.ok !== true || !Array.isArray(json.data)) {
+        return;
+      }
+
+      // Si no hay nuevos datos, no hacer nada
+      if (json.data.length === 0) {
+        return;
+      }
+
+      // Agregar nuevos datos a los existentes
+      const nuevos = json.data.slice().sort(
+        (a, b) => new Date(a.visible_at || a.created_at || 0) - new Date(b.visible_at || b.created_at || 0)
+      );
+
+      datosActuales.push(...nuevos);
+
+      // Ordenar todo por tiempo
+      datosActuales.sort((a, b) => new Date(a.visible_at || a.created_at || 0) - new Date(b.visible_at || b.created_at || 0));
+
+      // Re-renderizar gráficas sin limpiar (actualización incremental)
+      const labels = datosActuales.map(r => formatearHoraReal(r.visible_at || r.created_at));
+
+      if (chartVoltages || chartCurrents || chartPowers || chartPhasePowers || chartPf || chartFrequency) {
+        actualizarGraficaVoltajes(labels, datosActuales);
+        actualizarGraficaCorrientes(labels, datosActuales);
+        actualizarGraficaPotencias(labels, datosActuales);
+        actualizarGraficaPotenciaPorFase(labels, datosActuales);
+        actualizarGraficaFp(labels, datosActuales);
+        actualizarGraficaFrecuencia(labels, datosActuales);
+        actualizarTodasLasTablas(labels, datosActuales);
+      }
+
+      const ultimo = nuevos[nuevos.length - 1];
+      ultimoTimestampHistorico = ultimoTimestampLive = ultimo?.timestamp_ms ?? null;
+      ultimaHoraVisible = ultimo?.visible_at || ultimo?.created_at || null;
+
+      errorBox.innerText = "";
+
+    } catch (e) {
+      console.warn("Error en obtenerHistoricoDesdeUltimoDato:", e);
+    }
   }
 
   /* Orquestador */
