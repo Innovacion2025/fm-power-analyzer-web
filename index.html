@@ -2230,8 +2230,12 @@
       // Solo hacer polling incremental si es hoy
       if (day !== hoyTexto()) return;
 
-      // Si no hay último timestamp, no consultar incrementales
-      if (!ultimaHoraVisible) return;
+      // Si no hay último timestamp, hacer fallback a carga completa
+      // Esto garantiza que se muestre "No hay datos" si corresponde
+      if (!ultimaHoraVisible) {
+        await consultarTodo(false);
+        return;
+      }
 
       // Consultar solo nuevos datos desde el último visible
       const url = `${API_BASE}/api/history/since?device_id=${encodeURIComponent(device)}&pm_slave=${encodeURIComponent(pm_slave)}&from=${encodeURIComponent(day)}&to=${encodeURIComponent(day)}&last_created_at=${encodeURIComponent(ultimaHoraVisible)}&t=${Date.now()}`;
