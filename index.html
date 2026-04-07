@@ -1843,7 +1843,37 @@
       .forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML="";});
   }
 
-  /* Medidores */
+  /* Limpia todas las gráficas y tablas */
+  function limpiarGraficas() {
+    // Destruir los Chart.js si existen
+    if (chartVoltages) {
+      chartVoltages.destroy();
+      chartVoltages = null;
+    }
+    if (chartCurrents) {
+      chartCurrents.destroy();
+      chartCurrents = null;
+    }
+    if (chartPowers) {
+      chartPowers.destroy();
+      chartPowers = null;
+    }
+    if (chartPhasePowers) {
+      chartPhasePowers.destroy();
+      chartPhasePowers = null;
+    }
+    if (chartPf) {
+      chartPf.destroy();
+      chartPf = null;
+    }
+    if (chartFrequency) {
+      chartFrequency.destroy();
+      chartFrequency = null;
+    }
+    
+    // Limpiar tablas
+    limpiarTablas();
+  }
   async function cargarMedidores() {
     try {
       const res=await fetch(`${API_BASE}/api/meters/${encodeURIComponent(device)}?t=${Date.now()}`,{cache:"no-store"});
@@ -2304,6 +2334,9 @@
       if (!day) {
         datosActuales = [];
         limpiarGraficas();
+        ultimaHoraVisible = null;
+        ultimoTimestampHistorico = null;
+        ultimoTimestampLive = null;
         mostrarToast("Seleccione una fecha");
         return;
       }
@@ -2314,6 +2347,9 @@
       if (estadoGatewayActual === "dead") {
         datosActuales = [];
         limpiarGraficas();
+        ultimaHoraVisible = null;
+        ultimoTimestampHistorico = null;
+        ultimoTimestampLive = null;
         errorBox.innerText = "Gateway desconectado";
         return;
       }
@@ -2338,6 +2374,9 @@
         errorBox.innerText = "";
         datosActuales = [];
         limpiarGraficas();
+        ultimaHoraVisible = null;
+        ultimoTimestampHistorico = null;
+        ultimoTimestampLive = null;
         mostrarToast("Error consultando el histórico");
         return;
       }
@@ -2352,6 +2391,9 @@
         limpiarGraficas();
         fechaHistoricaActual = day;
         pmHistoricoActual = pm_slave;
+        ultimaHoraVisible = null;
+        ultimoTimestampHistorico = null;
+        ultimoTimestampLive = null;
         mostrarToast("No hay datos para graficar en la fecha seleccionada");
         return;
       }
@@ -2396,7 +2438,11 @@
       errorBox.innerText = "";
     } catch(e) {
       document.getElementById("error").innerText = "";
+      datosActuales = [];
       limpiarGraficas();
+      ultimaHoraVisible = null;
+      ultimoTimestampHistorico = null;
+      ultimoTimestampLive = null;
       mostrarToast("Error al consultar las curvas");
     } finally {
       ocultarLoadingCurvas();
@@ -2412,31 +2458,58 @@
       await iniciarDashboard();
     }
   });
-  document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("dayDate")?.addEventListener("change", () => consultarTodo(true));
-  
-    document.getElementById("pmSelect")?.addEventListener("change", async () => {
-      actualizarMeterSeleccionadoDesdeSelect();
-      await actualizarTiempoReal();
-      await consultarTodo(true);
-    });
-  
-    document.getElementById("phasePowerMode")?.addEventListener("change", async (e) => {
-      phasePowerMode = e.target.value;
-      await consultarTodo(true);
-    });
-  
-    document.getElementById("totalPowerMode")?.addEventListener("change", async (e) => {
-      totalPowerMode = e.target.value;
-      await consultarTodo(true);
-    });
-  
-    document.getElementById("tokenInput")?.addEventListener("keydown", async (e) => {
-      if (e.key === "Enter") {
-        await validarAccesoDashboard();
-      }
-    });
+
+  // Registrar eventos directamente sin esperar a DOMContentLoaded
+  // (el script está al final del body, así que ya está todo disponible)
+  function registrarEventos() {
+    const dayDateEl = document.getElementById("dayDate");
+    const pmSelectEl = document.getElementById("pmSelect");
+    const phasePowerModeEl = document.getElementById("phasePowerMode");
+    const totalPowerModeEl = document.getElementById("totalPowerMode");
+    const tokenInputEl = document.getElementById("tokenInput");
+
+    if (dayDateEl) {
+      dayDateEl.addEventListener("change", () => consultarTodo(true));
+    }
+    
+    if (pmSelectEl) {
+      pmSelectEl.addEventListener("change", async () => {
+        actualizarMeterSeleccionadoDesdeSelect();
+        await actualizarTiempoReal();
+        await consultarTodo(true);
+      });
+    }
+    
+    if (phasePowerModeEl) {
+      phasePowerModeEl.addEventListener("change", async (e) => {
+        phasePowerMode = e.target.value;
+        await consultarTodo(true);
+      });
+    }
+    
+    if (totalPowerModeEl) {
+      totalPowerModeEl.addEventListener("change", async (e) => {
+        totalPowerMode = e.target.value;
+        await consultarTodo(true);
+      });
+    }
+    
+    if (tokenInputEl) {
+      tokenInputEl.addEventListener("keydown", async (e) => {
+        if (e.key === "Enter") {
+          await validarAccesoDashboard();
+        }
+      });
+    }
+  }
+
+  // Registrar eventos también en load como fallback
+  window.addEventListener("load", () => {
+    registrarEventos();
   });
+
+  // Intentar registrar eventos inmediatamente
+  registrarEventos();
 </script>
 </body>
 </html>
