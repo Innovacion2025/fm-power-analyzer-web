@@ -1461,6 +1461,7 @@
   let chartVoltages=null, chartCurrents=null, chartPowers=null;
   let chartPhasePowers=null, chartPf=null, chartFrequency=null;
   let phasePowerMode="activa", totalPowerMode="activa", meters=[], currentMeter=null;
+  let datosActuales = [];
   let ultimoTimestampHistorico=null, ultimoTimestampLive=null;
   let ultimaHoraVisible=null, fechaHistoricaActual=null, pmHistoricoActual=null;
   let pollingTiempoRealEnCurso=false;
@@ -1919,6 +1920,7 @@
         listaPmAdvertencia = [];
         actualizarCajaAdvertenciaPM([]);
         limpiarResumenInstantaneo();
+        datosActuales = [];
         limpiarGraficas();
         document.getElementById("error").innerText = "Gateway desconectado";
         return d;
@@ -2199,20 +2201,19 @@
     else{chartFrequency.data.labels=labels;chartFrequency.data.datasets[0].data=fr;chartFrequency.update("none");}
   }
 
-  /* Limpiar */
-  function limpiarGraficas() {
-    ultimoTimestampHistorico=null;ultimoTimestampLive=null;ultimaHoraVisible=null;
-    [chartVoltages,chartCurrents,chartPowers,chartPhasePowers,chartPf,chartFrequency].forEach(c=>{
-      if(!c)return; c.data.labels=[]; c.data.datasets.forEach(d=>d.data=[]); c.update("none");
-    });
-    limpiarTablas();
-  }
-
   /* Histórico */
-  async function obtenerHistorico() {
+  async function obtenerHistorico(incremental = false, since = null) {
     const day=document.getElementById("dayDate").value, pm_slave=getCurrentPmSlave();
     if(!day) throw new Error("No hay fecha"); if(!pm_slave) throw new Error("No hay PM");
-    const res=await fetch(`${API_BASE}/api/history?device_id=${encodeURIComponent(device)}&pm_slave=${encodeURIComponent(pm_slave)}&from=${encodeURIComponent(day)}&to=${encodeURIComponent(day)}&t=${Date.now()}`,{cache:"no-store"});
+
+    let url;
+    if (incremental && since) {
+      url = `${API_BASE}/api/history/incremental?device_id=${encodeURIComponent(device)}&pm_slave=${encodeURIComponent(pm_slave)}&since=${encodeURIComponent(since)}&t=${Date.now()}`;
+    } else {
+      url = `${API_BASE}/api/history?device_id=${encodeURIComponent(device)}&pm_slave=${encodeURIComponent(pm_slave)}&from=${encodeURIComponent(day)}&to=${encodeURIComponent(day)}&t=${Date.now()}`;
+    }
+
+    const res=await fetch(url,{cache:"no-store"});
     if(!res.ok) throw new Error("Error API"); return await res.json();
   }
 
@@ -2227,6 +2228,7 @@
   
       const day = dayInput.value;
       if (!day) {
+        datosActuales = [];
         limpiarGraficas();
         mostrarToast("Seleccione una fecha");
         return;
@@ -2236,6 +2238,7 @@
   
       // Si el gateway está dead, no mostrar curvas ni tablas
       if (estadoGatewayActual === "dead") {
+        datosActuales = [];
         limpiarGraficas();
         errorBox.innerText = "Gateway desconectado";
         return;
@@ -2243,25 +2246,35 @@
   
       const esNuevaFecha = fechaHistoricaActual !== day;
       const esNuevoPm = Number(pmHistoricoActual) !== Number(pm_slave);
+      const esDiaActual = day === hoyTexto();
   
-      // Mostrar loading solo cuando realmente se recargan curvas
-      if (forzar || esNuevaFecha || esNuevoPm) {
+      // Determinar si usar incremental
+      const usarIncremental = !forzar && !esNuevaFecha && !esNuevoPm && esDiaActual && ultimaHoraVisible;
+  
+      // Mostrar loading solo cuando realmente se recargan curvas completas
+      if (forzar || esNuevaFecha || esNuevoPm || !usarIncremental) {
         cerrarToast();
         mostrarLoadingCurvas();
         errorBox.innerText = "";
       }
   
-      const json = await obtenerHistorico();
+      const json = await obtenerHistorico(usarIncremental, ultimaHoraVisible);
   
       if (!json || json.ok !== true || !Array.isArray(json.data)) {
         errorBox.innerText = "";
+        datosActuales = [];
         limpiarGraficas();
         mostrarToast("Error consultando el histórico");
         return;
       }
   
       if (json.data.length === 0) {
+        // Si es incremental y no hay nuevos datos, no hacer nada
+        if (usarIncremental) {
+          return;
+        }
         errorBox.innerText = "";
+        datosActuales = [];
         limpiarGraficas();
         fechaHistoricaActual = day;
         pmHistoricoActual = pm_slave;
@@ -2273,16 +2286,33 @@
         (a,b) => new Date(a.visible_at || a.created_at || 0) - new Date(b.visible_at || b.created_at || 0)
       );
   
-      const rowsFinales = ordenadas;
-      const labels = rowsFinales.map(r => formatearHoraReal(r.visible_at || r.created_at));
+      if (usarIncremental) {
+        // Agregar nuevos puntos a los datos actuales
+        datosActuales.push(...ordenadas);
+        // Ordenar por tiempo
+        datosActuales.sort((a,b) => new Date(a.visible_at || a.created_at || 0) - new Date(b.visible_at || b.created_at || 0));
+        // Re-renderizar con todos los datos
+        const labels = datosActuales.map(r => formatearHoraReal(r.visible_at || r.created_at));
+        actualizarGraficaVoltajes(labels, datosActuales);
+        actualizarGraficaCorrientes(labels, datosActuales);
+        actualizarGraficaPotencias(labels, datosActuales);
+        actualizarGraficaPotenciaPorFase(labels, datosActuales);
+        actualizarGraficaFp(labels, datosActuales);
+        actualizarGraficaFrecuencia(labels, datosActuales);
+        actualizarTodasLasTablas(labels, datosActuales);
+      } else {
+        // Recargar gráficas completas
+        datosActuales = ordenadas.slice(); // Copiar
+        const labels = ordenadas.map(r => formatearHoraReal(r.visible_at || r.created_at));
   
-      actualizarGraficaVoltajes(labels,rowsFinales);
-      actualizarGraficaCorrientes(labels,rowsFinales);
-      actualizarGraficaPotencias(labels,rowsFinales);
-      actualizarGraficaPotenciaPorFase(labels,rowsFinales);
-      actualizarGraficaFp(labels,rowsFinales);
-      actualizarGraficaFrecuencia(labels,rowsFinales);
-      actualizarTodasLasTablas(labels,rowsFinales);
+        actualizarGraficaVoltajes(labels,ordenadas);
+        actualizarGraficaCorrientes(labels,ordenadas);
+        actualizarGraficaPotencias(labels,ordenadas);
+        actualizarGraficaPotenciaPorFase(labels,ordenadas);
+        actualizarGraficaFp(labels,ordenadas);
+        actualizarGraficaFrecuencia(labels,ordenadas);
+        actualizarTodasLasTablas(labels,ordenadas);
+      }
   
       const ultimo = ordenadas[ordenadas.length - 1];
       ultimoTimestampHistorico = ultimoTimestampLive = ultimo?.timestamp_ms ?? null;
