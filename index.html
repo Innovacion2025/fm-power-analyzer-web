@@ -1832,9 +1832,9 @@
       rows.map(r=>numeroSeguro(r[cfg.keyB])),
       rows.map(r=>numeroSeguro(r[cfg.keyC]))]);
     renderTabla("tbodyPf",[
-      rows.map(r=>corregirPfFase(numeroSeguro(r.pf_a))),
-      rows.map(r=>corregirPfFase(numeroSeguro(r.pf_b))),
-      rows.map(r=>corregirPfFase(numeroSeguro(r.pf_c))),
+      rows.map(r=>numeroSeguro(r.pf_a)),
+      rows.map(r=>numeroSeguro(r.pf_b)),
+      rows.map(r=>numeroSeguro(r.pf_c)),
       rows.map(r=>numeroSeguro(r.pf_tot))]);
     renderTabla("tbodyFrequency",[rows.map(r=>numeroSeguro(r.frecuencia,r.frequency))]);
   }
