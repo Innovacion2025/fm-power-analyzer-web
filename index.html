@@ -1119,8 +1119,8 @@
         <!-- Métricas -->
         <div class="metrics-grid">
           <div class="metric-card">
-            <div class="metric-label">Potencia activa total</div>
-            <div class="metric-value" id="summaryPTot">--</div>
+            <div class="metric-label">Energía activa consumida</div>
+            <div class="metric-value" id="summaryActiveEnergy">--</div>
             <div class="metric-sub">Valor instantáneo</div>
           </div>
           <div class="metric-card">
@@ -1527,7 +1527,7 @@
   }
 
   function limpiarResumenInstantaneo() {
-    document.getElementById("summaryPTot").innerText = "--";
+    document.getElementById("summaryActiveEnergy").innerText = "--";
     document.getElementById("summaryPfTot").innerText = "--";
     document.getElementById("summaryFrequency").innerText = "--";
     document.getElementById("summaryCurrentN").innerText = "--";
@@ -1966,7 +1966,7 @@
         actualizarCajaAdvertenciaPM([]);
       }
   
-      document.getElementById("summaryPTot").innerText      = textoValor(numeroSeguro(d.p_tot,d.ptot)," kW",3);
+      document.getElementById("summaryActiveEnergy").innerText = textoValor(numeroSeguro(d.active_energy)/3," kWh",3);
       document.getElementById("summaryPfTot").innerText     = textoValor(numeroSeguro(d.pf_tot),"",3);
       document.getElementById("summaryFrequency").innerText = textoValor(numeroSeguro(d.frecuencia,d.frequency)," Hz",3);
       document.getElementById("summaryCurrentN").innerText  = textoValor(numeroSeguro(d.current_n)," A",3);
