@@ -1518,7 +1518,7 @@
   function numeroSeguro(...vals) { const v=valorSeguro(...vals); if(v===null) return null; const n=Number(v); return Number.isFinite(n)?n:null; }
   function textoValor(v,sufijo="",dec=3) { if(v===null||v===undefined||v==="") return "--"; const n=Number(v); return Number.isFinite(n)?`${n.toFixed(dec)}${sufijo}`:"--"; }
   function getCurrentPmSlave() { return currentMeter?Number(currentMeter.pm_slave):null; }
-  function corregirPfFase(v) { if(v===null||v===undefined||v==="") return null; const n=Number(v); return Number.isFinite(n)?2-n:null; }
+  function corregirPfFase(v) { if(v===null||v===undefined||v==="") return null; const n=Number(v); return Number.isFinite(n)?n:null; }
   function actualizarEncabezadoMeter() {
     document.getElementById("device").innerText         = currentMeter?.device_id||device;
     document.getElementById("heroDeviceName").innerText = currentMeter?.device_name||currentMeter?.device_id||"--";
@@ -1966,7 +1966,7 @@
         actualizarCajaAdvertenciaPM([]);
       }
   
-      document.getElementById("summaryActiveEnergy").innerText = textoValor(numeroSeguro(d.active_energy)/3," kWh",3);
+      document.getElementById("summaryActiveEnergy").innerText = textoValor(numeroSeguro(d.active_energy)/1000," kWh",3);
       document.getElementById("summaryPfTot").innerText     = textoValor(numeroSeguro(d.pf_tot),"",3);
       document.getElementById("summaryFrequency").innerText = textoValor(numeroSeguro(d.frecuencia,d.frequency)," Hz",3);
       document.getElementById("summaryCurrentN").innerText  = textoValor(numeroSeguro(d.current_n)," A",3);
