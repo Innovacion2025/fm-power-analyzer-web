@@ -1966,7 +1966,7 @@
         actualizarCajaAdvertenciaPM([]);
       }
   
-      document.getElementById("summaryActiveEnergy").innerText = textoValor(numeroSeguro(d.active_energy)/1000," kWh",3);
+      document.getElementById("summaryActiveEnergy").innerText = textoValor(numeroSeguro(d.active_energy)/1000," MWh",3);
       document.getElementById("summaryPfTot").innerText     = textoValor(numeroSeguro(d.pf_tot),"",3);
       document.getElementById("summaryFrequency").innerText = textoValor(numeroSeguro(d.frecuencia,d.frequency)," Hz",3);
       document.getElementById("summaryCurrentN").innerText  = textoValor(numeroSeguro(d.current_n)," A",3);
