@@ -759,8 +759,8 @@
 
   /* LOGIN DASHBOARD */
   .auth-overlay {
-    --auth-bg-x: 18%;
-    --auth-bg-size: cover;
+    --auth-bg-x: 50%;
+    --auth-bg-size: 100% auto;
     position: fixed;
     inset: 0;
     z-index: 10000;
@@ -771,7 +771,7 @@
     background:
       radial-gradient(920px 380px at 78% 16%, rgba(236,99,31,0.16), transparent 66%),
       linear-gradient(90deg, rgba(4,8,12,0.05), rgba(4,8,12,0.24) 62%, rgba(4,8,12,0.42)),
-      url("assets/login/ChatGPT%20Image%201%20jun%202026,%2009_32_57%20a.m..png") var(--auth-bg-x) center / var(--auth-bg-size) no-repeat,
+      url("assets/login/fondonuevo.png") var(--auth-bg-x) center / var(--auth-bg-size) no-repeat,
       #040507;
   }
 
@@ -1065,8 +1065,6 @@
   @media (max-width: 520px) {
     .auth-overlay {
       padding: 12px;
-      --auth-bg-x: 36%;
-      --auth-bg-size: 1450px auto;
     }
 
     .auth-card {
