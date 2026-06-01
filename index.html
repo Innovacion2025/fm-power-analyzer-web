@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -292,10 +292,10 @@
       padding: 22px 28px;
       border-right: 1px solid var(--border);
       flex: 1;
-      min-width: 320px; /* ⬅️ aumenta un poco */
+      min-width: 320px; /* â¬…ï¸ aumenta un poco */
       display: flex;
       flex-direction: column;
-      gap: 8px; /* ⬅️ separa mejor */
+      gap: 8px; /* â¬…ï¸ separa mejor */
       justify-content: center;
     }
     .hero-eyebrow { font-size:10px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:var(--orange); }
@@ -385,7 +385,7 @@
     }
     .quality-left { display:flex; flex-direction:column; gap:12px; }
 
-    /* MÉTRICAS */
+    /* MÃ‰TRICAS */
     .metrics-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
     .metric-card {
       background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md);
@@ -518,7 +518,7 @@
     .chart-body { background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); padding:10px; }
     .chart-canvas { width:100% !important; height:210px !important; }
 
-    /* TABLA DINÁMICA */
+    /* TABLA DINÃMICA */
     .data-table-wrap { overflow-x:auto; }
     .data-table { width:100%; border-collapse:collapse; font-size:11px; }
     .data-table thead tr { border-bottom:1px solid var(--border2); }
@@ -759,182 +759,364 @@
 
   /* LOGIN DASHBOARD */
   .auth-overlay {
+    --auth-bg-x: 18%;
+    --auth-bg-size: cover;
     position: fixed;
     inset: 0;
     z-index: 10000;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
+    padding: 24px clamp(20px, 4vw, 72px);
     background:
-      radial-gradient(ellipse 80% 45% at 50% 0%, rgba(236,99,31,0.10) 0%, transparent 70%),
-      rgba(6, 8, 10, 0.96);
-    backdrop-filter: blur(6px);
+      radial-gradient(920px 380px at 78% 16%, rgba(236,99,31,0.16), transparent 66%),
+      linear-gradient(90deg, rgba(4,8,12,0.05), rgba(4,8,12,0.24) 62%, rgba(4,8,12,0.42)),
+      url("../ChatGPT%20Image%201%20jun%202026,%2009_32_57%20a.m..png") var(--auth-bg-x) center / var(--auth-bg-size) no-repeat,
+      #040507;
   }
-  
+
+  .auth-shell {
+    width: clamp(320px, 34vw, 470px);
+    max-width: 100%;
+    display: block;
+    position: relative;
+    margin-left: auto;
+    transform: translateX(-92px);
+  }
+
   .auth-card {
     width: 100%;
-    max-width: 420px;
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: var(--r-lg);
-    box-shadow: var(--shadow);
+    border-radius: 24px;
+    border: 1px solid rgba(169, 199, 220, 0.22);
+    background: linear-gradient(160deg, rgba(14,23,33,0.64), rgba(9,16,24,0.5));
+    box-shadow:
+      0 24px 48px rgba(0,0,0,0.48),
+      inset 0 1px 0 rgba(255,255,255,0.2);
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 24px 24px 20px;
+    position: relative;
     overflow: hidden;
   }
-  
-  .auth-topbar {
-    height: 3px;
-    background: linear-gradient(90deg, var(--orange) 0%, #ff7b36 50%, transparent 100%);
+
+  .auth-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(280px 120px at 76% 0%, rgba(255,155,83,0.26), transparent 68%),
+      linear-gradient(180deg, rgba(255,255,255,0.05), transparent 42%);
   }
-  
-  .auth-body {
-    padding: 28px 26px 24px;
+
+  .auth-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(120deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 22%, transparent 38%),
+      radial-gradient(160px 65px at 12% 8%, rgba(255,255,255,0.08), transparent 72%);
   }
-  
+
   .auth-logo {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 18px;
-  }
-  
-  .auth-logo img {
-    width: 100%;
-    max-width: 210px;
+    width: min(100%, 190px);
     height: auto;
-    object-fit: contain;
+    margin: 2px auto 16px;
+    display: block;
+    position: relative;
+    z-index: 1;
   }
-  
+
   .auth-title {
-    font-size: 20px;
+    font-size: 24px;
+    line-height: 1.1;
     font-weight: 800;
-    color: var(--text);
+    color: #f6f9fc;
+    letter-spacing: -0.2px;
+    margin-bottom: 10px;
     text-align: center;
-    margin-bottom: 6px;
+    position: relative;
+    z-index: 1;
   }
-  
+
   .auth-subtitle {
-    font-size: 12px;
-    color: var(--text-dim);
+    font-size: 14px;
+    line-height: 1.45;
+    color: #9bb0c0;
+    margin-bottom: 16px;
+    max-width: 350px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(95,125,146,0.28);
     text-align: center;
-    line-height: 1.5;
-    margin-bottom: 22px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    z-index: 1;
   }
-  
-  .auth-device {
-    font-size: 11px;
-    color: var(--orange);
-    text-align: center;
-    font-weight: 700;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    margin-bottom: 18px;
+
+  .auth-field.auth-gateway-field {
+    margin-top: 0;
+    margin-bottom: 12px;
   }
-  
+
   .auth-field {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    margin-bottom: 16px;
+    gap: 7px;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
   }
-  
-  .auth-field label {
-    font-size: 10px;
+
+  .auth-field label,
+  .auth-gateway-label {
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: var(--text-dim);
-  }
-  
-  .auth-field input {
-    height: 42px;
-    padding: 0 14px;
-    background: var(--surface3);
-    border: 1px solid var(--border2);
-    border-radius: var(--r-sm);
-    color: var(--text);
-    font-family: var(--font);
-    font-size: 14px;
-    font-weight: 500;
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-  
-  .auth-field input:focus {
-    border-color: var(--orange);
-    box-shadow: 0 0 0 3px rgba(236,99,31,0.15);
+    color: #7f95a6;
   }
 
-  .auth-field .input-wrap {
-    position: relative;
+  .auth-device {
     width: 100%;
-  }
-  
-  .auth-field .input-wrap input {
-    width: 100%;
-    padding-right: 46px;
-  }
-  
-  .auth-field .input-wrap .eye-btn {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text-dim);
-    padding: 4px;
+    min-height: 60px;
+    border: 1px solid rgba(71,97,116,0.48);
+    border-radius: 11px;
+    background: rgba(10,16,24,0.56);
+    color: #f0f4f8;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
     display: flex;
     align-items: center;
     justify-content: center;
-    line-height: 0;
-}
-  
+    text-align: center;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+  }
+
+  .auth-device::before,
+  .auth-device::after {
+    content: "";
+    width: 20px;
+    height: 2px;
+    border-radius: 20px;
+    background: linear-gradient(90deg, #ff7b1f, #ffae72);
+    opacity: 0.95;
+    margin: 0 10px;
+    flex-shrink: 0;
+  }
+
+  .auth-input-wrap {
+    position: relative;
+  }
+
+  .auth-field input {
+    width: 100%;
+    height: 48px;
+    padding: 0 46px 0 14px;
+    border-radius: 11px;
+    border: 1px solid rgba(71,97,116,0.52);
+    background: rgba(11,17,25,0.55);
+    color: #eef3f8;
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 500;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  }
+
+  .auth-field input::placeholder {
+    color: #74899a;
+  }
+
+  .auth-field input:focus {
+    border-color: rgba(255,123,31,0.95);
+    box-shadow: 0 0 0 3px rgba(236,99,31,0.2);
+    background: rgba(13,20,30,0.8);
+  }
+
+  .auth-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #7f95a6;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .auth-toggle:hover {
+    color: #ff8f45;
+    background: rgba(236,99,31,0.09);
+  }
+
+  .auth-remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    color: #9eb2c2;
+    font-size: 13px;
+    user-select: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  .auth-remember input {
+    width: 16px;
+    height: 16px;
+    accent-color: #ea6121;
+  }
+
+  .auth-remember label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
   .auth-actions {
     display: flex;
-    gap: 10px;
-    margin-top: 8px;
+    gap: 8px;
+    margin-top: 0;
+    margin-bottom: 8px;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
   }
-  
+
   .auth-btn {
-    flex: 1;
-    height: 42px;
-    border: none;
-    border-radius: var(--r-sm);
+    height: 46px;
+    border-radius: 11px;
+    border: 1px solid transparent;
     font-family: var(--font);
-    font-size: 13px;
-    font-weight: 800;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
     cursor: pointer;
-    transition: transform 0.1s, background 0.15s, opacity 0.15s;
+    transition: transform 0.1s, filter 0.15s, border-color 0.15s, color 0.15s;
   }
-  
+
   .auth-btn:active {
     transform: translateY(1px);
   }
-  
+
   .auth-btn-primary {
-    background: var(--orange);
+    min-width: 170px;
+    background: linear-gradient(90deg, #f16a22, #ec631f);
     color: #fff;
+    box-shadow: 0 6px 14px rgba(236,99,31,0.24);
+    padding: 0 16px;
   }
-  
+
   .auth-btn-primary:hover {
-    background: #ff7b36;
+    filter: brightness(1.06);
   }
-  
+
   .auth-btn-secondary {
-    background: var(--surface3);
-    color: var(--text);
-    border: 1px solid var(--border2);
+    flex: 0.95;
+    background: rgba(11,19,29,0.7);
+    color: #b4c3cf;
+    border-color: rgba(127,149,166,0.36);
   }
-  
+
+  .auth-btn-secondary:hover {
+    color: #f1f5f8;
+    border-color: rgba(127,149,166,0.58);
+  }
+
   .auth-error {
     min-height: 18px;
-    margin-top: 14px;
+    margin-top: 12px;
     text-align: center;
     font-size: 12px;
     font-weight: 600;
-    color: var(--red);
+    color: #ff7f7a;
+    position: relative;
+    z-index: 1;
   }
-  
+
+  @media (max-width: 900px) {
+    .auth-overlay {
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .auth-shell {
+      width: min(100%, 560px);
+      transform: none;
+      margin: 0;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .auth-overlay {
+      padding: 12px;
+      --auth-bg-x: 36%;
+      --auth-bg-size: 1450px auto;
+    }
+
+    .auth-card {
+      border-radius: 20px;
+      padding: 20px 16px;
+    }
+
+    .auth-logo {
+      width: min(100%, 170px);
+      margin-bottom: 14px;
+    }
+
+    .auth-title {
+      font-size: 25px;
+    }
+
+    .auth-subtitle {
+      font-size: 13px;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+    }
+
+    .auth-device {
+      min-height: 56px;
+      font-size: 18px;
+      letter-spacing: 0.5px;
+    }
+
+    .auth-device::before,
+    .auth-device::after {
+      width: 14px;
+      margin: 0 6px;
+    }
+
+    .auth-field input {
+      height: 48px;
+      font-size: 14px;
+      padding-right: 48px;
+    }
+
+    .auth-actions {
+      flex-direction: column;
+    }
+
+    .auth-btn {
+      width: 100%;
+      height: 44px;
+      font-size: 14px;
+    }
+  }
   .dashboard-hidden {
     display: none;
   }
@@ -943,33 +1125,30 @@
 <body>
 <!-- LOGIN / ACCESO DASHBOARD -->
 <div class="auth-overlay" id="authOverlay">
-  <div class="auth-card">
-    <div class="auth-topbar"></div>
-    <div class="auth-body">
-      <div class="auth-logo">
-        <img
-          src="https://www.fmelectrodo.com/wp-content/uploads/2026/03/FMPowerAnalyzerBlanco.svg"
-          alt="FM Power Analyzer"
-        >
-      </div>
+  <div class="auth-shell">
+    <div class="auth-card">
+      <img class="auth-logo" src="../FM%20Power%20Analyzer%20Alt%201.png" alt="FM Power Analyzer">
 
       <div class="auth-title">Acceso al dashboard</div>
       <div class="auth-subtitle">
-        Ingrese el token del dispositivo para visualizar la información del medidor.
+        Ingrese el token del dispositivo para habilitar la visualizacion del dashboard.
       </div>
 
-      <div class="auth-device" id="authDeviceText">Gateway: --</div>
+      <div class="auth-field auth-gateway-field">
+        <div class="auth-gateway-label">Gateway detectado</div>
+        <div class="auth-device" id="authDeviceText"> --</div>
+      </div>
 
       <div class="auth-field">
         <label for="tokenInput">Token de acceso</label>
-        <div class="input-wrap">
+        <div class="auth-input-wrap">
           <input
             type="password"
             id="tokenInput"
             placeholder="Ingrese el token del dispositivo"
             autocomplete="off"
           >
-          <button type="button" class="eye-btn" onclick="toggleToken()">
+          <button type="button" class="auth-toggle" onclick="toggleToken()">
             <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                  viewBox="0 0 24 24" fill="none" stroke="currentColor"
                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -980,10 +1159,14 @@
         </div>
       </div>
 
+      <div class="auth-remember">
+        <label for="rememberToken">
+          <input type="checkbox" id="rememberToken">
+          Recordar token
+        </label>
+      </div>
+
       <div class="auth-actions">
-        <button class="auth-btn auth-btn-secondary" type="button" onclick="limpiarToken()">
-          Limpiar
-        </button>
         <button class="auth-btn auth-btn-primary" type="button" onclick="validarAccesoDashboard()">
           Ingresar
         </button>
@@ -993,7 +1176,6 @@
     </div>
   </div>
 </div>
-
   <!-- LOADING CURVAS -->
   <div class="charts-loading-overlay" id="chartsLoadingOverlay">
     <div class="charts-loading-box">
@@ -1025,8 +1207,8 @@
       
         <!-- IZQUIERDA -->
         <div class="hero-left">
-          <div class="hero-eyebrow">Monitoreo eléctrico industrial</div>
-          <div class="hero-subtitle">Análisis de curvas y calidad de energía en tiempo real</div>
+          <div class="hero-eyebrow">Monitoreo elÃ©ctrico industrial</div>
+          <div class="hero-subtitle">AnÃ¡lisis de curvas y calidad de energÃ­a en tiempo real</div>
       
           <div class="hero-status">
             <span class="tag-live" id="tagStatus">--</span>
@@ -1072,7 +1254,7 @@
       </div>
     </div>
     <div class="toolbar-section">
-      <div class="toolbar-section-title">Curvas históricas</div>
+      <div class="toolbar-section-title">Curvas histÃ³ricas</div>
       <div class="toolbar-row">
         <div class="ctrl">
           <label for="dayDate">Fecha</label>
@@ -1081,7 +1263,7 @@
       </div>
     </div>
     <div class="toolbar-section">
-      <div class="toolbar-section-title">Exportación CSV</div>
+      <div class="toolbar-section-title">ExportaciÃ³n CSV</div>
       <div class="toolbar-row">
         <div class="ctrl">
           <label for="csvFrom">Desde</label>
@@ -1104,24 +1286,24 @@
     </div>
   </div>
 
-  <!-- CALIDAD DE ENERGÍA -->
+  <!-- CALIDAD DE ENERGÃA -->
   <section>
     <div class="section-head">
       <div class="section-head-bar"></div>
       <div>
-        <h2>Calidad de energía</h2>
-        <p>Parámetros instantáneos y métricas de calidad de red</p>
+        <h2>Calidad de energÃ­a</h2>
+        <p>ParÃ¡metros instantÃ¡neos y mÃ©tricas de calidad de red</p>
       </div>
     </div>
 
     <div class="quality-layout">
       <div class="quality-left">
-        <!-- Métricas -->
+        <!-- MÃ©tricas -->
         <div class="metrics-grid">
           <div class="metric-card">
-            <div class="metric-label">Energía activa consumida</div>
+            <div class="metric-label">EnergÃ­a activa consumida</div>
             <div class="metric-value" id="summaryActiveEnergy">--</div>
-            <div class="metric-sub">Valor instantáneo</div>
+            <div class="metric-sub">Valor instantÃ¡neo</div>
           </div>
           <div class="metric-card">
             <div class="metric-label">Factor de potencia total</div>
@@ -1136,7 +1318,7 @@
           <div class="metric-card">
             <div class="metric-label">Corriente de neutro</div>
             <div class="metric-value" id="summaryCurrentN">--</div>
-            <div class="metric-sub">Corriente instantánea calculada</div>
+            <div class="metric-sub">Corriente instantÃ¡nea calculada</div>
           </div>
         </div>
 
@@ -1144,7 +1326,7 @@
         <div class="gauges-row">
           <!-- Voltaje -->
           <div class="gauge-card">
-            <div class="gauge-title">Desbalance de voltaje  · ARCONEL 009/24</div>
+            <div class="gauge-title">Desbalance de voltaje  Â· ARCONEL 009/24</div>
             <div class="gauge-svg-wrap">
               <svg viewBox="0 0 130 74" style="width:100%;height:100%;overflow:visible">
                 <!-- Pista fondo -->
@@ -1174,7 +1356,7 @@
               </svg>
             </div>
             <div class="gauge-val" id="gaugeValV">--<span> %</span></div>
-            <div class="gauge-range">Límite recomendado ≤ 2 %</div>
+            <div class="gauge-range">LÃ­mite recomendado â‰¤ 2 %</div>
           </div>
 
           <!-- Corriente -->
@@ -1204,14 +1386,14 @@
               </svg>
             </div>
             <div class="gauge-val" id="gaugeValI">--<span> %</span></div>
-            <div class="gauge-range">Límite recomendado ≤ 5 %</div>
+            <div class="gauge-range">LÃ­mite recomendado â‰¤ 5 %</div>
           </div>
         </div>
       </div>
 
-      <!-- THD — mini-gauges -->
+      <!-- THD â€” mini-gauges -->
       <div class="quality-card">
-        <div class="quality-card-title">THD de Voltaje · ARCONEL 009/24 y THD de corriente</div>
+        <div class="quality-card-title">THD de Voltaje Â· ARCONEL 009/24 y THD de corriente</div>
         <div class="thd-gauges-grid">
 
           <!-- THD V A -->
@@ -1228,7 +1410,7 @@
               <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
             </svg>
             <div class="mini-gauge-val" id="q_thd_va">--<span> %</span></div>
-            <div class="gauge-range">Límite recomendado ≤ 8 %</div>
+            <div class="gauge-range">LÃ­mite recomendado â‰¤ 8 %</div>
           </div>
 
           <!-- THD V B -->
@@ -1245,7 +1427,7 @@
               <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
             </svg>
             <div class="mini-gauge-val" id="q_thd_vb">--<span> %</span></div>
-            <div class="gauge-range">Límite recomendado ≤ 8 %</div>
+            <div class="gauge-range">LÃ­mite recomendado â‰¤ 8 %</div>
           </div>
 
           <!-- THD V C -->
@@ -1262,7 +1444,7 @@
               <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
             </svg>
             <div class="mini-gauge-val" id="q_thd_vc">--<span> %</span></div>
-            <div class="gauge-range">Límite recomendado ≤ 8 %</div>
+            <div class="gauge-range">LÃ­mite recomendado â‰¤ 8 %</div>
           </div>
 
           <!-- THD I A -->
@@ -1279,7 +1461,7 @@
               <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
             </svg>
             <div class="mini-gauge-val" id="q_thd_ia">--<span> %</span></div>
-            <div class="gauge-range">Límite recomendado ≤ 20 %</div>
+            <div class="gauge-range">LÃ­mite recomendado â‰¤ 20 %</div>
           </div>
 
           <!-- THD I B -->
@@ -1296,7 +1478,7 @@
               <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
             </svg>
             <div class="mini-gauge-val" id="q_thd_ib">--<span> %</span></div>
-            <div class="gauge-range">ímite recomendado ≤ 20 %</div>
+            <div class="gauge-range">Ã­mite recomendado â‰¤ 20 %</div>
           </div>
 
           <!-- THD I C -->
@@ -1313,7 +1495,7 @@
               <text x="94" y="64" fill="#3e4d55" font-size="7" font-family="Rubik" text-anchor="middle" font-weight="600">100%</text>
             </svg>
             <div class="mini-gauge-val" id="q_thd_ic">--<span> %</span></div>
-            <div class="gauge-range">ímite recomendado ≤ 20 %</div>
+            <div class="gauge-range">Ã­mite recomendado â‰¤ 20 %</div>
           </div>
 
         </div>
@@ -1321,13 +1503,13 @@
     </div>
   </section>
 
-  <!-- CURVAS HISTÓRICAS -->
+  <!-- CURVAS HISTÃ“RICAS -->
   <section>
     <div class="section-head">
       <div class="section-head-bar"></div>
       <div>
-        <h2>Curvas históricas</h2>
-        <p>Comportamiento temporal de las variables eléctricas</p>
+        <h2>Curvas histÃ³ricas</h2>
+        <p>Comportamiento temporal de las variables elÃ©ctricas</p>
       </div>
     </div>
 
@@ -1336,7 +1518,7 @@
       <!-- Voltajes -->
       <div class="chart-card">
         <div class="chart-header">
-          <div><div class="chart-title">Voltajes por fase</div><div class="chart-subtitle">VA · VB · VC</div></div>
+          <div><div class="chart-title">Voltajes por fase</div><div class="chart-subtitle">VA Â· VB Â· VC</div></div>
         </div>
         <div class="chart-body"><canvas id="chartVoltages" class="chart-canvas"></canvas></div>
         <div class="data-table-wrap">
@@ -1350,7 +1532,7 @@
       <!-- Corrientes -->
       <div class="chart-card">
         <div class="chart-header">
-          <div><div class="chart-title">Corrientes por fase</div><div class="chart-subtitle">IA · IB · IC · IN</div></div>
+          <div><div class="chart-title">Corrientes por fase</div><div class="chart-subtitle">IA Â· IB Â· IC Â· IN</div></div>
         </div>
         <div class="chart-body"><canvas id="chartCurrents" class="chart-canvas"></canvas></div>
         <div class="data-table-wrap">
@@ -1364,7 +1546,7 @@
       <!-- Potencias totales -->
       <div class="chart-card">
         <div class="chart-header">
-          <div><div class="chart-title">Potencias totales</div><div class="chart-subtitle" id="subtitlePowers">Activa · Reactiva · Aparente</div></div>
+          <div><div class="chart-title">Potencias totales</div><div class="chart-subtitle" id="subtitlePowers">Activa Â· Reactiva Â· Aparente</div></div>
           <select id="totalPowerMode" class="chart-select">
             <option value="activa">Activa (kW)</option>
             <option value="reactiva">Reactiva (kVAR)</option>
@@ -1402,7 +1584,7 @@
       <!-- Factor de potencia -->
       <div class="chart-card">
         <div class="chart-header">
-          <div><div class="chart-title">Factor de potencia</div><div class="chart-subtitle">FPA · FPB · FPC · FPTotal</div></div>
+          <div><div class="chart-title">Factor de potencia</div><div class="chart-subtitle">FPA Â· FPB Â· FPC Â· FPTotal</div></div>
         </div>
         <div class="chart-body"><canvas id="chartPf" class="chart-canvas"></canvas></div>
         <div class="data-table-wrap">
@@ -1416,7 +1598,7 @@
       <!-- Frecuencia -->
       <div class="chart-card">
         <div class="chart-header">
-          <div><div class="chart-title">Frecuencia de red</div><div class="chart-subtitle">Hz — curva continua</div></div>
+          <div><div class="chart-title">Frecuencia de red</div><div class="chart-subtitle">Hz â€” curva continua</div></div>
         </div>
         <div class="chart-body"><canvas id="chartFrequency" class="chart-canvas"></canvas></div>
         <div class="data-table-wrap">
@@ -1437,7 +1619,7 @@
 <div class="spinner-overlay" id="downloadSpinner">
   <div class="spinner-box">
     <div class="spinner"></div>
-    <div class="spinner-text">Generando archivo CSV…</div>
+    <div class="spinner-text">Generando archivo CSVâ€¦</div>
   </div>
 </div>
 
@@ -1454,6 +1636,8 @@
   const params   = new URLSearchParams(window.location.search);
   const device   = params.get("device") || "FMPAN-0001";
   const API_BASE = "https://fm-power-analyzer-server.onrender.com";
+  const TOKEN_KEY = `fm_analyzer_token_${device}`;
+  const TOKEN_REMEMBER_KEY = `fm_analyzer_token_remember_${device}`;
   
   let dashboardAutorizado = false;
   let tokenValidado = null;
@@ -1608,7 +1792,7 @@
     const authDeviceText = document.getElementById("authDeviceText");
   
     if (authDeviceText) {
-      authDeviceText.innerText = `Gateway: ${device}`;
+      authDeviceText.innerText = `${device}`;
     }
   
     if (overlay) overlay.style.display = "flex";
@@ -1636,16 +1820,10 @@
          <circle cx="12" cy="12" r="3"/>`;
   }
   
-  function limpiarToken() {
-    const input = document.getElementById("tokenInput");
-    const err = document.getElementById("authError");
-    if (input) input.value = "";
-    if (err) err.innerText = "";
-  }
-  
   async function validarAccesoDashboard() {
     const input = document.getElementById("tokenInput");
     const err = document.getElementById("authError");
+    const remember = document.getElementById("rememberToken");
   
     if (!input) return;
   
@@ -1672,8 +1850,14 @@
   
       dashboardAutorizado = true;
       tokenValidado = token;
-  
-      sessionStorage.setItem(`fm_token_ok_${device}`, token);
+
+      if (remember?.checked) {
+        localStorage.setItem(TOKEN_KEY, token);
+        localStorage.setItem(TOKEN_REMEMBER_KEY, "1");
+      } else {
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(TOKEN_REMEMBER_KEY);
+      }
   
       ocultarPantallaAuth();
       await iniciarDashboard();
@@ -1686,28 +1870,21 @@
   }
   
   async function validarSesionGuardada() {
-    const tokenGuardado = sessionStorage.getItem(`fm_token_ok_${device}`);
-    if (!tokenGuardado) return false;
-  
-    try {
-      const url = `${API_BASE}/api/dashboard-auth?device_id=${encodeURIComponent(device)}&token=${encodeURIComponent(tokenGuardado)}&t=${Date.now()}`;
-      const res = await fetch(url, { cache: "no-store" });
-      const json = await res.json();
-  
-      if (!json || json.ok !== true) {
-        sessionStorage.removeItem(`fm_token_ok_${device}`);
-        return false;
-      }
-  
-      dashboardAutorizado = true;
-      tokenValidado = tokenGuardado;
-      ocultarPantallaAuth();
-      return true;
-  
-    } catch (e) {
-      sessionStorage.removeItem(`fm_token_ok_${device}`);
+    const input = document.getElementById("tokenInput");
+    const remember = document.getElementById("rememberToken");
+    const remembered = localStorage.getItem(TOKEN_REMEMBER_KEY) === "1";
+
+    if (remember) remember.checked = remembered;
+
+    if (!remembered) {
+      localStorage.removeItem(TOKEN_KEY);
+      if (input) input.value = "";
       return false;
     }
+
+    const tokenGuardado = localStorage.getItem(TOKEN_KEY) || "";
+    if (input) input.value = tokenGuardado;
+    return false;
   }
   
   async function iniciarDashboard() {
@@ -1735,7 +1912,7 @@
         pollingTiempoRealEnCurso = true;
         try {
           await actualizarTiempoReal();
-          // OPTIMIZACIÓN DE EGRESS: Solo usar incremental si es hoy
+          // OPTIMIZACIÃ“N DE EGRESS: Solo usar incremental si es hoy
           if (document.getElementById("dayDate").value === hoyTexto()) {
             await obtenerHistoricoDesdeUltimoDato();
           }
@@ -1747,7 +1924,7 @@
     }
   }
 
-  /* Gauges SVG — arco total ≈ 166px para r=53 */
+  /* Gauges SVG â€” arco total â‰ˆ 166px para r=53 */
   function actualizarGauge(fillId, needleId, valId, value, maxVal) {
     const fill=document.getElementById(fillId);
     const needle=document.getElementById(needleId);
@@ -1768,7 +1945,7 @@
       : (n > 10 ? "#D64541" : n > 5 ? "#f39c12" : "#16a085"); // corriente
   }
 
-  /* Mini-gauges THD — arco total 129px (r=41, 180°) */
+  /* Mini-gauges THD â€” arco total 129px (r=41, 180Â°) */
   function setMiniGauge(key, value) {
     const fill   = document.getElementById("mgFill_" + key);
     const needle = document.getElementById("mgNeedle_" + key);
@@ -1797,7 +1974,7 @@
       : (n > 50 ? "#D64541" : n > 20 ? "#f39c12" : "#16a085"); // THD corriente
   }
 
-  /* Tablas dinámicas — sin columna hora */
+  /* Tablas dinÃ¡micas â€” sin columna hora */
   const TABLE_ROWS=5;
   function renderTabla(tbodyId, columns) {
     const tbody=document.getElementById(tbodyId); if(!tbody) return;
@@ -1843,7 +2020,7 @@
       .forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML="";});
   }
 
-  /* Limpia todas las gráficas y tablas */
+  /* Limpia todas las grÃ¡ficas y tablas */
   function limpiarGraficas() {
     // Destruir los Chart.js si existen
     if (chartVoltages) {
@@ -1946,7 +2123,7 @@
       };
       actualizarEncabezadoMeter();
   
-      // DEAD: no mostrar nada en calidad ni históricas
+      // DEAD: no mostrar nada en calidad ni histÃ³ricas
       if (statusNormalizado === "dead") {
         listaPmAdvertencia = [];
         actualizarCajaAdvertenciaPM([]);
@@ -1988,7 +2165,7 @@
     }
   }
 
-  /* Opciones gráfica */
+  /* Opciones grÃ¡fica */
   function chartOpts(yLabel, minV = null, maxV = null) {
     const o = {
       responsive: true,
@@ -2086,13 +2263,13 @@
     return {keyA:"p_a",keyB:"p_b",keyC:"p_c",labelA:"P A",labelB:"P B",labelC:"P C",yLabel:"kW"};
   }
 
-  /* Gráficas */
+  /* GrÃ¡ficas */
   function actualizarGraficaVoltajes(labels,rows) {
     const va = rows.map(r=>numeroSeguro(r.voltage_a,r.voltage_an));
     const vb = rows.map(r=>numeroSeguro(r.voltage_b));
     const vc = rows.map(r=>numeroSeguro(r.voltage_c));
   
-    // 🔴 DEFINE TUS LÍMITES AQUÍ
+    // ðŸ”´ DEFINE TUS LÃMITES AQUÃ
     const LIM_SUP = 129.6; // +8% 
     const LIM_INF = 110.4; // -8%
   
@@ -2112,9 +2289,9 @@
             ds("VB",vb,"#2D9CDB"),
             ds("VC",vc,"#16a085"),
 
-            // 🔴 LÍMITE SUPERIOR
+            // ðŸ”´ LÃMITE SUPERIOR
             {
-              label: "Límite superior",
+              label: "LÃ­mite superior",
               data:limSupArr,
               borderColor:"#D64541",
               borderDash:[6,6],
@@ -2122,9 +2299,9 @@
               borderWidth:1.5
             },
   
-            // 🟡 LÍMITE INFERIOR
+            // ðŸŸ¡ LÃMITE INFERIOR
             {
-              label: "Límite inferior",
+              label: "LÃ­mite inferior",
               data:limInfArr,
               borderColor:"#f39c12",
               borderDash:[6,6],
@@ -2145,7 +2322,7 @@
       chartVoltages.data.datasets[1].data = vb;
       chartVoltages.data.datasets[2].data = vc;
   
-      // Límites
+      // LÃ­mites
       chartVoltages.data.datasets[3].data = limSupArr;
       chartVoltages.data.datasets[4].data = limInfArr;
   
@@ -2158,7 +2335,7 @@
     if(!chartCurrents){chartCurrents=new Chart(ctx,{type:"line",data:{labels,datasets:[ds("IA",ia,"#EC631F"),ds("IB",ib,"#2D9CDB"),ds("IC",ic,"#7B61FF"),ds("IN",iN,"#D64541")]},options:chartOpts("A",0)});}
     else{chartCurrents.data.labels=labels;[ia,ib,ic,iN].forEach((d,i)=>chartCurrents.data.datasets[i].data=d);chartCurrents.update("none");}
   }
-  /* Config de potencias totales según selector */
+  /* Config de potencias totales segÃºn selector */
   function getTotalPowerConfig() {
     if(totalPowerMode==="activa")   return {key:"p_tot",alt:"ptot",label:"P ",unit:"kW",color:"#EC631F"};
     if(totalPowerMode==="reactiva") return {key:"q_tot",alt:"qtot",label:"Q ",unit:"kVAR",color:"#2D9CDB"};
@@ -2191,7 +2368,7 @@
         chartPowers=new Chart(ctx,{type:"line",data:{labels,datasets:[ds(cfg.label,data,cfg.color)]},options:chartOpts(cfg.unit,0)});
       } else {
         chartPowers.data.labels=labels;
-        // Ajustar a 1 dataset si venía de "todas"
+        // Ajustar a 1 dataset si venÃ­a de "todas"
         chartPowers.data.datasets=[ds(cfg.label,data,cfg.color)];
         chartPowers.options.scales.y.title.text=cfg.unit;
         chartPowers.update("none");
@@ -2201,13 +2378,13 @@
       const pa=rows.map(r=>numeroSeguro(r.p_tot,r.ptot));
       const qa=rows.map(r=>numeroSeguro(r.q_tot,r.qtot));
       const sa=rows.map(r=>numeroSeguro(r.s_tot,r.stot));
-      if(subtitleEl) subtitleEl.textContent="Activa · Reactiva · Aparente";
+      if(subtitleEl) subtitleEl.textContent="Activa Â· Reactiva Â· Aparente";
       if(!chartPowers){
-        chartPowers=new Chart(ctx,{type:"line",data:{labels,datasets:[ds("P (kW)",pa,"#EC631F"),ds("Q (kVAR)",qa,"#2D9CDB"),ds("S (kVA)",sa,"#7B61FF")]},options:chartOpts("10³",0)});
+        chartPowers=new Chart(ctx,{type:"line",data:{labels,datasets:[ds("P (kW)",pa,"#EC631F"),ds("Q (kVAR)",qa,"#2D9CDB"),ds("S (kVA)",sa,"#7B61FF")]},options:chartOpts("10Â³",0)});
       } else {
         chartPowers.data.labels=labels;
         chartPowers.data.datasets=[ds("P (kW)",pa,"#EC631F"),ds("Q (kVAR)",qa,"#2D9CDB"),ds("S (kVA)",sa,"#7B61FF")];
-        chartPowers.options.scales.y.title.text="10³";
+        chartPowers.options.scales.y.title.text="10Â³";
         chartPowers.update("none");
       }
     }
@@ -2232,7 +2409,7 @@
     else{chartFrequency.data.labels=labels;chartFrequency.data.datasets[0].data=fr;chartFrequency.update("none");}
   }
 
-  /* Histórico */
+  /* HistÃ³rico */
   async function obtenerHistorico(incremental = false, since = null) {
     const day=document.getElementById("dayDate").value, pm_slave=getCurrentPmSlave();
     if(!day) throw new Error("No hay fecha"); if(!pm_slave) throw new Error("No hay PM");
@@ -2248,7 +2425,7 @@
     if(!res.ok) throw new Error("Error API"); return await res.json();
   }
 
-  /* Función incremental: obtiene solo nuevos datos desde el último punto cargado */
+  /* FunciÃ³n incremental: obtiene solo nuevos datos desde el Ãºltimo punto cargado */
   async function obtenerHistoricoDesdeUltimoDato() {
     try {
       const day = document.getElementById("dayDate").value;
@@ -2260,14 +2437,14 @@
       // Solo hacer polling incremental si es hoy
       if (day !== hoyTexto()) return;
 
-      // Si no hay último timestamp, hacer fallback a carga completa
+      // Si no hay Ãºltimo timestamp, hacer fallback a carga completa
       // Esto garantiza que se muestre "No hay datos" si corresponde
       if (!ultimaHoraVisible) {
         await consultarTodo(false);
         return;
       }
 
-      // Consultar solo nuevos datos desde el último visible
+      // Consultar solo nuevos datos desde el Ãºltimo visible
       const url = `${API_BASE}/api/history/since?device_id=${encodeURIComponent(device)}&pm_slave=${encodeURIComponent(pm_slave)}&from=${encodeURIComponent(day)}&to=${encodeURIComponent(day)}&last_created_at=${encodeURIComponent(ultimaHoraVisible)}&t=${Date.now()}`;
       const res = await fetch(url, { cache: "no-store" });
 
@@ -2297,7 +2474,7 @@
       // Ordenar todo por tiempo
       datosActuales.sort((a, b) => new Date(a.visible_at || a.created_at || 0) - new Date(b.visible_at || b.created_at || 0));
 
-      // Re-renderizar gráficas sin limpiar (actualización incremental)
+      // Re-renderizar grÃ¡ficas sin limpiar (actualizaciÃ³n incremental)
       const labels = datosActuales.map(r => formatearHoraReal(r.visible_at || r.created_at));
 
       if (chartVoltages || chartCurrents || chartPowers || chartPhasePowers || chartPf || chartFrequency) {
@@ -2343,7 +2520,7 @@
   
       document.getElementById("selectedDateText").innerText = formatearFechaCorta(day);
   
-      // Si el gateway está dead, no mostrar curvas ni tablas
+      // Si el gateway estÃ¡ dead, no mostrar curvas ni tablas
       if (estadoGatewayActual === "dead") {
         datosActuales = [];
         limpiarGraficas();
@@ -2377,7 +2554,7 @@
         ultimaHoraVisible = null;
         ultimoTimestampHistorico = null;
         ultimoTimestampLive = null;
-        mostrarToast("Error consultando el histórico");
+        mostrarToast("Error consultando el histÃ³rico");
         return;
       }
   
@@ -2417,7 +2594,7 @@
         actualizarGraficaFrecuencia(labels, datosActuales);
         actualizarTodasLasTablas(labels, datosActuales);
       } else {
-        // Recargar gráficas completas
+        // Recargar grÃ¡ficas completas
         datosActuales = ordenadas.slice(); // Copiar
         const labels = ordenadas.map(r => formatearHoraReal(r.visible_at || r.created_at));
   
@@ -2452,15 +2629,11 @@
   /* Init */
   window.addEventListener("load", async () => {
     mostrarPantallaAuth();
-  
-    const sesionValida = await validarSesionGuardada();
-    if (sesionValida) {
-      await iniciarDashboard();
-    }
+    await validarSesionGuardada();
   });
 
   // Registrar eventos directamente sin esperar a DOMContentLoaded
-  // (el script está al final del body, así que ya está todo disponible)
+  // (el script estÃ¡ al final del body, asÃ­ que ya estÃ¡ todo disponible)
   function registrarEventos() {
     const dayDateEl = document.getElementById("dayDate");
     const pmSelectEl = document.getElementById("pmSelect");
@@ -2503,7 +2676,7 @@
     }
   }
 
-  // Registrar eventos también en load como fallback
+  // Registrar eventos tambiÃ©n en load como fallback
   window.addEventListener("load", () => {
     registrarEventos();
   });
